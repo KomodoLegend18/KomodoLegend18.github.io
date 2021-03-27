@@ -1,123 +1,125 @@
 <html>
-<body>
-    <!--
-    <div id="muteYouTubeVideoPlayer"></div>
+    <head>
+        <title>HOLORADIO</title>
+    <body>
+        <!--
+        <div id="muteYouTubeVideoPlayer"></div>
 
-    <script async src="https://www.youtube.com/iframe_api"></script>
-    <script>
-     function onYouTubeIframeAPIReady() {
-      var player;
-      player = new YT.Player('muteYouTubeVideoPlayer', {
-        width: 1366,               // Player width (in px)
-        height: 768,              // Player height (in px)
-        playerVars: {
-          listType:'playlist',
-          list: 'PLowuZgbBgs5X66yiQjWU-J0Ds51Eu24zO',
-          autoplay: 1,        // Auto-play the video on load
-          controls: 1,        // Show pause/play buttons in player
-          showinfo: 0,        // Hide the video title
-          modestbranding: 1,  // Hide the Youtube Logo
-          loop: 1,            // Run the video in a loop
-          fs: 0,              // Hide the full screen button
-          cc_load_policy: 0, // Hide closed captions
-          iv_load_policy: 3,  // Hide the Video Annotations
-          autohide: 1         // Hide video controls when playing
-        },
-        events: {
-          onReady: function(e) {
-            e.target.mute();
-          },
-          onError: function(e){
-            e.target.nextVideo();
-            e.target.playVideo();
-          }
-        }
-      });
-     }
-    </script>
-    -->
-    <div id="player"></div>
-    <script>
-        /* Replace This Code - get Value from playlist page and place it here */
-        var playlistId = "PLowuZgbBgs5X66yiQjWU-J0Ds51Eu24zO";
-        var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-    
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-        var player;
-    
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                playerVars: {
-                    autoplay: 1,        // Auto-play the video on load
-                    controls: 1,        // Show pause/play buttons in player
-                    modestbranding: 1,  // Hide the Youtube Logo
-                    loop: 1,            // Run the video in a loop
-                    fs: 0,              // Hide the full screen button
-                    cc_load_policy: 1, // Hide closed captions
-                    iv_load_policy: 3,  // Hide the Video Annotations
-                    autohide: 2         // Hide video controls when playing
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError,
+        <script async src="https://www.youtube.com/iframe_api"></script>
+        <script>
+         function onYouTubeIframeAPIReady() {
+          var player;
+          player = new YT.Player('muteYouTubeVideoPlayer', {
+            width: 1366,               // Player width (in px)
+            height: 768,              // Player height (in px)
+            playerVars: {
+              listType:'playlist',
+              list: 'PLowuZgbBgs5X66yiQjWU-J0Ds51Eu24zO',
+              autoplay: 1,        // Auto-play the video on load
+              controls: 1,        // Show pause/play buttons in player
+              showinfo: 0,        // Hide the video title
+              modestbranding: 1,  // Hide the Youtube Logo
+              loop: 1,            // Run the video in a loop
+              fs: 0,              // Hide the full screen button
+              cc_load_policy: 0, // Hide closed captions
+              iv_load_policy: 3,  // Hide the Video Annotations
+              autohide: 1         // Hide video controls when playing
+            },
+            events: {
+              onReady: function(e) {
+                e.target.mute();
+              },
+              onError: function(e){
+                e.target.nextVideo();
+                e.target.playVideo();
+              }
+            }
+          });
+         }
+        </script>
+        -->
+        <div id="player"></div>
+        <script>
+            /* Replace This Code - get Value from playlist page and place it here */
+            var playlistId = "PLowuZgbBgs5X66yiQjWU-J0Ds51Eu24zO";
+            var tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            var player;
+
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player('player', {
+                    height: '100%',
+                    width: '100%',
+                    playerVars: {
+                        autoplay: 1,        // Auto-play the video on load
+                        controls: 1,        // Show pause/play buttons in player
+                        modestbranding: 1,  // Hide the Youtube Logo
+                        loop: 1,            // Run the video in a loop
+                        fs: 0,              // Hide the full screen button
+                        cc_load_policy: 1, // Hide closed captions
+                        iv_load_policy: 3,  // Hide the Video Annotations
+                        autohide: 2         // Hide video controls when playing
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange,
+                        'onError': onPlayerError,
+                    }
+
+                });
+            }
+
+
+            var playlistArray;
+            var playListArrayLength;
+            var maxNumber;
+
+            var oldNumber = 0;
+            var NewNumber = 0;
+
+            function newRandomNumber() {
+                oldNumber = NewNumber;
+                NewNumber = Math.floor(Math.random() * maxNumber);
+                if (NewNumber == oldNumber) {
+                    newRandomNumber();
+                } else {
+                    return NewNumber;
                 }
-    
+            }
+
+        function onPlayerReady(event) {
+            player.loadPlaylist({
+                'listType': 'playlist',
+                'list': playlistId
             });
         }
-    
-    
-        var playlistArray;
-        var playListArrayLength;
-        var maxNumber;
-    
-        var oldNumber = 0;
-        var NewNumber = 0;
-    
-        function newRandomNumber() {
-            oldNumber = NewNumber;
-            NewNumber = Math.floor(Math.random() * maxNumber);
-            if (NewNumber == oldNumber) {
-                newRandomNumber();
+
+        var firstLoad = true;
+        function onPlayerStateChange(event) {
+            console.log(event.data);
+            if (event.data == YT.PlayerState.ENDED) {
+                player.playVideoAt(newRandomNumber());   
             } else {
-                return NewNumber;
+                if (firstLoad && event.data == YT.PlayerState.PLAYING) {
+                    firstLoad = false;
+                    playlistArray = player.getPlaylist();
+                    playListArrayLength = playlistArray.length;
+                    maxNumber = playListArrayLength;
+                    NewNumber = newRandomNumber();
+                    player.playVideoAt(newRandomNumber());
+                }
             }
         }
-    
-    function onPlayerReady(event) {
-        player.loadPlaylist({
-            'listType': 'playlist',
-            'list': playlistId
-        });
-    }
-    
-    var firstLoad = true;
-    function onPlayerStateChange(event) {
-        console.log(event.data);
-        if (event.data == YT.PlayerState.ENDED) {
+
+        function onPlayerError(event) {
+            console.log(event.data);
             player.playVideoAt(newRandomNumber());   
-        } else {
-            if (firstLoad && event.data == YT.PlayerState.PLAYING) {
-                firstLoad = false;
-                playlistArray = player.getPlaylist();
-                playListArrayLength = playlistArray.length;
-                maxNumber = playListArrayLength;
-                NewNumber = newRandomNumber();
-                player.playVideoAt(newRandomNumber());
-            }
         }
-    }
-    
-    function onPlayerError(event) {
-        console.log(event.data);
-        player.playVideoAt(newRandomNumber());   
-    }
-        
-    </script>
-</body>
+
+        </script>
+    </body>
 </html>
