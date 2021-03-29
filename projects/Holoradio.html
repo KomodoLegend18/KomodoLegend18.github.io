@@ -1,5 +1,5 @@
 <html>
-<body style="background-color: black;">
+<body>
     <!--
     <div id="muteYouTubeVideoPlayer"></div>
 
@@ -36,10 +36,68 @@
      }
     </script>
     -->
+    <style>
+        body{
+            background-color: black;
+            overflow: hidden;
+            position: relative;
+        }
+        #help{
+            font-weight: bold;
+            margin-top: -1%;
+            margin-bottom: -2%;
+            margin-left: -17%;
+            float: left;
+            width: 15%;
+            height: 104%;
+            color: white;
+            background-color: cyan;
+            padding-right: 20px;
+            padding-left: 10px;
+            position: absolute;
+            z-index: 1;
+            cursor: default;
+            opacity: 0%;
+            transition-duration: 150ms;
+        }
+        #help s{
+            cursor: not-allowed;
+            color: gray;
+        }
+        #help:hover{
+            width: 20%;
+            padding-right: 4px;
+            margin-left: -1%;
+            transition-duration: 350ms;
+            overflow: scroll;
+            overflow-x: hidden;
+            opacity: 93%;
+        }
+        #videoplayer{
+            width: 100%;
+            height: 100%;
+            float: right;
+            position: absolute;
+            left: 0%;
+            top: 0%;
+        }
+    </style>
 
+    <div id="help">
+        <p style="width: 100%;background-color: gray;">Keyboard Shortcuts</p>
+        <p>Spacebar or [k]: Play / Pause</p><br>
+        <p>Arrow Left: Jump back 5 seconds in the current video</p><br>
+        <p>Arrow Right: Jump ahead 5 seconds in the current video</p><br>
+        <p>Arrow Up: Volume up</p><br>
+        <p>Arrow Down: Volume Down</p><br>    
+        <s title="Disabled">[f]: Toggle full-screen display</s><br>    
+        <p>[j]: Jump back 10 seconds in the current video</p><br>    
+        <p>[l]: Jump ahead 10 seconds in the current video</p><br>
+        <p>[m]: Mute or unmute the video</p><br>
+        <p>[0-9]: Jump to a point in the video. 0 jumps to the beginning of the video, 1 jumps to the point 10% into the video, 2 jumps to the point 20% into the video, and so forth.</p>
+    </div>
 
-
-    <div id="player"></div>
+    <div style="float: right; width: 100%; height: 100%;position: absolute;" id="player"></div>
     <script>
         /* Replace This Code - get Value from playlist page and place it here */
         var playlistId = "PLowuZgbBgs5X66yiQjWU-J0Ds51Eu24zO";
@@ -53,8 +111,8 @@
     
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
+                //height: '100%',
+                //width: '100%',
                 playerVars: {
                     autoplay: 1,        // Auto-play the video on load
                     controls: 0,        // Show pause/play buttons in player
@@ -139,7 +197,6 @@
     }
         
     </script>
-
     <!--
     <div class="videoplayer" id="ytplayer"></div>
     <script>
