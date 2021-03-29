@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>::ITK ACCESS::</title>
+			<link href="CSSNYA.css" rel="stylesheet" type="text/css" />
+			<link href="loading-icon.gif" rel="icon" type="image/x-icon">
+            <script>
+function digi() {
+  var date = new Date(),
+      hour = date.getHours(),
+      minute = checkTime(date.getMinutes()),
+      ss = checkTime(date.getSeconds());
+  function checkTime(i) {
+    if( i < 10 ) {
+      i = "0" + i;
+    }
+    return i;
+  }
+if ( hour > 12 ) {
+  hour = hour - 12;
+  if ( hour == 12 ) {
+    hour = checkTime(hour);
+  document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" AM";
+  }
+  else {
+    hour = checkTime(hour);
+    document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" PM";
+  }
+}
+else {
+  document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" AM";;
+}
+var time = setTimeout(digi,1000);
+}
+			</script>
+</head>
+
+<body style="background-color:#000" onload="digi()">
+	<br/>
+	<div id="Container">
+    	<div id="header">
+        	<marquee onmouseover="this.stop()" onmouseout="this.start()" behavior="alternate" scrollamount="2" scrolldelay="20" truespeed="truespeed">
+        		<div id="digiclock" style="color:#FFFFFF; font-size:36px; margin-top:2px;"></div>
+            </marquee>
+        </div>
+        
+        <!--[=============Content==============]-->
+			<div id="ContainerITKAccess">
+        <!--####################################-->
+        <br />
+        <br />
+        <!--=============Quick Links============-->
+        			<div class="contentITKAccess">
+           				<div class="judul-content">
+                			<h3>Quick Links</h3>
+               			</div>
+                        	<div class="scrollITKAccess">
+                			<table style="margin:0px" align="center" cellpadding="0" cellspacing="0">
+						<tr>
+                    					<td align="center" class="buttonquickaccessfluid">
+                    					<a href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/html5-editable-content-master/index.html"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">NOTE</p></button></a>
+                    					</td>
+                   				</tr>
+						<tr>
+                    					<td align="center" class="buttonquickaccessfluid">
+                    					<a href="http://ict.itk.ac.id/index.html"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">ICT SUPPORT</p></button></a>
+                    					</td>
+                   				</tr>
+						<tr>
+                    					<td align="center" class="buttonquickaccessfluid">
+                    					<a href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/GERBANG.html"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">GERBANG</p></button></a>
+                    					</td>
+                   				</tr>
+                                    		<tr>
+                    					<td align="center">
+                    					<a href="https://classroom.google.com"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">Google Classroom</p></button></a>
+                    					</td>
+                   				</tr>
+                                		<tr>
+                                    			<td align="center">
+                                        		<a href="https://www.itk.ac.id/"><button s class="buttonquickaccess"><img src="Asset/Lambang_ITK.png" style="width:50px"></button></a>
+                                        		</td>
+                                   		</tr>
+                                    		<tr>
+                    					<td align="center">
+                    					<a href="https://sikantan.itk.ac.id"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">SIKANTAN</p></button></a>
+                    					</td>
+                   				</tr>
+              				</table>
+                        	</div>
+                	</div>
+       	<!--=============Quick Links============-->    
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      		</div>
+        <!--[=============Content==============]-->
+        <!--####################################-->
+      	<!--[==============Footer==============]-->
+			<div id="Footer">
+            	<table style="margin:0px" align="" cellpadding="0" cellspacing="0">
+					<tr class="buttonquickaccessfluid">
+                    	<a href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/QuickAccess.html"><button s class="buttonfooterleftactive"><p>Quick Access</p></button></a>
+                   	</tr>
+                    <tr>
+                       	<a href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/Homepage.html"><button s class="buttonfootermiddle"><p>Home</p></button></a>
+                    </tr>
+                    <tr>
+                        <a href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/Experimental.html"><button s class="buttonfooterright"><p style="word-wrap:break-word">Experimental</p></button></a>
+                    </tr>
+              	</table>
+            </div>
+        <!--[==============Footer==============]--> 
+	</div>
+</body>
+</html>

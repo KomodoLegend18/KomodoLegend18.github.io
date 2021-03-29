@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>::QUICK ACCESS::</title>
+			<link href="CSSNYA.css" rel="stylesheet" type="text/css" />
+			<link href="loading-icon.gif" rel="icon" type="image/x-icon">
+            <script>
+function digi() {
+  var date = new Date(),
+      hour = date.getHours(),
+      minute = checkTime(date.getMinutes()),
+      ss = checkTime(date.getSeconds());
+  function checkTime(i) {
+    if( i < 10 ) {
+      i = "0" + i;
+    }
+    return i;
+  }
+if ( hour > 12 ) {
+  hour = hour - 12;
+  if ( hour == 12 ) {
+    hour = checkTime(hour);
+  document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" AM";
+  }
+  else {
+    hour = checkTime(hour);
+    document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" PM";
+  }
+}
+else {
+  document.getElementById("digiclock").innerHTML = hour+":"+minute+":"+ss+" AM";;
+}
+var time = setTimeout(digi,1000);
+}
+			</script>
+</head>
+
+<body style="background-color:#000" onload="digi()">
+	<br/>
+	<div id="Container">
+    	<div id="header">
+        	<marquee onmouseover="this.stop()" onmouseout="this.start()" behavior="alternate" scrollamount="2" scrolldelay="20" truespeed="truespeed">
+        		<div id="digiclock" style="color:#FFFFFF; font-size:36px; margin-top:2px;"></div>
+            </marquee>
+        </div>
+        
+        <!--[=============Content==============]-->
+			<div id="ContainerQuickAccess">
+        <!--####################################-->
+        <br />
+        <br />
+        <!--=============Quick Links============-->
+        			<div class="contentQuickAccess">
+           				<div class="judul-content">
+                			<h3>Quick Links</h3>
+               			</div>
+                        	<div class="scrollQuickAccess">
+                				<table style="margin:0px" align="" cellpadding="0" cellspacing="0">
+									<tr>
+                    					<td align="center" class="buttonquickaccessfluid">
+                    						<a tabindex="-1" href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/ITKAccess.html"><button s class="buttonquickaccess"><p style="font-size:2vmax; display:block; margin:auto">ITK ACCESS</p></button></a>
+                    					</td>
+                   					</tr>
+                                	<tr>
+                                    	<td align="center">
+                                        	<a tabindex="-1" href="https://store.steampowered.com/"><button s class="buttonquickaccess"><img src="Asset/Steam-logo.png" style="width:10vmin; display:block; margin:auto"></button></a>
+                                        </td>
+                                   	</tr>
+                                    <tr>
+                                    	<td align="center">
+                                        	<a tabindex="-1" href="https://www.soundcloud.com"><button s class="buttonquickaccess"><img src="Asset/Soundcloud-Logo.png" style="width:13vmin; display:block; margin:auto"/></button></a>
+                                        </td>
+                                   	</tr>
+              						<tr>
+                						<td align="center">
+                    						<a tabindex="-1" href="https://myanimelist.net"><button s class="buttonquickaccess"><img src="Asset/myanimelist_owler_20160226_213523_original.png" style="width:35vmin; display:block; margin:auto"/></button></a>
+                    					</td>
+                    				</tr>
+                    				<tr>
+                    					<td align="center">
+                    						<a tabindex="-1" href="https://www.samehadaku.tv"><button s class="buttonquickaccess"><img src="Asset/logo_samehadaku.png" style="width:35vmin; display:block; margin:auto"/></button></a>
+                    					</td>
+                   					</tr>
+                                    <tr>
+                                    	<td align="center">
+                                        	<a tabindex="-1" href="https://www.achanime.net"><button s class="buttonquickaccess"><img src="Asset/ACH_LOGO.png" style="width:25vmin; display:block; margin:auto"/></button></a>
+                                        </td>
+                                   	</tr>
+                                    <tr>
+                                    	<td align="center">
+                                        	<a tabindex="-1" href="https://osu.ppy.sh"><button s class="buttonquickaccess"><img src="Asset/Osu!Logo_(2015).png" style="width:10vmin; display:block; margin:auto"/></button></a>
+                                        </td>
+                                   	</tr>
+              					</table>
+                        	</div>
+                	</div>
+       	<!--=============Quick Links============-->    
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      		</div>
+        <!--[=============Content==============]-->
+        <!--####################################-->
+      	<!--[==============Footer==============]-->
+			<div id="Footer">
+            	<table style="margin:0px" align="" cellpadding="0" cellspacing="0">
+					<tr class="buttonquickaccessfluid">
+                    	<a tabindex="-1" href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/ITKAccess.html"><button s class="buttonfooterleftactive"><p>Quick Access</p></button></a>
+                   	</tr>
+                    <tr>
+                       	<a tabindex="-1" href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/Homepage.html"><button s class="buttonfootermiddle"><p>Home</p></button></a>
+                    </tr>
+                    <tr>
+                        <a tabindex="-1" href="file:///D:/Personal%20Folder/Personal%20Project/18/Custom%20Webpage/Browser%20Homepage%20Remastered/Experimental.html"><button s class="buttonfooterright"><p style="word-wrap:break-word">Experimental</p></button></a>
+                    </tr>
+              	</table>
+            </div>
+        <!--[==============Footer==============]--> 
+	</div>
+</body>
+</html>
