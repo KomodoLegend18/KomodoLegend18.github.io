@@ -57,13 +57,15 @@
                 width: '100%',
                 playerVars: {
                     autoplay: 1,        // Auto-play the video on load
-                    controls: 1,        // Show pause/play buttons in player
+                    controls: 0,        // Show pause/play buttons in player
                     modestbranding: 1,  // Hide the Youtube Logo
                     loop: 1,            // Run the video in a loop
                     fs: 0,              // Hide the full screen button
                     cc_load_policy: 1, // Hide closed captions
                     iv_load_policy: 3,  // Hide the Video Annotations
-                    autohide: 2         // Hide video controls when playing
+                    autohide: 0,         // Hide video controls when playing
+                    rel: 0              // hide related vids
+                    widget_referrer: 'https://komodolegend18.github.io/projects/Holoradio'
                 },
                 events: {
                     'onReady': onPlayerReady,
