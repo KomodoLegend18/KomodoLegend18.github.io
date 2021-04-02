@@ -1,4 +1,4 @@
-# KomodoLegend18.github.io | My Github Page
+# KomodoLegend18.github.io | My Personal Github Page
 *personal homepage<br>
 *youtube embed (shuffle, loop, skip error) hololive youtube embed 
 
