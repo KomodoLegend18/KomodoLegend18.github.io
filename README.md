@@ -1,9 +1,8 @@
-# KomodoLegend18.github.io | My Personal Github Page
-*personal homepage<br>
-*youtube embed (shuffle, loop, skip error) hololive youtube embed 
+# [KomodoLegend18.github.io](https://komodolegend18.github.io) | My Personal Github Page
+|Content Name|Description|
+|---|---|
+|Personal Homepage|Homepage containing google search, yt search and wikipedia search. also has many other features|
+|HoloRadio|youtube embed (shuffle, loop, skip error) hololive youtube playlist embed > can be used as obs browser source|
 
-can be used as obs browser source
 
-https://komodolegend18.github.io<br>
-https://komodolegend18.github.io/projects/Homepage<br>
-https://komodolegend18.github.io/projects/Holoradio
+
