@@ -1,14 +1,21 @@
 <html>
 <head>
     <title>HOLOTV</title>
+    <meta content="KOMODO.GITHUB.IO" property="og:title">
+    <meta content="Komodo's Personal Github Page" property="og:description">
+    <meta content="https://komodolegend18.github.io/projects/HoloTV" property="og:url">
+    <meta content="https://preview.redd.it/49v7a9w3qro51.jpg?width=507&format=pjpg&auto=webp&s=6cdda412b1fa77096e9ee912ae16f597d2ef4afc" property="og:image">
+    <meta content="#00ffd6" data-react-helmet="true" name="theme-color">
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
 </head>
 <body>
     <style>
         body{
+            border: none;
+            margin: 0px;
             background-color: black;
-            overflow: scroll;
-            overflow-x: hidden;
+            overflow: hidden;
+            /*overflow-x: hidden;*/
             position: relative;
         }
         #help{
@@ -34,6 +41,7 @@
             color: gray;
         }
         #help:hover{
+            padding-left: 2%;
             width: 20%;
             padding-right: 4px;
             margin-left: -1%;
@@ -50,66 +58,115 @@
             left: 0%;
             top: 0%;
         }
+        a {
+            color: white;
+            text-decoration: none;
+        }
+        a:visited {
+            color: white;
+            text-decoration: none;
+        }
+        a:active {
+            color: black;
+            text-decoration: none;
+        }
+        .gentitle{
+            text-decoration: underline;
+        }
+        .genselect:hover{
+            margin-left: -3%;
+            padding-left: 3%;
+            outline: 5px solid white;
+            transition-duration: 250ms;
+        }
     </style>
 
     <div id="help">
-        <p>Click on button below to change stream</p><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-
+        <p>Click on button below to change stream</p>
         <!--JP GEN 0-->
+        <div class="genselect">
+        <p class="gentitle">JP Gen 0</p>
         <a href="https://www.youtube.com/embed/live_stream?channel=UCp6993wxpyDPHUpavwDFqgg&autoplay=1" target="search_iframe">Tokino Sora</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UC0TXe_LYZ4scaW2XMyi5_kw&autoplay=1" target="search_iframe">AZKi</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UCDqI2jOz0weumE8s7paEk6g&autoplay=1" target="search_iframe">Roboco</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UC-hM6YJuNYVAmUWxeIr9FeA&autoplay=1" target="search_iframe">Sakura Miko</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UC5CwaMl1eIgY8h02uZw7u8A&autoplay=1" target="search_iframe">Hoshimachi Suisei</a><br>
+        </div>
         <!--JP GEN 1-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">JP Gen 1</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCD8HOxPs4Xvsm8H0ZxXGiBw&autoplay=1" target="search_iframe">Yozora Mel</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCdn5BQ06XqgXoAxIhbqw5Rg&autoplay=1" target="search_iframe">Shirakami Fubuki</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCQ0UDLQCjY0rmuxCDE38FGg&autoplay=1" target="search_iframe">Natsuiro Matsuri</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCFTLzh12_nrtzqBPsTCqenA&autoplay=1" target="search_iframe">Aki Rosenthal</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC1CfXB_kRs3C-zaeTG3oGyg&autoplay=1" target="search_iframe">Akai Haato</a><br>
+        </div>
         <!--JP GEN 2-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">JP Gen 2</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC1opHUrw8rvnsadT-iGp7Cg&autoplay=1" target="search_iframe">Minato Aqua</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC1suqwovbL1kzsoaZgFZLKg&autoplay=1" target="search_iframe">Yuzuki Choco</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC7fk0CB07ly8oSl0aqKkqFg&autoplay=1" target="search_iframe">Nakiri Ayame</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCXTpFs_3PqI41qX2d9tL2Rw&autoplay=1" target="search_iframe">Murasaki Shion</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCvzGlP9oQwU--Y0r9id_jnA&autoplay=1" target="search_iframe">Oozora Subaru</a><br>
+        </div>
         <!--JP GAMERS-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=UCp-5t9SrOQwXMU7iIjQfARg&autoplay=1" target="search_iframe">Mio</a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=UChAnqc_AY5_I3Px5dig3X1Q&autoplay=1" target="search_iframe">Korone</a><br>
+        <div class="genselect">
+        <p class="gentitle">JP GAMERS</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCdn5BQ06XqgXoAxIhbqw5Rg&autoplay=1" target="search_iframe">Shirakami Fubuki</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCp-5t9SrOQwXMU7iIjQfARg&autoplay=1" target="search_iframe">Ookami Mio</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCvaTdHTWBGv3MKj3KVqJVCw&autoplay=1" target="search_iframe">Nekomata Okayu</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UChAnqc_AY5_I3Px5dig3X1Q&autoplay=1" target="search_iframe">Inugami Korone</a><br>
+        </div>
         <!--JP GEN 3-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">JP Gen 3</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCvInZx9h3jC2JzsIzoOebWg&autoplay=1" target="search_iframe">Shiranui Flare</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCdyqAaZDKHXg4Ahi7VENThQ&autoplay=1" target="search_iframe">Shirogane Noel</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCCzUftO8KOVkV4wQG1vkUvg&autoplay=1" target="search_iframe">Houshou Marine</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC1DCedRgGHBdm81E1llLhOQ&autoplay=1" target="search_iframe">Usada Pekora</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCl_gCybOJRIgOXw6Qb4qJzQ&autoplay=1" target="search_iframe">Uruha Rushia</a><br>
+        </div>
         <!--JP GEN 4-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">JP Gen 4</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCZlDXzGoo7d44bwdNObFacg&autoplay=1" target="search_iframe">Amane Kanata</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCS9uQI-jC3DE0L4IpXyvr6w&autoplay=1" target="search_iframe">Kiryu Coco</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCqm3BQLlJfvkTsX_hvm0UmA&autoplay=1" target="search_iframe">Tsunomaki Watame</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC1uv2Oq6kNxgATlCiez59hw&autoplay=1" target="search_iframe">Tokoyami Towa</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCa9Y57gfeY0Zro_noHRVrnw&autoplay=1" target="search_iframe">Himemori Luna</a><br>
+        </div>
         <!--JP GEN 5-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">JP Gen 5</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCFKOVgVbGmX65RxO3EtH3iw&autoplay=1" target="search_iframe">Yukihana Lamy</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCAWSyEs_Io8MtpY3m-zqILA&autoplay=1" target="search_iframe">Momosuzu Nene</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCUKD-uaobj9jiqB-VXt71mA&autoplay=1" target="search_iframe">Shishiro Botan</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCK9V2B22uJYu3N7eR_BT9QA&autoplay=1" target="search_iframe">Omaru Polka</a><br>
+        </div>
         <!--ID GEN 1-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        <div class="genselect">
+        <p class="gentitle">ID Gen 1</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCOyYb1c43VlX9rc_lT6NKQw&autoplay=1" target="search_iframe">Ayunda Risu</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCP0BspO_AMEe3aQqqpo89Dg&autoplay=1" target="search_iframe">Moona Hoshinova</a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCAoy6rzhSf4ydcYjJw3WoVg&autoplay=1" target="search_iframe">Airani Iofifteen</a><br>
+        </div>
         <!--ID GEN 2-->
-        <a href="https://www.youtube.com/embed/live_stream?channel=UCYz_5n-uDuChHtLo7My1HnQ&autoplay=1" target="search_iframe">Ollie</a><br>
+        <div class="genselect">
+        <p class="gentitle">ID Gen 2</p>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCYz_5n-uDuChHtLo7My1HnQ&autoplay=1" target="search_iframe">Kureiji Ollie</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        </div>
         <!--EN GEN 1-->
+        <div class="genselect">
+        <p class="gentitle">EN Gen 1</p>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=&autoplay=1" target="search_iframe"></a><br>
+        </div>
         
         
         
@@ -118,9 +175,9 @@
     <script>
     </script>
 
-    <div style="float: right; width: 100%; height: 100%;position: absolute;" id="player">
+    <div style="float: right; width: 100%; height: 100%;position: absolute; z-index: 0;" id="player">
         
-        <iframe src="https://schedule.hololive.tv/" width="100%" height="100%" name="search_iframe"></iframe>
+        <iframe src="https://schedule.hololive.tv/" width="100%" height="100%" frameBorder="0" name="search_iframe"></iframe>
 
     </div>
 </body>
