@@ -72,7 +72,7 @@ body{
     transition:150ms ease-in-out;
     overflow: hidden;
 }
-#player{
+#videoplayer{
     overflow:hidden;
     width: 100%;
     height: 100%;
