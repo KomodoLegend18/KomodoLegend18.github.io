@@ -9,13 +9,11 @@
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
     <!--<link rel="stylesheet" href="https://komodolegend18.github.io/projects/holo.css">-->
     <link rel="stylesheet" href="file:///C:/Users/Fandy/Documents/GitHub/KomodoLegend18.github.io/projects/holo.css">
-    <link rel="stylesheet" href="https://komodolegend18.github.io/projects/holo.css">
+    <!--<link rel="stylesheet" href="https://komodolegend18.github.io/projects/holo.css">-->
 </head>
 <body>
     <div id="help">
-        <p>v.14.4/7:35</p>
-        <p>Click on button below to change stream</p>
-        <a href="https://schedule.hololive.tv/" target="search_iframe">[ Schedule ]</a><br>
+        <p style="direction: ltr;">Click on button below to change stream</p>
         <!--JP GEN 0-->
         <div class="genselect">
         <p class="gentitle">JP Gen 0</p>
@@ -23,7 +21,8 @@
         <a href="https://www.youtube.com/embed/live_stream?channel=UC0TXe_LYZ4scaW2XMyi5_kw&autoplay=1" target="search_iframe"><button class="channel-button">AZKi</button></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UCDqI2jOz0weumE8s7paEk6g&autoplay=1" target="search_iframe"><button class="channel-button">Roboco</button></a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UC-hM6YJuNYVAmUWxeIr9FeA&autoplay=1" target="search_iframe"><button class="channel-button">Sakura Miko</button></a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=UC5CwaMl1eIgY8h02uZw7u8A&autoplay=1" target="search_iframe"><button class="channel-button">Hoshimachi Suisei</button></a><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UC5CwaMl1eIgY8h02uZw7u8A&autoplay=1" target="search_iframe"><button class="channel-button">Hoshimachi Suisei</button></a><br><br>
+
         </div>
         <!--JP GEN 1-->
         <div class="genselect">
@@ -98,15 +97,16 @@
         <a href="https://www.youtube.com/embed/live_stream?channel=UCHsx4Hqa-1ORjQTh9TYDhww&autoplay=1" target="search_iframe">Takanashi Kiara</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UCMwGHR0BTZuLsmjY_NT5Pwg&autoplay=1" target="search_iframe">Ninomae Ina'nis</a><br>
         <a href="https://www.youtube.com/embed/live_stream?channel=UCoSrY_IQQVpmIRZ9Xf-y93g&autoplay=1" target="search_iframe">Gawr Gura</a><br>
-        <a href="https://www.youtube.com/embed/live_stream?channel=UCyl1z3jo3XHR1riLFKG5UAg&autoplay=1" target="search_iframe">Amelia Watson</a>
-        </div><br>
+        <a href="https://www.youtube.com/embed/live_stream?channel=UCyl1z3jo3XHR1riLFKG5UAg&autoplay=1" target="search_iframe">Amelia Watson</a><br><br>
+        </div>
     </div>
+    
 
-    <script>
-    </script>
-
-    <div style="float: right; width: 100%; height: 100%;position: absolute; z-index: 0;" id="player">
-        <iframe src="https://schedule.hololive.tv/" width="100%" height="100%" frameBorder="0" name="search_iframe"></iframe>
+    <div style="float: right; width: 100%; height: 100%;position: absolute; z-index: 0;" class="player">
+        <iframe src="file:///C:/Users/Fandy/Documents/GitHub/KomodoLegend18.github.io/projects/HoloTV-Landing.html" width="100%" height="100%" frameBorder="0" name="search_iframe"><p>Hover to the left for channel menu, and hover to the right for schedule</p></iframe>
+    </div>
+    <div id="schedule">
+            <iframe src="https://schedule.hololive.tv/" width="100%" height="100%" frameBorder="0" name="holoschedule"></iframe>
     </div>
 </body>
 </html>
