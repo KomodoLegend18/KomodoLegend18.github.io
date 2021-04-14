@@ -11,6 +11,7 @@ body{
     position: relative;
 }
 #help{
+    display: inline-block;
     font-family: 'Ubuntu', 'Times New Roman';
     font-weight: bold;
     margin-top: 0;
