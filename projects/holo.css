@@ -49,6 +49,15 @@ body{
     overflow-x: hidden;
     background-color: rgba(56, 255, 228, 0.88);
 }
+/*#help:focus-within{
+    color: rgba(255, 255, 255, 0.88);
+    padding-right: 4px;
+    margin-left: 0%;
+    transition: 150ms ease-in-out;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: rgba(56, 255, 228, 0.88);
+}*/
 #schedule{
     display: block;
     font-family: 'Ubuntu', 'Times New Roman';
@@ -66,12 +75,14 @@ body{
     z-index: 2;
     cursor: default;
     transition:150ms ease-in-out;
-    overflow:hidden;
+    overflow:scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
 }
 #schedule:hover{
     padding-left: 0%;
     background-color: rgba(56, 255, 228, 0);
-    margin-left: 65vw;
+    margin-left: 66.3vw;
     transition:150ms ease-in-out;
     overflow: scroll;
     overflow-x: hidden;
@@ -102,6 +113,10 @@ body{
     transition: 50ms ease-in-out;
     background-color: gray;
 }
+.channel-button:focus{
+    transition: 50ms ease-in-out;
+    background-color: gray;
+}
 .channel-button:active {
     background-color: black;
     color: white;
@@ -122,4 +137,10 @@ body{
 .genselect:hover{
     outline: 5px solid white;
     transition:50ms ease-in;
+}
+#id:hover{
+    outline:5px solid red;
+}
+#en:hover{
+    outline: 5px solid purple;
 }
