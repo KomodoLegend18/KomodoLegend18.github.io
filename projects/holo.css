@@ -100,8 +100,8 @@ body{
 }
 .channel-button{
     direction: ltr;
-    width: 72vmin;
-    height: 25vh;
+    width: 110%;
+    height: 25%;
     background-color: white;
     border: none;
     cursor: pointer;
@@ -111,7 +111,9 @@ body{
     transition: 100ms ease-out;
     padding:0%;
     padding-left: 2vw;
+    padding-right: 2vw;
     margin-left: -2.8vh;
+    border: 10% lightblue;
 }
 .channel-button:hover{
     transition: 50ms ease-in-out;
@@ -134,8 +136,8 @@ body{
     outline: 10px solid rgba(255, 255, 255, 0);
     direction: ltr;
     margin-left: 0%;
-    padding-left: 3%;
-    padding-right: 3%;
+    padding-left: 6%;
+    padding-right: 6%;
     transition: 100ms ease-out;
 }
 .genselect:hover{
@@ -180,7 +182,7 @@ body{
 }
 #azki:hover{
     background-position: right,top;
-    transition:160ms ease-out;
+    transition:100ms ease-out;
 }
 #azki:active{
     filter: brightness(80%);
@@ -189,9 +191,10 @@ body{
 }
 #azki:focus{
     color: white;
+    background-size: 100%, 100%;
     background-position: right, top;
     background-color: rgb(255, 0, 128);
-    transition:160ms ease-out;
+    transition:320ms ease-in-out;
 }
 /*===*/
 #roboco{
