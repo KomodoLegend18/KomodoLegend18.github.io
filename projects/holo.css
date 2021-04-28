@@ -275,7 +275,7 @@ body{
 }
 #mel:active{
     filter: brightness(80%);
-    background-color: rgb(50, 53, 250);
+    background-color: rgb(255, 238, 89);
     transition:160ms ease-out;
 }
 #mel:focus{
