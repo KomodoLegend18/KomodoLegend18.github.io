@@ -262,3 +262,25 @@ body{
     background-color: rgb(49, 178, 253);
     transition:160ms ease-out;
 }
+/*===*/
+#mel{
+    background-image:url(https://komodolegend18.github.io/projects/assets/melbutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#mel:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#mel:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#mel:focus{
+    color: white;
+    background-position: right, top;
+    background-color: rgb(49, 178, 253);
+    transition:160ms ease-out;
+}
