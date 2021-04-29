@@ -100,7 +100,7 @@ body{
 }
 .channel-button{
     direction: ltr;
-    width: 110%;
+    width: 109%;
     height: 25%;
     background-color: white;
     border: none;
@@ -133,11 +133,12 @@ body{
     text-decoration: underline;
 }
 .genselect{
+    width: 87%;
     outline: 10px solid rgba(255, 255, 255, 0);
     direction: ltr;
-    margin-left: 0%;
+    margin-left: 0.33vw;
     padding-left: 6%;
-    padding-right: 6%;
+    padding-right: 2vw;
     transition: 100ms ease-out;
 }
 .genselect:hover{
