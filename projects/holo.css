@@ -9,16 +9,6 @@ h2{
     top: 0;
     position: sticky;
 }
-body{
-    overflow: hidden;
-    height: auto;
-    width: 100%;
-    border: none;
-    margin: 0px;
-    background-color: black;
-    position: relative;
-    scrollbar-color: rgba(56, 255, 228, 0.88) black;
-}
 #help{
     display: block;
     font-family: 'Ubuntu', 'Times New Roman';
