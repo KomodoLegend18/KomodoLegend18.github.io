@@ -10,6 +10,7 @@ h2{
     position: sticky;
 }
 body{
+    overflow: hidden;
     height: auto;
     width: 100%;
     border: none;
