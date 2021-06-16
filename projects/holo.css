@@ -149,14 +149,7 @@ h2{
     text-align: center;
 }
 .side-wrap{
-    float: left;
-    padding-top: 0;
-    width: 30%;
-    height: 150vh;
-    position: relative;
-    margin: auto;
-    margin-left: 2%;
-    background-color: blue;
+    
 }
 .card-wrap{
     float: left;
