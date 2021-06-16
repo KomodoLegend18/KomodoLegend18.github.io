@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 
-body{
-    color: white;
-    background-color: black;
-}
 h2{
     font-size: 5vmin;
 }
@@ -143,6 +139,7 @@ h2{
     outline: 0.7vmin solid white;
     transition:50ms ease-in;
 }
+<<<<<<< HEAD
 .content-wrap{
     width: 100%;
     height: 100%;
@@ -151,19 +148,19 @@ h2{
 .side-wrap{
     
 }
+=======
+>>>>>>> parent of b6f8a37 (Update holo.css)
 .card-wrap{
-    float: left;
-    background-color: yellow;
+    /*background-color: yellow;*/
     padding-top: 5vh;
-    width: 66%;
-    height: auto;
+    width: 90vw;
     position: relative;
     margin: auto;
-    margin-right: 2%;
 }
 .card{
     z-index: 1;
-    margin-left: 12%;
+    margin-left: 5vw;
+    margin-right: 5vw;
     margin-bottom: 6vw;
     width: 50vw;
     height: 58.5vh;
@@ -181,7 +178,6 @@ h2{
     z-index: 1;
     width: 50vw;
     height: auto;
-    position: relative;
     background-position: top;
     background-color: rgb(49, 49, 49);
     background-size: cover;
