@@ -6,14 +6,16 @@
     <meta content="https://komodolegend18.github.io/projects/HoloTV" property="og:url">
     <meta content="https://preview.redd.it/49v7a9w3qro51.jpg?width=507&format=pjpg&auto=webp&s=6cdda412b1fa77096e9ee912ae16f597d2ef4afc" property="og:image">
     <meta content="#00ffd6" data-react-helmet="true" name="theme-color">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- google icons -->
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
     <link rel="stylesheet" href="https://KomodoLegend18.github.io/projects/holo.css">
     <!-- <link rel="stylesheet" href="file:///C:/Users/Fandy/Documents/GitHub/KomodoLegend18.github.io/projects/holo.css"> -->
+    <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script>
 </head>
 <body style="overflow: hidden; height: auto; width: 100%; border: none; margin: 0px; background-color: black; position: relative; scrollbar-color: rgba(56, 255, 228, 0.88) black;">
     <div id="help" tabindex="1">
 
-        <p style="direction: ltr; background-color: rgba(56, 255, 228, 0.90); color: black; height: 6%; width: 101% ;margin-top: 0%; margin-right: -1%;" id="sticky">Click on button below to change stream<br><a href="#jp">HOLOJP</a> | <a href="#id">HOLOID</a> | <a href="#en">HOLOEN</a></p>
+        <p style="direction: ltr; background-color: rgba(56, 255, 228, 0.90); color: black; height: 6%; width: 101% ;margin-top: 0%; margin-right: -1%; font-size: 1vmax;" id="sticky">Click on button below to specific section<br><a href="#jp">HOLOJP</a> | <a href="#id">HOLOID</a> | <a href="#en">HOLOEN</a></p>
         <div id="jp"></div>
         <!--JP GEN 0-->
         <div class="genselect">
@@ -107,11 +109,17 @@
     </div>
     <div id="schedule">
             <!-- schedule top -->
-            <div style="height: 10%; background-color: white; margin-top: 0%; color: white;">
-                <a href="https://schedule.hololive.tv/" target="holoschedule" tabindex="-1" style="margin-top: 50%;">Reload Schedule</a>
+            <div style="height: 8vh; direction: ltr; background-color: rgba(56, 255, 228, 1); color: black; margin-top: -10%; margin-right: -1%; font-size: 1vmax;" id="sticky">
+                <p>*Schedule in JST<span style="float: right; margin-right: 2%;">JST: <span class="clock" timezone="+9"></span></span>
+                <br>
+                **Currently running livestreams is marked with red border
+                <a href="https://schedule.hololive.tv/" target="holoschedule" tabindex="-1" style="margin-top: 50%;">
+                <span class="material-icons" style="font-size: 5vh; text-decoration: none; color: black; float: right; margin-right: 1%;" title="Reload Schedule">refresh</span>
+                </a>
+                </p>
             </div>
             <!-- schedule -->
-            <iframe src="https://schedule.hololive.tv/" width="100%" height="100%" frameBorder="0" name="holoschedule" tabindex="-1"></iframe>
+            <iframe style="margin-top: -15.1%;" src="https://schedule.hololive.tv/" width="100%" height="108%" frameBorder="0" name="holoschedule" tabindex="-1"></iframe>
     </div>
 </body>
 </html>
