@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+body{
+    margin-top: 0%;
+    overflow: hidden;
+}
+
+h2{
+    font-size: 5vmin;
+}
+#sticky{
+    z-index: 2;
+    top: 0;
+    position: sticky;
+}
+#help{
+    display: block;
+    font-family: 'Ubuntu', 'Times New Roman';
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: -2%;
+    margin-left: -36%;
+    float: bottom;
+    width: 35vw;
+    height: 100vh;
+    color:rgba(255, 255, 255, 0);
+    background-color: rgba(56, 255, 228, 0.5);
+    position: absolute;
+    padding-left: 0;
+    padding-right: 1%;
+    z-index: 2;
+    cursor: default;
+    transition:150ms ease-in-out;
+    overflow:hidden;
+    direction: rtl;
+    opacity: 30%;
+}
+#help s{
+    cursor: not-allowed;
+    color: gray;
+}
+#help:hover{
+    opacity: 100%;
+    color: rgba(255, 255, 255, 0.88);
+    padding-right: 4px;
+    margin-left: -0.6%;
+    transition: 150ms ease-in-out;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: rgba(56, 255, 228, 0.88);
+}
+/*#help:focus-within{
+    color: rgba(255, 255, 255, 0.88);
+    padding-right: 4px;
+    margin-left: 0%;
+    transition: 150ms ease-in-out;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: rgba(56, 255, 228, 0.88);
+}*/
+#schedule{
+    display: block;
+    font-family: 'Ubuntu', 'Times New Roman';
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: -2%;
+    margin-left: 99.8vw;
+    float: bottom;
+    width: 35vw;
+    height: 100vh;
+    color:rgba(255, 255, 255, 0);
+    background-color: rgba(56, 255, 228, 0.5);
+    position: absolute;
+    padding-left: 1.5vw;
+    z-index: 2;
+    cursor: default;
+    transition:150ms ease-in-out;
+    overflow:scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+#schedule:hover{
+    padding-left: 0%;
+    background-color: rgba(56, 255, 228, 0);
+    margin-left: 66.3vw;
+    transition:150ms ease-in-out;
+    overflow: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+#videoplayer{
+    overflow:hidden;
+    width: 100vw;
+    height: 100vh;
+    float: right;
+    position: absolute;
+    z-index: 0;
+    left: 0%;
+    top: 0%;
+}
+.channel-button{
+    direction: ltr;
+    width: 109%;
+    height: 25%;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: left;
+    font-size: 4vmin;
+    transition: 100ms ease-out;
+    padding:0%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    margin-left: -2.8vh;
+    border: 10% lightblue;
+}
+.channel-button:hover{
+    transition: 50ms ease-in-out;
+    background-color: rgba(31,230,203, 255);
+}
+.channel-button:focus{
+    transition: 50ms ease-in-out;
+    background-color: gray;
+}
+.channel-button:active {
+    background-color: black;
+    color: white;
+    transition: 10ms ease-out;
+}
+.gentitle{
+    direction: ltr;
+    text-decoration: underline;
+}
+.genselect{
+    width: 87%;
+    outline: 10px solid rgba(255, 255, 255, 0);
+    direction: ltr;
+    margin-left: 0.33vw;
+    padding-left: 6%;
+    padding-right: 2vw;
+    transition: 100ms ease-out;
+}
+.genselect:hover{
+    outline: 0.7vmin solid white;
+    transition:50ms ease-in;
+}
+
+.content-wrap{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+/* .side-wrap{
+    
+} */
+
+.card-wrap{
+    /*background-color: yellow;*/
+    padding-top: 5vh;
+    width: 90vw;
+    position: relative;
+    margin: auto;
+}
+.card{
+    z-index: 1;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    margin-bottom: 6vw;
+    width: 50vw;
+    height: 58.5vh;
+    background-position: top;
+    background-color: rgb(58, 58, 58);
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 10px 10px 0px 0px;
+    float: left;
+    -webkit-box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+    box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+}
+.card-desc{
+    z-index: 1;
+    width: 50vw;
+    height: auto;
+    background-position: top;
+    background-color: rgb(49, 49, 49);
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 0px 0px 10px 10px;
+    float: left;
+    -webkit-box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+    box-shadow: 0px 8px 34px -2px rgba(0,0,0,0.26);
+    color: rgb(255, 255, 255);
+}   
+#id:hover{
+    outline:5px solid red;
+}
+#en:hover{
+    outline: 5px solid purple;
+}
+
+/*Talent*/
+#sora{
+    background-image:url(https://komodolegend18.github.io/projects/assets/sorabutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#sora:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#sora:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#sora:focus{
+    color: white;
+    background-position: right, top;
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+/*===*/
+#azki{
+    background-image:url(https://komodolegend18.github.io/projects/assets/azkibutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#azki:hover{
+    background-position: right,top;
+    transition:100ms ease-out;
+}
+#azki:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#azki:focus{
+    color: white;
+    background-size: 100%, 100%;
+    background-position: right, top;
+    background-color: rgb(255, 0, 128);
+    transition:320ms ease-in-out;
+}
+/*===*/
+#roboco{
+    background-image:url(https://komodolegend18.github.io/projects/assets/robocobutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#roboco:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#roboco:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#roboco:focus{
+    color: white;
+    background-position: right, top;
+    background-color: rgb(255, 0, 34);
+    transition:160ms ease-out;
+}
+/*===*/
+#miko{
+    background-image:url(https://komodolegend18.github.io/projects/assets/mikobutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#miko:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#miko:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#miko:focus{
+    color: white;
+    background-position: right, top;
+    background-color: hotpink;
+    transition:160ms ease-out;
+}
+/*===*/
+#sui{
+    background-image:url(https://komodolegend18.github.io/projects/assets/suibutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#sui:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#sui:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#sui:focus{
+    color: white;
+    background-position: right, top;
+    background-color: rgb(49, 178, 253);
+    transition:160ms ease-out;
+}
+/*===*/
+#mel{
+    background-image:url(https://komodolegend18.github.io/projects/assets/melbutton.png), url(https://komodolegend18.github.io/projects/assets/triangle.svg);
+    background-size:contain,cover;
+    background-position: right,bottom;
+    background-repeat: no-repeat;
+}
+#mel:hover{
+    background-position: right,top;
+    transition:160ms ease-out;
+}
+#mel:active{
+    filter: brightness(80%);
+    background-color: rgb(50, 53, 250);
+    transition:160ms ease-out;
+}
+#mel:focus{
+    color: white;
+    background-position: right, top;
+    background-color: rgb(252, 255, 56);
+    transition:160ms ease-out;
+}
