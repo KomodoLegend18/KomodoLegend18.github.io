@@ -7,17 +7,22 @@
     <meta content="https://preview.redd.it/49v7a9w3qro51.jpg?width=507&format=pjpg&auto=webp&s=6cdda412b1fa77096e9ee912ae16f597d2ef4afc" property="og:image">
     <meta content="#00ffd6" data-react-helmet="true" name="theme-color">
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
-    <link rel="stylesheet" href="https://komodolegend18.github.io/projects/holoradio.css">
-    <!-- <link rel="stylesheet" href="file:///C:/Users/Fandy/Documents/GitHub/KomodoLegend18.github.io/projects/holoradio.css"> -->
+    <!-- <link rel="stylesheet" href="https://komodolegend18.github.io/projects/holoradio.css"> -->
+    <link rel="stylesheet" href="file:///C:/Users/Fandy/Documents/GitHub/KomodoLegend18.github.io/projects/holoradio.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+    <div id="player"></div>
+    <p id="mobiletext" style="width: 100vmax; float:left; padding-top: 350px;">aaaaaaa</p>
+        
+        
     <div id="help">
         <img src="https://komodolegend18.github.io/projects/assets/1.png" id="jsimg" style="width: 100%;">
         <a href="https://komodolegend18.github.io" target="_blank" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Play Current Music to Update Data | Open Current Song in YouTube</a>
         <p style="width: 100%;background-color: gray;">Keyboard Shortcuts</p>
         <p>12/4/3:13</p>
-        <button onclick="komocount=200" style="width: 50%; height: auto;">[DEBUG]</button>
-        <p>Click [DEBUG] to simulate 200 played songs and press 9 or go to the end of the song (don't skip/shift+n) to test playlist switching</p>
+        <!-- <button onclick="komocount=200" style="width: 50%; height: auto;">[DEBUG]</button> -->
+        <!-- <p>Click [DEBUG] to simulate 200 played songs and press 9 or go to the end of the song (don't skip/shift+n) to test playlist switching</p> -->
         <p>Spacebar or [k]: Play / Pause</p><br>
         <p>Arrow Left: Jump back 5 seconds in the current video</p><br>
         <p>Arrow Right: Jump ahead 5 seconds in the current video</p><br>
@@ -30,7 +35,7 @@
         <p>[0-9]: Jump to a point in the video. 0 jumps to the beginning of the video, 1 jumps to the point 10% into the video, 2 jumps to the point 20% into the video, and so forth.</p>
     </div>
 
-    <div style="float: right; width: 101%; height: 100%;position: absolute; margin-left: -1%;" id="player"></div>
+    
     <script>
         /* Replace This Code - get Value from playlist page and place it here */
         var playlistId = "PLowuZgbBgs5XvlwDBAf5eBuL1BQRQpaGE";
@@ -112,6 +117,7 @@
         // title, video_id, author, video_quality, video_quality_features, list
         // document.title = "HOLORADIO || "+player.getVideoData().title+" || "+player.getVideoData().author;
         document.title = "Welcome to HOLORADIO";
+        document.getElementById("mobiletext").innerHTML =player.getVideoData().title;
 
         // console.log("event status="+event.data);
         // console.log("Counter="+komocount);
