@@ -9,7 +9,14 @@ body{
     margin-top: 0%;
     overflow: hidden;
 }
-
+#player{
+    aspect-ratio: auto 16/9;
+    float: right;
+    width: 101vw;
+    height: 100%;
+    position: absolute;
+    margin-left: -1%;
+}
 h2{
     font-size: 5vmin;
 }
@@ -198,7 +205,7 @@ h2{
 }
 }
 /* Desktop */
-@media only screen and (min-width: 601px){
+/* @media only screen and (min-width: 401px){
     #player{
         aspect-ratio: auto 16/9;
         float: right;
@@ -208,18 +215,18 @@ h2{
         margin-left: -1%;
     }
     body{
-        /* background-color: hotpink; */
+        background-color: hotpink;
     }
     #mobiletext{
         visibility: hidden;
     }
-}
+} */
 
 /* screen upto 400px */
-@media (max-width: 600px){
+/* @media (max-width: 400px){
     #player{
         float: left;
-        /* width: 100%; */
+        width: 100%;
         aspect-ratio: 16/9;
         position: absolute;
         margin-left: -1%;
@@ -237,7 +244,7 @@ h2{
         visibility: visible;
         color: white;
     }
-}
+} */
 
 
 
