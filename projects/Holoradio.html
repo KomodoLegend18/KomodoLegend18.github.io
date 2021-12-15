@@ -19,6 +19,7 @@
     <div id="help">
         <img src="https://komodolegend18.github.io/projects/assets/1.png" id="jsimg" style="width: 100%; aspect-ratio: 16/9;">
         <a href="https://komodolegend18.github.io" target="_blank" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Play Current Music to Update Data | Open Current Song in YouTube</a>
+        <p>Open Developer Console (f12 / ctrl+shift+i) to see Song name and Artist</p>
         <p style="width: 100%;background-color: gray;">Keyboard Shortcuts</p>
         <p>12/4/3:13</p>
         <!-- <button onclick="komocount=200" style="width: 50%; height: auto;">[DEBUG]</button> -->
@@ -39,6 +40,7 @@
     <script>
         /* Replace This Code - get Value from playlist page and place it here */
         var playlistId = "PLowuZgbBgs5XvlwDBAf5eBuL1BQRQpaGE";
+        var playlistId2 = "PLowuZgbBgs5W1do79sWC1nYHsmbc7pW5M";
         var tag = document.createElement('script');
             tag.src = "https://www.youtube.com/iframe_api";
     
@@ -78,6 +80,10 @@
         var oldNumber = 0;
         var NewNumber = 0;
         var komocount = 0;
+
+        var channelname = 'null';
+        var songname = 'null';
+        
     
         // function newRandomNumber() {
         //     oldNumber = NewNumber;
@@ -119,6 +125,27 @@
         document.title = "Welcome to HOLORADIO";
         document.getElementById("mobiletext").innerHTML =player.getVideoData().title;
 
+        fetch('https://holodex.net/api/v2/videos/'+player.getVideoData().video_id, { 
+            method: 'GET'
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(json) {
+        // use the json below
+        // print json to console
+        console.log(json);
+        // set variable channelname
+        channelname=player.getVideoData().author;
+        channelname=json.channel.english_name;
+        // print channel name to console
+        // console.log(channelname);
+        // set variable songname
+        songname=player.getVideoData().title;
+        songname=json.songs[0].name;
+        // print song name to console
+        // console.log(songname);
+        });
+        
+
         // console.log("event status="+event.data);
         // console.log("Counter="+komocount);
 
@@ -130,21 +157,26 @@
         // YT.PlayerState.ENDED //backup
 
         // If Video Played, Show this in console
-        if (event.data == 1){
+        if (event.data == 1){         
             // Show now playing in Dev Console f12
-            console.log('Now Playing :\n%c'+player.getVideoData().title+"\nby "+player.getVideoData().author, 'background: rgba(56, 255, 228, 0.5); color: black; font-size: 200%');
+            console.log('Now Playing :\n%c'+songname+"\nby "+channelname, 'background: rgba(56, 255, 228, 0.5); color: black; font-size: 200%');
+
             // Set Now Playing Song as Page Title
-            document.title = "Now Playing : "+player.getVideoData().title+" || "+player.getVideoData().author;
+            document.title = "Now Playing : "+songname+" || "+channelname;
+
             // Set Title after 10 Secs
             setTimeout(function() {
-                document.title = "HOLORADIO || "+player.getVideoData().title+" || "+player.getVideoData().author;
+                document.title = "HOLORADIO || "+songname+" || "+channelname;
             }, 10000);
+
             // Add ID of current song to button
-            document.getElementById("jsurl").innerHTML =player.getVideoData().video_id+" | Open Current Song in YouTube";
+            document.getElementById("jsurl").innerHTML =player.getVideoData().author+" | Open Current Song in YouTube";
             // Get URL of current song
             document.getElementById("jsurl").href="https://youtu.be/"+player.getVideoData().video_id;
             // Get Max Resolution Thumbnail of Current Song and put it in sidebar
             document.getElementById("jsimg").src="https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg";
+
+            
         }
         if (event.data == 2){
                     document.title = "Paused : "+player.getVideoData().title+" || "+player.getVideoData().author;
@@ -152,10 +184,27 @@
 
         // If Playlist end, do this
         if (event.data == YT.PlayerState.ENDED) {
-            komocount=komocount+201;
+            // komocount=komocount+201;
             // Play next video after playlist end
-            player.playVideo();
-            player.playVideoAt(newRandomNumber());
+            // player.playVideoAt(1);
+            player.stopVideo()
+            player.loadPlaylist({
+                    'listType': 'playlist',
+                    'list': playlistId2
+                });
+            setTimeout(function() {
+                player.setShuffle({'shufflePlaylist' : true});
+                player.playVideoAt(0);
+                // player.cuePlaylist({
+                //     'list': playlistId2
+                // });
+            }, 2*1000);
+            
+            console.log(event.data);
+            
+            // player.setShuffle({'shufflePlaylist' : true});
+            // player.playVideo();
+            
             console.log("Player state ended");
         }
         // Else, do this
@@ -171,10 +220,10 @@
                 console.log("firstLoad && event.data == YT.PlayerState.PLAYING");
             }
         }
-        if (komocount>200){
-            //window.location.reload();
-            window.location.replace("https://komodolegend18.github.io/projects/Holoradio2");
-        }
+        // if (komocount>200){
+        //     //window.location.reload();
+        //     // window.location.replace("https://komodolegend18.github.io/projects/Holoradio2");
+        // }
     }
     
     function onPlayerError(event) {
@@ -184,7 +233,6 @@
     }
     // newPageTitle = player.getVideoUrl();
     // document.title = newPageTitle;
-    
     </script>
 </body>
 </html>
