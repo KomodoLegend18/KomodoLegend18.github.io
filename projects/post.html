@@ -4,27 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Webhook Tutorial</title>
-    
+    <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script>
   </head>
   <body>
+    <span id="tosend" class="clock" timezone="+8"></span>
     <button onclick="sendMessage()">Send</button>
   </body>
 
   <script>
-    var msg = prompt("Input Message:");
+    // var msg = prompt("Input Message:");
     function sendMessage() {
+      var span_Text = document.getElementById("tosend").innerText;
+      console.log(span_Text)
       var request = new XMLHttpRequest();
-      request.open("POST", "https://discord.com/api/webhooks/854773493110800386/GfVUHJT_BLJnMzQFqejq67PzejzZtdwNs0Rwtv604OcfL2G1bZyL970E15Q_bwqn4ul2");
+      request.open("POST", "https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez?thread_id=935558529102790696");
 
       request.setRequestHeader('Content-type', 'application/json');
 
       var params = {
         username: "My Webhook Name",
-        avatar_url: "",
-        content: msg
+        avatar_url: "https://cdn.discordapp.com/avatars/445546636530155520/1d240f6ee6effe388a341bb97c3a1deb.png?size=4096",
+        content: span_Text
       }
 
       request.send(JSON.stringify(params));
+      console.log(params.content);
     }
   </script>
 </html>

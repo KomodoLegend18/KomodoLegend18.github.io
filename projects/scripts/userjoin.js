@@ -15,10 +15,26 @@ function userjoin() {
     // alert('ok!');
 }
 window.onload = userjoin;
+
 window.onbeforeunload = function userleave() {
     var leavemsg = ':red_circle: user attempted to leave the website';
     var request = new XMLHttpRequest();
     request.open("POST", "https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez?thread_id=935558529102790696");
+
+    komocount=0
+    fetch(patchurl, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      })
+      .then(response => {
+        return response.json();
+      }).then(jsonResponse => {
+        console.log('Deleted: '+jsonResponse);
+      }).catch (error => {
+        console.log(error)
+      })
 
     request.setRequestHeader('Content-type', 'application/json');
 

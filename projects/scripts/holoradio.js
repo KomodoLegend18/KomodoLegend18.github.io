@@ -139,7 +139,14 @@ function onPlayerStateChange(event) {
         // Get Max Resolution Thumbnail of Current Song and put it in sidebar
         document.getElementById("jsimg").src="https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/hqdefault.jpg";
 
-        usersong();
+        // post to webhook
+        if (komocount==0){
+            usersong();
+        }
+        if (komocount==1){
+            patchusersong();
+        }
+        
     }
     if (event.data == 2){
                 document.title = player.getVideoData().title+" || "+player.getVideoData().author;
