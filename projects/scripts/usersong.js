@@ -13,7 +13,7 @@ function usersong() {
     }
 
     request.send(JSON.stringify(params));
-    postrespond = request.responseText
-    console.log(postrespond)
+    
+    // console.log(postrespond)
     // alert('ok!');
 }
