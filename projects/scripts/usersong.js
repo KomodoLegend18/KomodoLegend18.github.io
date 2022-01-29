@@ -1,6 +1,6 @@
 function usersong() {
     // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
-    var songmsg = "\nNow Playing : "+playlistindex+"/200"+"\nhttps://youtu.be/"+player.getVideoData().video_id;
+    var songmsg = "\nNow Playing "+playlistindex+"/200 :"+"\nhttps://youtu.be/"+player.getVideoData().video_id;
     
     var params = {
       username: "holoRadio",
@@ -23,7 +23,7 @@ function usersong() {
     }).then(jsonResponse => {
       komocount=1
       postid=jsonResponse.id
-      console.log('POST: '+postid);
+      console.log('POST: '+jsonResponse);
     }).catch (error => {
       console.log(error)
     })
