@@ -20,11 +20,23 @@
 <body>
     <div id="player"></div>
     <p id="mobiletext" style="width: 100vmax; float:left; padding-top: 350px;"></p>
-        
+    <script>
+        function killwebhookmsg(){
+            var patchurl = 'https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez/messages/'+postid
+
+            fetch(patchurl, {
+            method: "DELETE",
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            })
+        }
+    </script>   
         
     <div id="help">
         <img src="https://komodolegend18.github.io/projects/assets/1.png" id="jsimg" style="width: 100%; aspect-ratio: 16/9;">
         <a href="https://komodolegend18.github.io" target="_blank" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Play Current Music to Update Data | Open Current Song in YouTube</a>
+        <button onclick="killwebhookmsg()" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Remove Webhook Message</button>
         <p>Open Developer Console (f12 / ctrl+shift+i) to see Song name and Artist</p>
         <p style="width: 100%;background-color: gray;">Keyboard Shortcuts</p>
         <p>12/4/3:13</p>
