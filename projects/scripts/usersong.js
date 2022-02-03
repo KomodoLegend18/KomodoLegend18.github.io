@@ -23,7 +23,7 @@ function usersong() {
     }).then(jsonResponse => {
       komocount=1
       postid=jsonResponse.id
-      console.log('POST: '+jsonResponse);
+      console.log(JSON.stringify(jsonResponse));
     }).catch (error => {
       console.log(error)
     })
