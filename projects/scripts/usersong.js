@@ -8,7 +8,7 @@ function usersong() {
       content: songmsg
     }
     
-    fetch("https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez?wait=true", {
+    fetch(localStorage.hookID+"?wait=true", {
     method: "POST",
     headers: {
       'Accept': 'application/json',
