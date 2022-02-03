@@ -1,4 +1,4 @@
-function userjoin() {
+window.onload = function userjoin() {
     var joinmsg = ':green_circle: successfully attached website to webhook';
     var request = new XMLHttpRequest();
     request.open("POST", localStorage.hookID);
@@ -14,7 +14,6 @@ function userjoin() {
     request.send(JSON.stringify(params));
     // alert('ok!');
 }
-window.onload = userjoin;
 
 window.onbeforeunload = function userleave() {
     var leavemsg = ':red_circle: user attempted to leave the website';
