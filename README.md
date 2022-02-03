@@ -1,3 +1,4 @@
+thx random stranger that pinged @everyone for the heads up, didn't expect anyone would be looking at my messy github page lol
 # [KomodoLegend18.github.io](https://komodolegend18.github.io) | My Personal Github Page
 |Content Name|Description|
 |---|---|
