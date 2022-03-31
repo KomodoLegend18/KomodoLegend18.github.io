@@ -55,6 +55,7 @@ h2{
     opacity: 100%;
     color: rgba(255, 255, 255, 0.88);
     padding-right: 4px;
+    margin-top: 0;
     margin-left: -0.6%;
     transition: 150ms ease-in-out;
     overflow: scroll;
@@ -204,6 +205,39 @@ h2{
     outline: 5px solid purple;
 }
 }
+
+/* HOLORADIO SECTION */
+#playermenu{
+    direction: ltr;
+    background-color: aquamarine;
+    width: 100%;
+}
+#playermenu p{
+    text-align: center;
+    margin-bottom: 2;
+    font-size: 1.3vw;
+}
+#webhookid{
+    text-align: center;
+    font-size: 1.3vw;
+    width: 100%;
+}
+#webhookidbtn{
+    font-size: 3vh;
+    width: 100%;
+}
+#customplaylist{
+    text-align: center;
+    font-size: 1.3vw;
+    width: 100%;
+}
+#customplaylistbtn{
+    font-size: 3vh;
+    width: 100%;
+}
+
+/* END OF HOLORADIO SECTION */
+
 /* Desktop */
 /* @media only screen and (min-width: 401px){
     #player{

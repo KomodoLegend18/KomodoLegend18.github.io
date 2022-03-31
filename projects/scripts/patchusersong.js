@@ -1,11 +1,26 @@
 function patchusersong() {
     // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
-    var patchedsongmsg = "\nNow Playing "+playlistindex+"/200 :"+"\nhttps://youtu.be/"+player.getVideoData().video_id;
+    var patchedsongmsg = "\nNow Playing "+playlistindex+"/"+player.getPlaylist().length+" :"+"\nhttps://youtu.be/"+player.getVideoData().video_id+" from: https://youtube.com/playlist?list="+player.getPlaylistId();
     
     var patchurl = localStorage.hookID+'/messages/'+postid
 
+    var songembeds = {
+      title:player.getVideoData().title,
+      description:"there",
+      image: {
+        url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/hqdefault.jpg"
+      },
+      author:{
+        name:"holoradio"
+      },
+      color: 5814783
+    }
+  
     var patchparams = {
-      content: patchedsongmsg
+      username: "holoRadio",
+      avatar_url: "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png",
+      content: patchedsongmsg,
+      embeds: [songembeds]
     }
 
     fetch(patchurl, {

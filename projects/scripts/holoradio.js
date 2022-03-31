@@ -14,7 +14,7 @@
             //height: '100%',
             //width: '100%',
             playerVars: {
-                autoplay: 0,        // Auto-play the video on load
+                autoplay: 1,        // Auto-play the video on load
                 controls: 1,        // Show pause/play buttons in player
                 modestbranding: 1,  // Hide the Youtube Logo
                 loop: 1,            // Run the video in a loop
@@ -161,7 +161,7 @@ function onPlayerStateChange(event) {
         player.loadPlaylist({
                 'listType': 'playlist',
                 'list': playlistId2
-            });
+        });
         setTimeout(function() {
             player.setShuffle({'shufflePlaylist' : true});
             player.playVideoAt(0);

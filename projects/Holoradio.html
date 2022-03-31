@@ -13,6 +13,7 @@
     <script src="https://komodoLegend18.github.io/projects/scripts/userjoin.js"></script>
     <script src="https://komodoLegend18.github.io/projects/scripts/usersong.js"></script>
     <script src="https://komodoLegend18.github.io/projects/scripts/patchusersong.js"></script>
+    <script src="https://komodoLegend18.github.io/projects/scripts/userleave.js"></script>
 </head>
 <body onload="load()">
     <div id="player"></div>
@@ -26,10 +27,10 @@
     </script>   
         
     <div id="help">
-        <img src="https://komodolegend18.github.io/projects/assets/1.png" id="jsimg" style="width: 100%; aspect-ratio: 16/9;">
+        <img src="https://komodolegend18.github.io/projects/assets/holoradio.jpg" id="jsimg" style="width: 100%; aspect-ratio: 16/9;">
         <a href="https://komodolegend18.github.io" target="_blank" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Play Current Music to Update Data</a>
 
-        <div id="webhooks">
+        <div id="playermenu">
             <script>
                 function save(){
                     if (typeof(Storage) !== "undefined") {
@@ -40,16 +41,52 @@
                     document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
                     }
                 }
+                function saveytpl(){
+                    if (typeof(Storage) !== "undefined") {
+                    // Store
+                    localStorage.setItem("CustomPlaylistID", document.getElementById("customplaylist").value);
+                    alert(`YouTube Playlist URL Set as: \n${localStorage.CustomPlaylistID}`)
+                    player.stopVideo()
+                    player.loadPlaylist({
+                        'listType': 'playlist',
+                        'list': localStorage.CustomPlaylistID
+                    });
+                    } else {
+                    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+                    }
+                }
                 function load(){
                     // Retrieve
                     document.getElementById("webhookid").value = localStorage.getItem("hookID");
+                    loadytpl()
+                }
+                function loadytpl(){
+                    // Retrieve
+                    document.getElementById("customplaylist").value = localStorage.getItem("CustomPlaylistID");
+                }
+                function loadsong(){
+                    player.stopVideo()
+                    player.loadVideoById({
+                        'videoId': document.getElementById("inputloadsong").value
+                    });
                 }
             </script>
+            
             <button onclick="killwebhookmsg()" id="jsurl" style="background-color: red; color: white; text-decoration: none; text-align: center;">Remove Webhook Message</button>
         </br>
         </br>
-            <input id="webhookid" type="text" placeholder="Webhook URL">
-            <button onclick="save()">Save Webhook URL</button>
+            <p>Discord Webhook</p>
+            <input title="You can display currently playing songs on Discord by inputting Discord Webhook URL" id="webhookid" type="text" placeholder="Discord Webhook URL">
+            <button id="webhookidbtn" onclick="save()">Save Webhook URL</button>
+        </br>
+        </br>
+            <p>YouTube Playlist</p>
+            <input title="Don't like current playlist?, You can use your own YouTube playlist by inputting YT playlist ID into the text box" id="customplaylist" type="text" placeholder="YT Playlist ID e.g:PLprEdbWR-1w2LlYWKStehqqa2P6sNALPc">
+            <button id="customplaylistbtn" onclick="saveytpl()">Save YouTube Playlist ID</button>
+        </br>
+        </br>
+        <input id="inputloadsong" type="text" placeholder="YT Video ID e.g:XD1t7JHbge0">
+        <button id="customsong" onclick="loadsong()">Load Song</button>
         </div>
         
         <p>Open Developer Console (f12 / ctrl+shift+i) to see Song name and Artist</p>
