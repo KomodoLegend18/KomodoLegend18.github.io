@@ -8,7 +8,7 @@ function patchusersong() {
       title:player.getVideoData().title,
       description:"there",
       image: {
-        url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/hqdefault.jpg"
+        url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
       },
       author:{
         name:"holoradio"
