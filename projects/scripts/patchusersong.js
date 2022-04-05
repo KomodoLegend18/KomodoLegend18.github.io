@@ -1,6 +1,7 @@
 function patchusersong() {
     // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
     var patchedsongmsg = "\nNow Playing "+playlistindex+"/"+player.getPlaylist().length+" :"+"\nhttps://youtu.be/"+player.getVideoData().video_id+" from: https://youtube.com/playlist?list="+player.getPlaylistId();
+    var songplaylist = `https://youtube.com/playlist?list=${player.getPlaylistId()}`
     
     var patchurl = localStorage.hookID+'/messages/'+postid
 
