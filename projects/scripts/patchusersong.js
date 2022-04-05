@@ -6,7 +6,7 @@ function patchusersong() {
 
     var songembeds = {
       title:player.getVideoData().title,
-      description:"there",
+      description:`[Playlist](${songplaylist})`,
       image: {
         url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
       },
