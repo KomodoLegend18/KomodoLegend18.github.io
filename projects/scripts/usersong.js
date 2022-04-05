@@ -1,10 +1,11 @@
 function usersong() {
   // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
-  var songmsg = "\nNow Playing "+playlistindex+"/"+player.getPlaylist().length+":\nhttps://youtu.be/"+player.getVideoData().video_id+" from: https://youtube.com/playlist?list="+player.getPlaylistId();;
-  
+  var songmsg = "\nNow Playing "+playlistindex+"/"+player.getPlaylist().length+":\nhttps://youtu.be/"+player.getVideoData().video_id+" from: https://youtube.com/playlist?list="+player.getPlaylistId();
+  var songplaylist = `https://youtube.com/playlist?list=${player.getPlaylistId()}`
+
   var songembeds = {
     title:player.getVideoData().title,
-    description:"there",
+    description:`[Playlist](${songplaylist})`,
     image: {
       url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
     },
@@ -15,7 +16,7 @@ function usersong() {
   }
 
   var params = {
-    username: "holoRadio",
+    username: `holoradio | ${navigator.appCodeName}/${navigator.platform}/${navigator.language} (remind me to add a more unique id later)`,
     avatar_url: "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png",
     content: songmsg,
     embeds: [songembeds]
