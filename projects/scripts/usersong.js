@@ -10,7 +10,7 @@ function usersong() {
       url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
     },
     author:{
-      name:"holoradio"
+      name:`holoRadio | ${player.getVideoData().author}`
     },
     color: 5814783
   }
