@@ -83,7 +83,6 @@ function onPlayerStateChange(event) {
     // title, video_id, author, video_quality, video_quality_features, list
     // document.title = "HOLORADIO || "+player.getVideoData().title+" || "+player.getVideoData().author;
     // document.title = "Welcome to HOLORADIO";
-    document.getElementById("mobiletext").innerHTML =player.getVideoData().title;
 
     fetch('https://holodex.net/api/v2/videos/'+player.getVideoData().video_id, { 
         method: 'GET'
