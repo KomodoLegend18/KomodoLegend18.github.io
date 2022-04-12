@@ -7,15 +7,15 @@
   animation: background 2s cubic-bezier(1,1,1,1) infinite;  
 }
 @-webkit-keyframes background {
-  0% { background-color: #11D5DF; }
+  0% { background-color: #007b81; }
   50% { background-color: #53DFD8; }  
-  100% { background-color: #11D5DF; }
+  100% { background-color: #538486; }
 }
 
 @keyframes background {
-  0% { background-color: #11D5DF;}
+  0% { background-color: #007b81;}
   50% { background-color: #53DFD8;}  
-  100% { background-color: #11D5DF;}
+  100% { background-color: #538486;}
 }
 
 #Container {
@@ -334,70 +334,6 @@
 	background:#FFFFFF;
 }
 .scrollQuickAccess{
-	position:inherit;
-	overflow-x:hidden;
-	overflow-y:scroll;
-	overflow-style:marquee-block;
-	left:443px;
-	width:100%;
-	height:272px;
-}
-
-/*==================================================ITK ACCESS SCRIPT=======================================================*/
-#ContainerITKAccess {
-	padding-bottom:10px;
-	margin:auto;
-	width: 81%;
-	height: 398px;
-	background-image:url(../assets/triangle.svg);
-	background-repeat:no-repeat;
-	background-color:#CCCCCC;
-	background-position:top;
-}
-.buttonITKAccess {
-	font-family:"DFGGothic-SU"; 
-    border: solid #2D2D2D;
-	border-width:5px 5px 5px 5px;
-	border-bottom-left-radius:0px;
-	border-top-left-radius:0px;
-	border-bottom-right-radius:0px;
-	border-top-right-radius:0px;
-    color: black;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition-duration: 0.2s;
-    cursor: pointer;
-	width: 100%;
-	height:80px;
-	text-shadow:#333;
-	font-size:24px;
-	background-image:url(../assets/triangle.svg);
-	background-position:center;
-	background-size:cover;
-	overflow:hidden;  
-}
-.buttonITKAccess:hover {
-	transition-timing-function:ease-in;
-	transition-duration:0.05s;
-	text-shadow:#333;
-	background-position:inherit;
-	height:96px;
-	font-size:24px;
-    color: #000;
-	border-width:5px 10px 5px 10px;
-	border-color: #2D2D2D;
-}
-.contentITKAccess {
-	border-top-left-radius:5px;
-	border-top-right-radius:5px;
-	width:81%;
-	height:276px;
-	margin:auto;
-	padding-bottom:23px;
-	background:#FFFFFF;
-}
-.scrollITKAccess{
 	position:inherit;
 	overflow-x:hidden;
 	overflow-y:scroll;
