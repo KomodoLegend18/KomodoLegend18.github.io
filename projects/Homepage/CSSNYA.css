@@ -271,6 +271,19 @@
 	padding-bottom:23px;
 	background:#FFFFFF;
 }
+.contentHomePin {
+	margin-top: 1%;
+	width:100%;
+	height:20%;
+	background:#FFFFFF;
+}
+#PinnedSite{
+	table-layout: fixed;
+	width: 100%;
+}
+#PinnedSite td{
+	width:25%;
+}
 .scrollHome{
 	overflow:auto;
 	width:100%;

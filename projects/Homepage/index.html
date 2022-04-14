@@ -8,6 +8,7 @@
 			<link href="loading-icon.gif" rel="icon" type="image/x-icon">
             <!-- <link rel="stylesheet" href="https://komodolegend18.github.io/projects/CSSNYA.css"> -->
 			<link rel="stylesheet" href="../Homepage/CSSNYA.css">
+			<script src="../Homepage/scripts/Pin.js"></script>
             <!--Clock-->
             <script>
 				function digi() {
@@ -46,7 +47,7 @@
 	<div id="Container">
     	<div id="header">
         	<marquee onmouseover="this.stop()" onmouseout="this.start()" behavior="scroll" scrollamount="3.5" scrolldelay="30" truespeed="truespeed">
-        		<div id="digiclock" style="color:#FFFFFF; font-size:36px; padding-right:10px; margin-top:2px; display:inline-block"></div><p style="color:#FFFFFF; font-size:36px; padding-right:10px; margin-top:2px; display:inline-block;margin-bottom: 2px;">| man...it's been so long since i mess around with this homepage...</p>
+        		<div id="digiclock" style="color:#FFFFFF; font-size:36px; padding-right:10px; margin-top:2px; display:inline-block"></div><p style="color:#FFFFFF; font-size:36px; padding-right:10px; margin-top:2px; display:inline-block;margin-bottom: 2px;">| BREAKING NEWS : Local man discover how to add and remove element with JavaScript, The creator state "i'll add cookies later so it won't disappear after refresh, im too hungry to do it right now"</p>
             </marquee>
         </div>
         
@@ -54,8 +55,6 @@
 			<div id="ContainerHome">
         		<div class="scrollHome">
         <!--=============Search Bar=============-->
-        <br />
-        <br />
             		<div class="contentHome">
                     
            				<div class="judul-content">
@@ -104,11 +103,20 @@
                          	</p>
                 			</form>
                 	</div>
-       	<!--=============Search Bar=============--> 
+       	<!--=============Search Bar=============-->
+					<div class="contentHomePin">
+						<table id="PinnedSite">
+							<tr style="text-align: center;">
+								<!-- Icon Cells -->
+							</tr>
+							<tr style="text-align: center;">
+								<!-- Title Cells -->
+							</tr>
+						</table>
+						<button onclick="addPinCells()">Add Site</button>
+						<button onclick="deletePinCells()">Remove Site</button>
+					</div>
         <!--####################################-->
-        <br />
-        <br />
-        <br />
      			</div>
       		</div>
             
