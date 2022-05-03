@@ -43,6 +43,7 @@
 
     var channelname = 'null';
     var songname = 'null';
+    var channelphoto = `null`;
     
 
     // function newRandomNumber() {
@@ -78,6 +79,8 @@ function onPlayerReady(event) {
 }
 
 var firstLoad = true;
+
+
 function onPlayerStateChange(event) {
     // getVideoData documentation is gone, so here's some available parameters that i found
     // title, video_id, author, video_quality, video_quality_features, list
@@ -95,6 +98,13 @@ function onPlayerStateChange(event) {
     // set variable channelname
     channelname=player.getVideoData().author;
     channelname=json.channel.english_name;
+    if (channelphoto == null){
+        channelphoto=`https://cdn.discordapp.com/attachments/678197646032240640/966503920396533810/SuiVibe.gif?size=128`;
+    } else {
+        channelphoto=json.channel.photo; 
+    }
+    
+     
     // print channel name to console
     // console.log(channelname);
     // set variable songname
@@ -119,8 +129,6 @@ function onPlayerStateChange(event) {
     if (event.data == 1){         
         // Show now playing in Dev Console f12
         console.log('Now Playing :\n%c'+songname+"\nby "+channelname, 'background: rgba(56, 255, 228, 0.5); color: black; font-size: 200%');
-
-        
 
         // Set Now Playing Song as Page Title
         document.title = "Now Playing : "+songname+" || "+channelname;

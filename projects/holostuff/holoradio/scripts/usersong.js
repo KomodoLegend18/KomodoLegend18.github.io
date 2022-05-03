@@ -1,10 +1,15 @@
 function usersong() {
   // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
-  var songmsg = "\nNow Playing "+playlistindex+"/"+player.getPlaylist().length+":\nhttps://youtu.be/"+player.getVideoData().video_id+" from: https://youtube.com/playlist?list="+player.getPlaylistId();
+  var songmsg = `Now Playing ${playlistindex}/${player.getPlaylist().length}:\n[[Open in YouTube]](https://youtu.be/${player.getVideoData().video_id}) / [[Open Playlist]](https://youtube.com/playlist?list=${player.getPlaylistId()})`;
+  
   var songplaylist = `https://youtube.com/playlist?list=${player.getPlaylistId()}`
+
+  var date = new Date();
+
 
   var songembeds = {
     title:player.getVideoData().title,
+    url: `https://youtu.be/${player.getVideoData().video_id}`,
     description:`[Playlist](${songplaylist})`,
     image: {
       url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
@@ -12,17 +17,24 @@ function usersong() {
     author:{
       name:`holoRadio | ${player.getVideoData().author}`
     },
-    color: 5814783
+    color: 5814783,
+    timestamp: `${date.toISOString()}`,
+    footer: {
+      text: `UID ${localStorage.UserID}`
+    },
+    thumbnail: {
+      url: `${channelphoto}`
+    }
   }
 
   var params = {
-    username: `holoradio | ${navigator.appCodeName}/${navigator.platform}/${navigator.language} (remind me to add a more unique id later)`,
+    username: `holoradio | ID:${localStorage.UserID}`,
     avatar_url: "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png",
     content: songmsg,
     embeds: [songembeds]
   }
   
-  fetch(localStorage.hookID+"?wait=true", {
+  fetch(localStorage.hr_hookID+"?wait=true", {
   method: "POST",
   headers: {
     'Accept': 'application/json',
