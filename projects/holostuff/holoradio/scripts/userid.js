@@ -9,9 +9,10 @@ function UserIDCheck(){
         console.log(`UserID does not exist, Generating New UserID:\n${result}\nUserID is used as display name in Discord Webhook`);
         localStorage.setItem("UserID", result);
         return result;      
+    } else {
+        console.log("UserID exist, Current UserID:",localStorage.UserID);
+        // let user_id = prompt("Input Name");
     }
-    console.log("UserID exist, Current UserID:",localStorage.UserID);
-    // let user_id = prompt("Input Name");
 }
 function ResetUserID(){
     // let user_id = (Math.random()).toString(36).substring(6);
