@@ -1,6 +1,6 @@
 function usersong() {
   // var songmsg = 'Now Playing\n'+songname+' by '+channelname+"\nhttps://youtu.be/"+player.getVideoData().video_id;
-  var songmsg = `Now Playing ${playlistindex}/${player.getPlaylist().length}:\n[[Open in YouTube]](https://youtu.be/${player.getVideoData().video_id}) / [[Open Playlist]](https://youtube.com/playlist?list=${player.getPlaylistId()})`;
+  var songmsg = `▶ Now Playing 「${playlistindex}/${player.getPlaylist().length}」\n[[Open in YouTube]](https://youtu.be/${player.getVideoData().video_id}) / [[Open Playlist]](https://youtube.com/playlist?list=${player.getPlaylistId()})`;
   
   var songplaylist = `https://youtube.com/playlist?list=${player.getPlaylistId()}`
 
