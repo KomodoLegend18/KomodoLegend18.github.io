@@ -15,7 +15,8 @@ function patchusersong() {
         url: "https://i.ytimg.com/vi/"+player.getVideoData().video_id+"/maxresdefault.jpg"
       },
       author:{
-        name:`holoRadio | ${player.getVideoData().author}`
+        name:`holoRadio | ${player.getVideoData().author}`,
+        url: `https://komodolegend18.github.io/projects/holostuff/holoradio`
       },
       color: 5814783,
       timestamp: `${date.toISOString()}`,
