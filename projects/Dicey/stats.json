@@ -1,0 +1,12 @@
+{
+    "skill":[
+        {
+            "name":"poison",
+            "desc":"Deal -1HP after every turn"
+        },
+        {
+            "name":"heal",
+            "desc":"heal 1HP after every turn"
+        }
+    ]
+}
