@@ -61,6 +61,7 @@ function load(){
     bot_hp = 100
     document.getElementById("enemy_hp").innerHTML = `${bot_hp}/100`
     document.getElementById("enemy_hpbar").value = `${bot_hp}`
+    document.getElementById("enemy_hpbardamaged").value = `${bot_hp}`
     document.getElementById("player_hp").innerHTML = `${human_hp}/100`
     document.getElementById("player_hpbar").value = `${human_hp}`
     document.getElementById("roll_button").style = `visibility: visible;`
