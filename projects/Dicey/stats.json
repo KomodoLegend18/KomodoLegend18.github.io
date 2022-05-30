@@ -1,5 +1,15 @@
 {
-    "skill":[
+    "active_skill":[
+        {
+            "name":"revenge",
+            "desc":"if unit attacked >2 times in a row, unit next attack deals 2x damage (cannot stack)"
+        },
+        {
+            "name":"tank",
+            "desc":"if unit hp < enemy hp, then enemy's next attack -3 damage"
+        }
+    ],
+    "passive_skill":[
         {
             "name":"poison",
             "desc":"Deal -1HP after every turn"

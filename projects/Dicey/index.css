@@ -1,0 +1,101 @@
+body{
+    overflow: hidden;
+    margin:-1;
+    padding:0;
+    overflow-x:hidden;
+}
+table{
+    width: 100vw;
+    margin:0;
+    padding:0;
+    border-collapse: collapse;
+}
+tbody{
+    width: 100vw;
+    display: table
+}
+#enemy_row{
+    text-align: center;
+}
+#enemy_nameplate{
+    color: black;
+}
+#enemy_hp{
+    margin-bottom: 0.4%;
+}
+#enemy_chara{
+    width: 80vw;
+    height: 100vh;
+    margin-bottom: -35vh;
+    margin: auto;
+}
+#player_row{
+    text-align:center;
+}
+#player_card{
+    background-color: rgba(255, 255, 255, 0.582);
+    margin-top: -35vh; 
+    padding-bottom: 1%;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    -webkit-backdrop-filter: blur(5px) grayscale(100%) brightness(80%);
+    backdrop-filter: blur(5px) grayscale(100%) brightness(80%);
+ 
+}
+#player_nameplate{
+    padding-top: 0%;
+    margin-bottom: 0%; 
+}
+#player_hp{
+    margin-top: 0%;
+    margin-bottom: 0.4%;
+}
+/* ==================Enemy Bar==================== */
+#enemy_hpbar{
+    position: absolute;
+    top: 11.8%;
+    left: 9.95%;
+    width: 80vw;
+    background: rgba(255, 0, 0, 0);
+}
+#enemy_hpbar::-moz-progress-bar{
+    border: none;
+    background: rgba(255, 0, 0, 0);
+}
+#enemy_hpbar::-webkit-progress-value{
+    background: #1f234d;
+}
+#enemy_hpbar::-webkit-progress-bar{
+    background: #5d65c200;
+}
+/* damaged */
+#enemy_hpbardamaged{
+    width: 80vw;
+    background: red;
+}
+#enemy_hpbardamaged::-moz-progress-bar{
+    border: none;
+    background: red;
+}
+#enemy_hpbardamaged::-webkit-progress-value{
+    background: #ff0000;
+}
+#enemy_hpbardamaged::-webkit-progress-bar{
+    background: #5d66c2;
+}
+/* ==================Player Bar==================== */
+#player_hpbar{
+    width: 20vw;
+    background: rgb(0, 255, 55);
+}
+#player_hpbar::-moz-progress-bar{
+    border: none;
+    background: rgb(0, 255, 55);
+}
+#player_hpbar::-webkit-progress-value{
+    background: #ff0085;
+}
+#player_hpbar::-webkit-progress-bar{
+    background:#ff70ba;
+}

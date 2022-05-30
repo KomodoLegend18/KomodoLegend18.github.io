@@ -1,0 +1,44 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../Dicey/index.css">
+    <script src="../Dicey/dicey.js"></script>
+
+    <title>Document</title>
+</head>
+<body onload="load()">
+    <!-- <h2 style="position:static;text-align: center;">asda</h2> -->
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td id="enemy_row">
+                    <p id="enemy_nameplate">Suisei (kmd #Sui53X)</p>
+                    <p id="enemy_hp"></p>
+                    <progress id="enemy_hpbardamaged" value="100" max="100"></progress>
+                    <progress id="enemy_hpbar" value="100" max="100"></progress>
+                    
+                    <!-- <div style="background-image:url(../Dicey/assets/kv_calliope_min.png) ; width: 80vw; height: 100vh; margin-bottom: -35vh !important; background-size: 95%; background-repeat: no-repeat; background-position: center 10%; margin: auto;"></div> -->
+                    <div id="enemy_chara"></div>
+                </td> 
+            </tr>
+            <tr>
+                <td id="player_row">
+                    <div id="player_card">
+                        <p id="player_nameplate">Fubuki (lianee #5h0fun)</p>
+                        <p id="player_hp"></p>
+                        <progress id="player_hpbar" value="100" max="100"></progress>
+                        <br>
+                        <br>
+                        <button id="roll_button" onclick="singleplayer_roll()">Roll Dice</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</body>
+</html>
