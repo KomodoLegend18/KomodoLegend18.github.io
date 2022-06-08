@@ -1,4 +1,5 @@
 var human_hp
+var human_hp_prev
 var bot_hp
 var bot_hp_prev
 var human_dice
@@ -11,21 +12,33 @@ function singleplayer_roll(){
         bot_hp_prev = bot_hp
         bot_hp = bot_hp-human_dice
         console.log(`PREV:${bot_hp_prev}\nNOW:${bot_hp}`)
+        HPNormalize();
         document.getElementById("enemy_hp").innerHTML = `${bot_hp}/100`
         document.getElementById("enemy_hpbar").value = `${bot_hp}`
-        for (i = bot_hp_prev; i > bot_hp; i--)   {
+        for (i = bot_hp_prev; i > bot_hp; i--){
             console.log(i)
             setTimeout(function(){
                 // bot_hp_prev--
-                document.getElementById("enemy_hpbardamaged").value--
+                // document.getElementById("enemy_hpbardamaged").value--
+                var bar = document.getElementById("enemy_hpbardamaged");
+                bar.style.width = `${bot_hp}%`;
             }, 500);
         }
         // singleplayer_human_atk();
         console.log(`${human_dice} vs ${bot_dice}\nHuman Attacked BOT\n-${human_dice}HP\nHuman(${human_hp}HP) vs BOT(${bot_hp}HP)`)
     } else if (bot_dice > human_dice){
+        human_hp_prev = human_hp
         human_hp = human_hp-bot_dice
+        HPNormalize();
         document.getElementById("player_hp").innerHTML = `${human_hp}/100`
         document.getElementById("player_hpbar").value = `${human_hp}`
+        for (i = human_hp_prev; i > human_hp; i--){
+            console.log(i)
+            setTimeout(function(){
+                var bar = document.getElementById("player_hpbardamaged");
+                bar.style.width = `${human_hp}%`;
+            }, 500);
+        }
         // singleplayer_bot_atk();
         console.log(`${human_dice} vs ${bot_dice}\nBOT Attacked Human\n-${bot_dice}HP\nHuman(${human_hp}HP) vs BOT(${bot_hp}HP)`)
     } else if (bot_dice = human_dice){
@@ -60,8 +73,9 @@ function load(){
     human_hp = 100
     bot_hp = 100
     document.getElementById("enemy_hp").innerHTML = `${bot_hp}/100`
+    document.getElementById("enemy_hpbardamaged").style.width = `${bot_hp}%`;
     document.getElementById("enemy_hpbar").value = `${bot_hp}`
-    document.getElementById("enemy_hpbardamaged").value = `${bot_hp}`
+    // document.getElementById("enemy_hpbardamaged").value = `${bot_hp}`
     document.getElementById("player_hp").innerHTML = `${human_hp}/100`
     document.getElementById("player_hpbar").value = `${human_hp}`
     document.getElementById("roll_button").style = `visibility: visible;`
@@ -73,10 +87,11 @@ function load(){
 }
 function load_playerdata(){
     if (rng_char==1){
-        document.getElementById("enemy_nameplate").innerHTML = `Hoshimachi Suisei (kmd #${localStorage.UserID})`
+        document.getElementById("enemy_nameplate").innerHTML = `Hoshimachi Suisei (kmd #Sui53X)`
         document.getElementById("enemy_chara").style = `background-image:url(../Dicey/assets/Sui_Capcom.png) ; background-size: 80%; background-repeat: no-repeat; background-position: center 10%;`
     } else {
-        document.getElementById("enemy_nameplate").innerHTML = `Calliope Mori (kmd #${localStorage.UserID})`
+        // document.getElementById("enemy_nameplate").innerHTML = `Calliope Mori (kmd #${localStorage.UserID})`
+        document.getElementById("enemy_nameplate").innerHTML = `Calliope Mori (kmd #Sui53X)`
         document.getElementById("enemy_chara").style = `background-image:url(../Dicey/assets/kv_calliope_min.png) ; background-size: 100%; background-repeat: no-repeat; background-position: center 14%;`
     }
     
@@ -104,4 +119,10 @@ function load_json(){
     };
     xhr.send();    
 }
-
+function HPNormalize(){
+    if (bot_hp<0){
+        bot_hp = 0
+    } else if (human_hp<0){
+        human_hp = 0
+    }
+}
