@@ -48,6 +48,7 @@ function patchusersong() {
       return response.json();
     }).then(jsonResponse => {
       console.log('Patched: '+jsonResponse);
+      console.log(JSON.stringify(jsonResponse))
     }).catch (error => {
       console.log(error)
     })

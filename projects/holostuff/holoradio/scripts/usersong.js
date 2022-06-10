@@ -52,6 +52,7 @@ function usersong() {
     postid=jsonResponse.id
     console.log('POST: '+jsonResponse);
     console.log(JSON.stringify(jsonResponse.id));
+    console.log(JSON.stringify(jsonResponse))
   }).catch (error => {
     console.log(error)
   })
