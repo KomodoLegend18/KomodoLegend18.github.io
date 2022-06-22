@@ -14,10 +14,12 @@
             var target = document.getElementById('target');
             target.src = URL.createObjectURL(event.target.files[0]);
             
+            
             target.onload = function() {
                 var imagewidth = target.naturalWidth;
                 var imageheight = target.naturalHeight;
                 document.getElementById("input_title").innerHTML = `Input: (${imagewidth} x ${imageheight})`;
+                loadimagecanvas()
                 URL.revokeObjectURL(target.src) // free memory
           }
         };
@@ -43,11 +45,15 @@ function loadimagecanvas() {
     canvas.width=img.naturalWidth;
     canvas.height=img.naturalHeight;
         ctx.drawImage(img, 0, 0);
+        // ctx.globalCompositeOperation = 'destination-out';
         ctx.drawImage(gun, canvas.width/2, canvas.height-(canvas.width/2), canvas.width/2, canvas.width/2);
+        // ctx.globalCompositeOperation = 'source-over';
         ctx.font = `${canvas.width/10}px Arial`;
         ctx.textAlign = "center"; 
         ctx.fillText("bottom text lorem",canvas.width/2,canvas.height/1.1);
         document.getElementById("output_title").innerHTML = `Output: (${canvas.width} x ${canvas.height})`;
+    const dataURL = canvas.toDataURL();
+    console.log(dataURL);
 };
 </script>
 <!-- <script>
