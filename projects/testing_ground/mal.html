@@ -17,16 +17,20 @@
   <script>
     function mal(){
     var key = prompt("INPUT TOKEN");
-    var url = "https://api.myanimelist.net/v2/anime/49438?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics";
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false );
-    xmlHttp.setRequestHeader("X-MAL-CLIENT-ID",key);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
-    }
+    
+    xhr.setRequestHeader("X-MAL-CLIENT-ID", key);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+          console.log(xhr.status);
+          console.log(xhr.responseText);
+      }
+    };
+
+    xhr.send();
     // var anime_id = prompt("Input ID:");
     // var token = prompt("Input TOKEN:");
-
+    }
   </script>
 
 </html>
