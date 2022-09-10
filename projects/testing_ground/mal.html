@@ -7,7 +7,7 @@
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
     <!-- <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script> -->
   </head>
-  <body>
+  <body onload="mal()">
     <h1 id="first"></h1>
     <h2 id="second"></h2>
     <h2 id="third"></h2>
@@ -15,27 +15,18 @@
 
 
   <script>
-    var anime_id = prompt("Input ID:");
-    var token = prompt("Input TOKEN:");
-    var url = `https://api.myanimelist.net/v2/anime/${anime_id}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`;
+    function mal(){
+    var key = prompt("INPUT TOKEN");
+    var url = "https://api.myanimelist.net/v2/anime/49438?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics";
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false );
+    xmlHttp.setRequestHeader("X-MAL-CLIENT-ID",key);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+    }
+    // var anime_id = prompt("Input ID:");
+    // var token = prompt("Input TOKEN:");
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.setRequestHeader("X-MAL-CLIENT-ID", token);
-    xhr.responseType = 'json';
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-          var MALResponse = xhr.response;
-          var MALResponseJSON = JSON.parse(MALResponse);
-          console.log(xhr.status);
-          console.log(MALResponseJSON);
-          var anime_title = MALResponseJSON.title;
-          var anime_rating = MALResponseJSON.mean;
-          var anime_pic = MALResponseJSON.main_picture;
-          document.write(`<h1>${i+1}. ${anime_title} [${anime_rating}] (${anime_pic})</h1>`);
-      }};
-
-    xhr.send();
   </script>
 
 </html>
