@@ -10,6 +10,7 @@ console.log(JSON.parse(data_saved))
 
 var key = "a5f40eba77d1d8f6e092d31aa2780f74" //REMIND ME TO MAKE THIS A USER INPUT INSTEAD
 
+webhook_config_load()
 
 // var anime_id = prompt("Input Anime ID:")
 
@@ -261,12 +262,33 @@ function remove_episode(index){
   location.reload();
 }
 
+function webhook_config_load(){
+  document.getElementById("webhook_url").value = localStorage.getItem("webhook_url_saved")
+  document.getElementById("webhook_name").value = localStorage.getItem("webhook_name_saved")
+  document.getElementById("webhook_avatarurl").value = localStorage.getItem("webhook_avatarurl_saved")
+  document.getElementById("webhook_title").value = localStorage.getItem("webhook_title_saved")
+  document.getElementById("webhook_titleurl").value = localStorage.getItem("webhook_titleurl_saved")
+}
+function webhook_config_save(){
+  var webhook_url = document.getElementById("webhook_url").value
+  var webhook_name = document.getElementById("webhook_name").value
+  var webhook_avatarurl = document.getElementById("webhook_avatarurl").value
+  var webhook_title = document.getElementById("webhook_title").value
+  var webhook_titleurl = document.getElementById("webhook_titleurl").value
+  localStorage.setItem("webhook_url_saved", webhook_url);
+  localStorage.setItem("webhook_name_saved", webhook_name);
+  localStorage.setItem("webhook_avatarurl_saved", webhook_avatarurl);
+  localStorage.setItem("webhook_title_saved", webhook_title);
+  localStorage.setItem("webhook_titleurl_saved", webhook_titleurl);
+}
+
 function webhook_post(index){
   var embed_desc = `${jadwal_list.map(x => x.title).join(`\\n`)}`
+
   var embeds = JSON.parse(`{
-      "title": "List | Sesi <t:${Math.round(Date.now()/1000)}:D>",
+      "title": "${localStorage.getItem("webhook_title_saved")} | Sesi <t:${Math.round(Date.now()/1000)}:D>",
       "description": "${embed_desc}",
-      "url": "https://discord.com/channels/615162466351054861/678197646032240640/1024344224415617096",
+      "url": "${localStorage.getItem("webhook_titleurl_saved")}",
       "color": 15597654,
       "fields": [
         {
@@ -282,7 +304,7 @@ function webhook_post(index){
         "url": "${jadwal_list[index].main_picture.large}"
       }
   }`)
-  var msgdest = "https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez";
+  var msgdest = localStorage.getItem("webhook_url_saved");
   // var msg = prompt("Input Message:");
   sendMessage();
   function sendMessage() {
@@ -294,8 +316,8 @@ function webhook_post(index){
     request.setRequestHeader('Content-type', 'application/json');
 
     var params = {
-      username: "Test",
-      avatar_url: "https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png",
+      username: localStorage.getItem("webhook_name_saved"),
+      avatar_url: localStorage.getItem("webhook_avatarurl_saved"),
       embeds: [embeds]
     }
     if (request.readyState == XMLHttpRequest.DONE) {

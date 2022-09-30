@@ -19,7 +19,27 @@
       <!-- <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a> -->
       <div style="width: 100vw; height: 100vh">
         <div id="content">
-          
+          <div class="card">
+            <div id="anime_sidebar_card">
+              <img src="https://pbs.twimg.com/media/E7xoddlVUAAcGVu?format=jpg&name=orig" alt="Picture of Hoshimachi Suisei">
+            </div>
+            <div id="anime_result_card">
+              <div id="title">
+              <h2>Hoshimachi Suisei</h2>
+              </div>
+              <div id="genre">
+                  
+              </div>
+              <div id="description_card">
+                <p>Welcome to NobyarList, Please enter your details below</p>
+                <input id="webhook_url" onchange="webhook_config_save()" type="text" placeholder="Webhook URL">
+                <input id="webhook_name" onchange="webhook_config_save()" type="text" placeholder="Webhook Username">
+                <input id="webhook_avatarurl" onchange="webhook_config_save()" type="text" placeholder="Webhook Avatar URL">
+                <input id="webhook_title" onchange="webhook_config_save()" type="text" placeholder="Embed Title">
+                <input id="webhook_titleurl" onchange="webhook_config_save()" type="text" placeholder="Embed Title URL">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
