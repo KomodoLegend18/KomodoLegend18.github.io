@@ -111,11 +111,14 @@ function delete_item(index){ // function to delete an item from jadwal
 function get_anime(){ // function to get search data
   anime_search  = document.getElementById(`input_id`).value;
 
-  var req = new XMLHttpRequest(); // Create a new request
-  req.responseType = 'json';
-  req.open('GET', `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime?q=${anime_search}&limit=10&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,num_episodes`, true); // "https://cors-anywhere.herokuapp.com" is used because for some reason MAL API does not include CORS header ("https://myanimelist.net/forum/?topicid=1924562")
-  req.setRequestHeader("X-MAL-CLIENT-ID", key) // Add Client ID header with "key" value provided by user
-  req.onload  = function() {
+  if (document.getElementById("input_type").value=="title"){
+    var req = new XMLHttpRequest(); // Create a new request
+    req.responseType = 'json';
+
+    req.open('GET', `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime?q=${anime_search}&limit=10&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,num_episodes`, true); // "https://cors-anywhere.herokuapp.com" is used because for some reason MAL API does not include CORS header ("https://myanimelist.net/forum/?topicid=1924562")
+
+    req.setRequestHeader("X-MAL-CLIENT-ID", key) // Add Client ID header with "key" value provided by user
+    req.onload  = function() {
     delete_prev_result(); // Clear all previous result(s)
     var jsonResponse = req.response;
     data_get = jsonResponse // Copy response into a variable, just in case
@@ -196,6 +199,100 @@ function get_anime(){ // function to get search data
     }
   };
   req.send(null);
+  }
+  if (document.getElementById("input_type").value=="id"){
+    var req = new XMLHttpRequest(); // Create a new request
+    req.responseType = 'json';
+
+    req.open('GET', `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime/${anime_search}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`, true); // "https://cors-anywhere.herokuapp.com" is used because for some reason MAL API does not include CORS header ("https://myanimelist.net/forum/?topicid=1924562")
+
+    req.setRequestHeader("X-MAL-CLIENT-ID", key) // Add Client ID header with "key" value provided by user
+    req.onload  = function() {
+    delete_prev_result(); // Clear all previous result(s)
+    var jsonResponse = req.response;
+    data_get = jsonResponse // Copy response into a variable, just in case
+    console.log(jsonResponse.status)
+    console.log(jsonResponse);
+    
+
+    
+      var anime_identify = jsonResponse.id;
+      var anime_title = jsonResponse.alternative_titles.en; // get the english title by default
+      if (anime_title==null||anime_title==""){ // if there's no english title, fallback to romaji title
+        anime_title = jsonResponse.title
+      }
+      var anime_desc = jsonResponse.synopsis;
+      if (jsonResponse.genres==null){
+        var anime_genres = "";
+      }else{
+        var anime_genres = jsonResponse.genres.map(x => x.name).join(", ");
+      }
+       // display all genre name separated by comma
+      var anime_rating = jsonResponse.mean;
+      var anime_pic = jsonResponse.main_picture.large;
+
+      // Display Console
+      console.log(`
+        [${anime_identify}]
+        ${anime_title}
+        |   title: ${jsonResponse.title}
+        |   en: ${jsonResponse.alternative_titles.en}
+        |   ja:${jsonResponse.alternative_titles.ja}
+        ##########################################################
+
+        ${anime_desc}
+
+        ##########################################################
+        [${anime_genres}]
+        ${anime_rating}
+        ${anime_pic}
+      `)
+
+
+      // document.write(`
+      //   <h1>${anime_title} [${anime_rating}]</h1>
+      //   <p>${anime_desc}</p>
+      //   <p>ID: ${anime_identify}</p>
+      //   <p>Genre: ${anime_genres}</p>
+      //   <img src="${anime_pic}" alt="">
+      // `);
+      const div_card = document.createElement('div');
+      div_card.className = `card`;
+      div_card.innerHTML = `
+        <div id="anime_sidebar_card">
+          <img src="${anime_pic}" alt="${anime_title} Picture">
+        </div>
+        <div id="anime_result_card">
+          <div id="title">
+          <h2>[${anime_rating}] ${anime_title}</h2>
+          </div>
+          <div id="genre">
+              ${anime_genres}
+          </div>
+          <div id="description_card">
+            <p>${anime_desc}</p>
+          </div>
+        </div>
+        <div>
+          <button title="Add to List Jadwal" onclick="add_jadwal_list(0)" type="button">
+            <span class="material-symbols-outlined">playlist_add</span>
+          </button>
+          <button title="Open in MAL" onclick="window.open('https://myanimelist.net/anime/${anime_identify}', '_blank').focus();" type="button">
+            <span class="material-symbols-outlined">open_in_new</span>
+          </button>
+          <button title="Copy Anime ID to Clipboard" onclick="navigator.clipboard.writeText('${anime_identify}');" type="button">
+            <span class="material-symbols-outlined">content_copy</span>
+          </button>   
+        </div>
+      `;
+      document.getElementById('content').appendChild(div_card);
+    
+  };
+  req.send(null);
+  }
+
+  
+  
 }
 
 function delete_prev_result(){ // Clear previous result called by get_anime() function
@@ -355,4 +452,15 @@ function test_cors(){
 
 for (i = 0; i < localStorage.length; i++){ // Display ALL available saved data/cache in this domain
     console.log("LISTED|",localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
+}
+
+function display_input(){
+  if (document.getElementById("input_type").value=="title"){
+    document.getElementById("input_id").type="text"
+    document.getElementById("input_id").placeholder="example: \"akira\""
+  }
+  if (document.getElementById("input_type").value=="id"){
+    document.getElementById("input_id").type="number"
+    document.getElementById("input_id").placeholder="example: \"42310\""
+  }
 }

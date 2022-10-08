@@ -62,12 +62,13 @@ body{
     z-index: 2;
 }
 
-#input_id{
+.input{
     float: left;
     font-size: 2.5vh;
     width: 200px;
     height: 80%;
 }
+
 
 #content{
     position: absolute;

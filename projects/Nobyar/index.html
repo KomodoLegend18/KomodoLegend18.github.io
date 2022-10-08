@@ -12,8 +12,12 @@
   </head>
   <body>
       <div style="width: 100vw; height: 7vh;background-color: #06283D;">
-        <a href="../Nobyar/index.html" style="float: left; font-size: 5vh;text-decoration: none;color: white;margin-left: 2%;margin-right: 2%;">NobyarList</a>
-        <input autocomplete="off" onchange="get_anime()" type="text" id="input_id" placeholder="Search Anime here">
+        <a href="../Nobyar/index.html" style="float: left; font-size: 5vh;text-decoration: none;color: white;margin-left: 2%;margin-right: 2%;"><span class="material-symbols-outlined">home</span></a>
+        <input autocomplete="off" onchange="get_anime()" type="text" class="input" id="input_id" placeholder="Search">
+        <select class="input" id="input_type" onchange="display_input()">
+          <option value="title">Search by Title</option>
+          <option value="id">Search by ID</option>
+        </select>
       </div>
       
       <!-- <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a> -->
