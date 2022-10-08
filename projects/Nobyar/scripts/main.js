@@ -300,47 +300,125 @@ function delete_prev_result(){ // Clear previous result called by get_anime() fu
 }
 
 function add_jadwal_list(index){ // Add item to jadwal
-  if (data_get.data[index].node.mean==null){ // If item does not have mean/score yet, display "???" instead of "Undefined"
-    data_get.data[index].node.mean="???"
+
+  if (document.getElementById("input_type").value=="title"){
+    if (data_get.data[index].node.mean==null){ // If item does not have mean/score yet, display "???" instead of "Undefined"
+      data_get.data[index].node.mean="???"
+    }
+  
+    // Load item
+    var pushed_list = JSON.parse(`
+    {
+      "id": ${data_get.data[index].node.id},
+      "title": "${data_get.data[index].node.title}",
+      "main_picture": {
+          "medium": "${data_get.data[index].node.main_picture.medium}",
+          "large": "${data_get.data[index].node.main_picture.large}"
+      },
+      "alternative_titles": {
+          "synonyms": [
+          "${data_get.data[index].node.alternative_titles.synonyms}"
+          ],
+          "en": "${data_get.data[index].node.alternative_titles.en}",
+          "ja": "${data_get.data[index].node.alternative_titles.ja}"
+      },
+      "synopsis": ${JSON.stringify(data_get.data[index].node.synopsis)},
+      "genres": ${JSON.stringify(data_get.data[index].node.genres)},
+      "mean": ${JSON.stringify(data_get.data[index].node.mean)},
+      "num_episodes": ${JSON.stringify(data_get.data[index].node.num_episodes)},
+      "watched_episodes": 0
+    }
+    `)
+    jadwal_list.push(pushed_list); // Insert loaded item into array
+  
+    console.log(jadwal_list)
+    localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list)); // Save jadwal into Cache
+    console.log(localStorage.getItem("saved_jadwal"))
+    console.log(`
+      ADDED TO LIST:
+      ${data_get.data[index].node.id}
+      ${data_get.data[index].node.title}
+      ${data_get.data[index].node.alternative_titles.en}
+      ${data_get.data[index].node.alternative_titles.ja}
+      ${JSON.stringify(data_get.data[index].node.genres)}
+    `)
+    // localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list));
+  }
+  if (document.getElementById("input_type").value=="id"){
+    if (data_get.mean==null){ // If item does not have mean/score yet, display "???" instead of "Undefined"
+      data_get.mean="???"
+    }
+    if (data_get.genres==null){
+      var pushed_list = JSON.parse(`
+    {
+      "id": ${data_get.id},
+      "title": "${data_get.title}",
+      "main_picture": {
+          "medium": "${data_get.main_picture.medium}",
+          "large": "${data_get.main_picture.large}"
+      },
+      "alternative_titles": {
+          "synonyms": [
+          "${data_get.alternative_titles.synonyms}"
+          ],
+          "en": "${data_get.alternative_titles.en}",
+          "ja": "${data_get.alternative_titles.ja}"
+      },
+      "synopsis": ${JSON.stringify(data_get.synopsis)},
+      "genres": [
+        {
+        "id": 99999999,
+        "name": "undefined"
+        }
+      ],
+      "mean": ${JSON.stringify(data_get.mean)},
+      "num_episodes": ${JSON.stringify(data_get.num_episodes)},
+      "watched_episodes": 0
+    }
+    `)
+    } else{
+      var pushed_list = JSON.parse(`
+    {
+      "id": ${data_get.id},
+      "title": "${data_get.title}",
+      "main_picture": {
+          "medium": "${data_get.main_picture.medium}",
+          "large": "${data_get.main_picture.large}"
+      },
+      "alternative_titles": {
+          "synonyms": [
+          "${data_get.alternative_titles.synonyms}"
+          ],
+          "en": "${data_get.alternative_titles.en}",
+          "ja": "${data_get.alternative_titles.ja}"
+      },
+      "synopsis": ${JSON.stringify(data_get.synopsis)},
+      "genres": ${JSON.stringify(data_get.genres)},
+      "mean": ${JSON.stringify(data_get.mean)},
+      "num_episodes": ${JSON.stringify(data_get.num_episodes)},
+      "watched_episodes": 0
+    }
+    `)
+    }
+  
+    // Load item
+    jadwal_list.push(pushed_list); // Insert loaded item into array
+  
+    console.log(jadwal_list)
+    localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list)); // Save jadwal into Cache
+    console.log(localStorage.getItem("saved_jadwal"))
+    console.log(`
+      ADDED TO LIST:
+      ${data_get.id}
+      ${data_get.title}
+      ${data_get.alternative_titles.en}
+      ${data_get.alternative_titles.ja}
+      ${JSON.stringify(data_get.genres)}
+    `)
+    // localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list));
   }
 
-  // Load item
-  var pushed_list = JSON.parse(`
-  {
-    "id": ${data_get.data[index].node.id},
-    "title": "${data_get.data[index].node.title}",
-    "main_picture": {
-        "medium": "${data_get.data[index].node.main_picture.medium}",
-        "large": "${data_get.data[index].node.main_picture.large}"
-    },
-    "alternative_titles": {
-        "synonyms": [
-        "${data_get.data[index].node.alternative_titles.synonyms}"
-        ],
-        "en": "${data_get.data[index].node.alternative_titles.en}",
-        "ja": "${data_get.data[index].node.alternative_titles.ja}"
-    },
-    "synopsis": ${JSON.stringify(data_get.data[index].node.synopsis)},
-    "genres": ${JSON.stringify(data_get.data[index].node.genres)},
-    "mean": ${JSON.stringify(data_get.data[index].node.mean)},
-    "num_episodes": ${JSON.stringify(data_get.data[index].node.num_episodes)},
-    "watched_episodes": 0
-  }
-  `)
-  jadwal_list.push(pushed_list); // Insert loaded item into array
-
-  console.log(jadwal_list)
-  localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list)); // Save jadwal into Cache
-  console.log(localStorage.getItem("saved_jadwal"))
-  console.log(`
-    ADDED TO LIST:
-    ${data_get.data[index].node.id}
-    ${data_get.data[index].node.title}
-    ${data_get.data[index].node.alternative_titles.en}
-    ${data_get.data[index].node.alternative_titles.ja}
-    ${JSON.stringify(data_get.data[index].node.genres)}
-  `)
-  // localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list));
+  
 }
 function add_episode(index){
   jadwal_list[index].watched_episodes = jadwal_list[index].watched_episodes+1
