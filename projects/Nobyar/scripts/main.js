@@ -5,7 +5,7 @@ var data_saved = localStorage.getItem("saved_jadwal")
 console.log("Saved Jadwal (Cache): ")
 console.log(JSON.parse(data_saved))
 // console.log(data_saved.length)
-// localStorage.removeItem("saved_jadwal");
+
 
 
 var key = "a5f40eba77d1d8f6e092d31aa2780f74" //REMIND ME TO MAKE THIS A USER INPUT INSTEAD
@@ -108,10 +108,15 @@ function delete_item(index){ // function to delete an item from jadwal
   location.reload();
 }
 
+function delete_save(){
+  localStorage.removeItem("saved_jadwal");
+  location.reload();
+}
+
 function get_anime(){ // function to get search data
   anime_search  = document.getElementById(`input_id`).value;
 
-  if (document.getElementById("input_type").value=="title"){
+  if (document.getElementById("input_type").value=="title"){ // if search input is by Title
     var req = new XMLHttpRequest(); // Create a new request
     req.responseType = 'json';
 
@@ -200,7 +205,7 @@ function get_anime(){ // function to get search data
   };
   req.send(null);
   }
-  if (document.getElementById("input_type").value=="id"){
+  if (document.getElementById("input_type").value=="id"){ // if search input is by ID
     var req = new XMLHttpRequest(); // Create a new request
     req.responseType = 'json';
 
@@ -290,9 +295,6 @@ function get_anime(){ // function to get search data
   };
   req.send(null);
   }
-
-  
-  
 }
 
 function delete_prev_result(){ // Clear previous result called by get_anime() function
@@ -301,7 +303,7 @@ function delete_prev_result(){ // Clear previous result called by get_anime() fu
 
 function add_jadwal_list(index){ // Add item to jadwal
 
-  if (document.getElementById("input_type").value=="title"){
+  if (document.getElementById("input_type").value=="title"){ // if search input is by Title
     if (data_get.data[index].node.mean==null){ // If item does not have mean/score yet, display "???" instead of "Undefined"
       data_get.data[index].node.mean="???"
     }
@@ -344,7 +346,7 @@ function add_jadwal_list(index){ // Add item to jadwal
     `)
     // localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list));
   }
-  if (document.getElementById("input_type").value=="id"){
+  if (document.getElementById("input_type").value=="id"){ // if search input is by ID
     if (data_get.mean==null){ // If item does not have mean/score yet, display "???" instead of "Undefined"
       data_get.mean="???"
     }
@@ -509,7 +511,7 @@ function webhook_post(index){
   }
 }
 
-function test_cors(){
+function test_cors(){ // Test if request is allowed
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open( "GET", "https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime?q=lupin", false ); // false for synchronous request
   xmlHttp.setRequestHeader("X-MAL-CLIENT-ID", key) 
@@ -541,4 +543,42 @@ function display_input(){
     document.getElementById("input_id").type="number"
     document.getElementById("input_id").placeholder="example: \"42310\""
   }
+}
+
+function export_json(){
+  let dataStr = localStorage.getItem("saved_jadwal");
+  let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+  let exportFileDefaultName = 'data.json';
+
+  let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+
+function import_json(){
+  file = document.getElementById("input_file").files[0];
+  
+  let json_reader = new FileReader();
+  json_reader.onload= function(){
+    var json_content = JSON.parse(json_reader.result)
+    // var json_content_parsed = `
+    // File Loaded!
+    // ID: ${json_content[0].id}
+
+    // ${json_content[0].title} [${json_content[0].mean}]
+
+    // ${json_content[0].synopsis}
+    // `
+    // alert(json_content_parsed)
+    for (i = 0; i < json_content.length; i++){
+      jadwal_list.push(json_content[i]);
+      localStorage.setItem("saved_jadwal", JSON.stringify(jadwal_list));
+    }
+     // Insert loaded item into array
+    location.reload();
+    console.log(jadwal_list)
+     // Save jadwal into Cache
+  }
+  json_reader.readAsText(file);
 }

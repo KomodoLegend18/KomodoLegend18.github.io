@@ -7,7 +7,7 @@
 body{
     margin: 0%;
     background-color: #256D85;
-    /* overflow-y: hidden; */
+    overflow-x: hidden;
 }
 .material-symbols-outlined {
     transition-duration: 80ms;

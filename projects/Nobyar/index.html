@@ -41,6 +41,10 @@
                 <input id="webhook_avatarurl" onchange="webhook_config_save()" type="text" placeholder="Webhook Avatar URL">
                 <input id="webhook_title" onchange="webhook_config_save()" type="text" placeholder="Embed Title">
                 <input id="webhook_titleurl" onchange="webhook_config_save()" type="text" placeholder="Embed Title URL">
+                <button onclick="export_json()">Export List</button>
+                <button onclick="document.getElementById('input_file').click()">Import List</button>
+                <input onchange="import_json()" style="display: none;" id="input_file" type="file" accept=".json">
+                <button onclick="delete_save()">DELETE LIST</button>
               </div>
             </div>
           </div>
