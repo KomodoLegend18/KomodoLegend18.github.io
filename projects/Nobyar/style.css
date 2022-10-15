@@ -4,9 +4,16 @@
 #47B5FF
 #DFF6FF */
 
+:root{
+    --primary : #06283D;
+    --secondary : #256D85;
+    --title : #47B5FF;
+    --lightbg : #DFF6FF;
+}
+
 body{
     margin: 0%;
-    background-color: #256D85;
+    background-color: var(--secondary);
     overflow-x: hidden;
 }
 .material-symbols-outlined {
@@ -29,18 +36,22 @@ body{
 
 .card{
     /* position: absolute; */
+    position: relative;
     padding: 0%;
     /* background-color: bisque; */
     width: 100%;
     min-width: 768px;
     height: 193px;
     margin-bottom: 40px;
+    opacity: 0%;
     /* overflow: hidden; */
 }
+
+
 #anime_result_card{
     padding-left: 1%;
     float: left;
-    background-color: #DFF6FF;
+    background-color: var(--lightbg);
     width: 79%;
     min-width: 70%;
     height: 100%;
@@ -54,19 +65,23 @@ body{
     margin: 0%;
     /* padding: 1%; */
     float: left;
-    background-color: rgb(51, 231, 255);
+    background-color: var(--primary);
     /* width: 20%; */
     max-width: 145px;
     aspect-ratio: 3/4;
     height: 100%;
     z-index: 2;
 }
-
 .input{
+    margin-top: 0.5%;
     float: left;
     font-size: 2.5vh;
     width: 200px;
-    height: 80%;
+    height: 70%;
+    border-top: 0px;
+    border-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 
@@ -77,6 +92,26 @@ body{
     width: 80%;
     height: 100vh;
 }
+#content .card:nth-child(1n+0){
+    animation-name: card_in;
+    animation-delay: 500ms;
+    animation-duration: 500ms;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+}
+@keyframes card_in {
+    from {
+        margin-top: -15px;
+        opacity: 35%;
+        /* margin-left: -100%; */
+    }
+    to {
+        margin-top: 0px;
+        opacity: 100%;
+        /* margin-left: 0%; */
+    }
+}
+
 #anime_result{
     padding: 1%;
     float: left;
@@ -107,7 +142,7 @@ img{
     /* padding: 2%; */
     color: white;
     width: 100%;
-    background-color: #47B5FF;
+    background-color: var(--title);
     max-height: 30px;
     overflow: hidden;
     display: -webkit-box;

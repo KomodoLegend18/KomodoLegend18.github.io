@@ -11,7 +11,7 @@
     <script src="../Nobyar/scripts/main.js" defer></script>
   </head>
   <body>
-      <div style="width: 100vw; height: 7vh;background-color: #06283D;">
+      <div style="width: 100vw; height: 7vh;background-color: #06283D; z-index: 1; position: fixed;">
         <a href="../Nobyar/index.html" style="float: left; font-size: 5vh;text-decoration: none;color: white;margin-left: 2%;margin-right: 2%;"><span class="material-symbols-outlined">home</span></a>
         <input autocomplete="off" onchange="get_anime()" type="text" class="input" id="input_id" placeholder="Search">
         <select class="input" id="input_type" onchange="display_input()">
@@ -20,8 +20,8 @@
         </select>
       </div>
       
-      <!-- <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a> -->
-      <div style="width: 100vw; height: 100vh">
+      
+      <div style="width: 100vw; height: 100vh; z-index: 0;padding-top: 7vh;">
         <div id="content">
           <div class="card">
             <div id="anime_sidebar_card">
@@ -45,6 +45,7 @@
                 <button onclick="document.getElementById('input_file').click()">Import List</button>
                 <input onchange="import_json()" style="display: none;" id="input_file" type="file" accept=".json">
                 <button onclick="delete_save()">DELETE LIST</button>
+                <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a>
               </div>
             </div>
           </div>
