@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    var id = prompt("ID pls")
+
+    function get(){
+        var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", `https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez/messages/${id}`, false ); // false for synchronous request 
+    // xmlHttp.setRequestHeader("Cache-Control", "no-cache");
+    // xmlHttp.setRequestHeader("Pragma", "no-cache");
+    // xmlHttp.setRequestHeader("Expires", "0");
+    xmlHttp.send();
+    getmsg = JSON.parse(xmlHttp.responseText)
+    console.log(getmsg.embeds[0].description)
+
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState === 4) {
+            
+        }
+    };
+    }
+
+    setInterval(get, 3000);
+    
+    </script>
+</body>
+</html>
