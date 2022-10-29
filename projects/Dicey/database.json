@@ -1,0 +1,38 @@
+{
+    "characterData":[
+        {
+            "name":"Mori Calliope",
+            "art":"https://newunderworldorder.hololivepro.com/wp-content/themes/calliope_nuo/images/kv_calliope_min.png",
+            "background":"https://newunderworldorder.hololivepro.com/wp-content/themes/calliope_nuo/images/kv_bg_min.jpg"
+        },
+        {
+            "name":"Hoshimachi Suisei",
+            "art":"https://komodolegend18.github.io/projects/Dicey/assets/Sui_Capcom.png",
+            "background":"https://stellarintothegalaxy.hololive.tv/wp-content/themes/hoshimachi_1st_sololive/images/header_bg_min.jpg"
+        }
+    ],
+    "cards":[
+        {
+            "name":"Attack",
+            "desc":"Deal [1 to 6] damage"
+        },
+        {
+            "name":"revenge",
+            "desc":"if unit attacked >2 times in a row, unit next attack deals 2x damage (cannot stack)"
+        },
+        {
+            "name":"tank",
+            "desc":"if unit hp < enemy hp, then enemy's next attack -3 damage"
+        }
+    ],
+    "passive_skill":[
+        {
+            "name":"poison",
+            "desc":"Deal -1HP after every turn"
+        },
+        {
+            "name":"heal",
+            "desc":"heal 1HP after every turn"
+        }
+    ]
+}
