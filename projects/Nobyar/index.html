@@ -9,46 +9,34 @@
     <link rel="stylesheet" href="../Nobyar/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="../Nobyar/scripts/main.js" defer></script>
+    <script src="../Nobyar/scripts/eventlistener.js" defer></script>
+    <script src="../Nobyar/scripts/promise.js"></script>
+
+    <script src="../Nobyar/scripts/webhook.js" defer></script>
+    <script src="../Nobyar/scripts/site.js"></script>
+    <script src="../Nobyar/scripts/loader.js"></script>
+
+    <script src="../Nobyar/scripts/config.js" defer></script>
+
+
   </head>
   <body>
-      <div style="width: 100vw; height: 7vh;background-color: #06283D; z-index: 1; position: fixed;">
-        <a href="../Nobyar/index.html" style="float: left; font-size: 5vh;text-decoration: none;color: white;margin-left: 2%;margin-right: 2%;"><span class="material-symbols-outlined">home</span></a>
-        <input autocomplete="off" onchange="get_anime()" type="text" class="input" id="input_id" placeholder="Search">
+      <div id="elem"></div>
+      <div id="header">
+        <a href="../Nobyar/index.html"><span id="home" class="material-symbols-outlined">home</span></a>
+        <input autocomplete="off" type="text" class="input" id="input_id" placeholder="Search">
         <select class="input" id="input_type" onchange="display_input()">
           <option value="title">Search by Title</option>
           <option value="id">Search by ID</option>
         </select>
+        <a><span id="settings" class="material-symbols-outlined">
+          settings
+        </span></a>
       </div>
       
       
-      <div style="width: 100vw; height: 100vh; z-index: 0;padding-top: 7vh;">
+      <div style="width: 100vw; height: fit-content; z-index: 0;padding-top: 7vh;">
         <div id="content">
-          <div class="card">
-            <div id="anime_sidebar_card">
-              <img src="https://pbs.twimg.com/media/E7xoddlVUAAcGVu?format=jpg&name=orig" alt="Picture of Hoshimachi Suisei">
-            </div>
-            <div id="anime_result_card">
-              <div id="title">
-              <h2>Hoshimachi Suisei</h2>
-              </div>
-              <div id="genre">
-                  
-              </div>
-              <div id="description_card">
-                <p>Welcome to NobyarList, Please enter your details below</p>
-                <input id="webhook_url" onchange="webhook_config_save()" type="text" placeholder="Webhook URL">
-                <input id="webhook_name" onchange="webhook_config_save()" type="text" placeholder="Webhook Username">
-                <input id="webhook_avatarurl" onchange="webhook_config_save()" type="text" placeholder="Webhook Avatar URL">
-                <input id="webhook_title" onchange="webhook_config_save()" type="text" placeholder="Embed Title">
-                <input id="webhook_titleurl" onchange="webhook_config_save()" type="text" placeholder="Embed Title URL">
-                <button onclick="export_json()">Export List</button>
-                <button onclick="document.getElementById('input_file').click()">Import List</button>
-                <input onchange="import_json()" style="display: none;" id="input_file" type="file" accept=".json">
-                <button onclick="delete_save()">DELETE LIST</button>
-                <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       

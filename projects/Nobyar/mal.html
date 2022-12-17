@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyNobyarList</title>
+    <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
+    <!-- <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script> -->
+    <link rel="stylesheet" href="../Nobar/mal.css">
+  </head>
+  <body>
+      <input onchange="get_anime()" type="number" id="input_id" placeholder="Input Anime ID. e.g; 12345">
+      <a href="https://cors-anywhere.herokuapp.com">incase cors blocked</a>
+      <div style="width: 100vw; height: 100vh">
+        <div id="content">
+          <div id="anime_sidebar">
+            <!-- insert result here -->
+            <!-- <img src="https://api-cdn.myanimelist.net/images/anime/10/19969l.jpg" alt=""> -->
+          </div>
+          <div id="anime_result">
+            <!-- insert result here -->
+          </div>
+        </div>
+      </div>
+      
+  </body>
+
+
+  <script>
+    // var key = prompt("Input KEY:");
+    var key = "a5f40eba77d1d8f6e092d31aa2780f74"
+    // var key = "10093a3f9f0174b6b5577c40e9accdae" //malsync client id
+    // var anime_id = prompt("Input Anime ID:")
+    var anime_id
+
+    function get_anime(){
+      anime_id  = document.getElementById(`input_id`).value;
+      var req = new XMLHttpRequest();
+      req.responseType = 'json';
+      req.open('GET', `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime/${anime_id}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`, true);
+      req.setRequestHeader("X-MAL-CLIENT-ID", key)
+      req.onload  = function() {
+        var jsonResponse = req.response;
+        console.log(jsonResponse);
+
+          var anime_identify = jsonResponse.id;
+          var anime_title = jsonResponse.alternative_titles.en;
+          if (anime_title==null||anime_title==""){
+            anime_title = jsonResponse.title
+          }
+          var anime_desc = jsonResponse.synopsis;
+          var anime_genres = jsonResponse.genres.map(x => x.name).join(", ");
+          
+          console.log(anime_genres)
+          console.log(anime_title);
+          var anime_rating = jsonResponse.mean;
+          console.log(anime_rating);
+          var anime_pic = jsonResponse.main_picture.large;
+          console.log(anime_pic);
+          // document.write(`
+          //   <h1>${anime_title} [${anime_rating}]</h1>
+          //   <p>${anime_desc}</p>
+          //   <p>ID: ${anime_identify}</p>
+          //   <p>Genre: ${anime_genres}</p>
+          //   <img src="${anime_pic}" alt="">
+          // `);
+          delete_prev_result();
+          const div = document.createElement('div');
+            div.className = `anime`;
+
+            div.innerHTML = `
+            <div id="title">
+                <h2>${anime_title}</h2>
+            </div>
+            <div id="genre">
+                ${anime_genres}
+            </div>
+            <div id="description">
+              ${anime_desc}
+            </div>
+            `;
+            document.getElementById('anime_result').appendChild(div);
+          
+          const div_image = document.createElement('div');
+            div_image.className = `picture`;
+
+            div_image.innerHTML = `
+            <div id="image">
+              <img src="${anime_pic}" alt="${anime_title} Picture">
+            </div>
+            `;
+            document.getElementById('anime_sidebar').appendChild(div_image);
+          
+        
+        // do something with jsonResponse
+      };
+      req.send(null);
+    }
+    function delete_prev_result(){
+      document.getElementById('anime_result').innerHTML = ""
+      document.getElementById('anime_sidebar').innerHTML = ""
+    }
+  </script>
+
+</html>
