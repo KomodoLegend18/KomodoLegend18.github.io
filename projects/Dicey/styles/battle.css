@@ -1,0 +1,501 @@
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+img.emoji{
+    height: 1em !important;
+    width: 1em !important;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.1em;
+}
+img{
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#turnAlertContainer{
+    width: 100%; 
+    height: 100%;
+    position: absolute; 
+    background-color: #515a6694; 
+    z-index: 999999999;
+    backdrop-filter: grayscale(100%);
+    
+    animation-name: turnAlertContainerIN;
+    animation-duration: 2s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+}
+@keyframes turnAlertContainerIN {
+    0%{
+        opacity: 0%;
+        transform: translateX(0%);
+    }
+    25%{
+        opacity: 100%;
+    }
+    80%{
+        opacity: 100%;
+        transform: translateX(0%);
+    }
+    85%{
+        opacity: 0%;
+    }
+    100%{
+        opacity: 0%;
+        transform: translateX(100%);
+    }
+}
+    #turnAlertLabel{
+        width: 100%; 
+        height: 20%;
+        position: fixed; 
+        background-color: #5291e1; 
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        top: 35%;
+        font-size: 10vh;
+
+        animation-name: turnAlertIN;
+        animation-duration: 2s;
+        animation-timing-function: ease;
+        animation-fill-mode: forwards;
+    }
+@keyframes turnAlertIN {
+    0%{
+        opacity: 100%;
+        transform: translateX(-100%);
+    }
+    25%{
+        transform: translateX(0%);
+    }
+    80%{
+        transform: translateX(0%);
+        opacity: 100%;
+    }
+    90%{
+        opacity: 0%;
+    }
+    100%{
+        transform: translateX(100%);
+    }
+}
+
+body{
+        width: 100vw;
+        height: 100vh;
+        margin: 0%;
+        overflow: hidden;
+        user-drag: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+}
+.sidebar_left{
+    position: relative;
+    float: left;
+    width: 25%;
+    height: 100%;
+    background-color: red;
+}
+.log{
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background-color: rgb(214, 214, 214);
+    scroll-behavior: smooth;
+}
+#log_display{
+    position: relative;
+    scroll-behavior: smooth;
+    width: 100%;
+    height: 88%;
+    background-color: rgba(214, 214, 214, 0);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.log_header{
+    float: left;
+    position: relative;
+    width: 100%;
+    height: 12%;
+    background-color: rgb(56, 43, 43);
+    z-index: 1;
+    font-weight: bolder;
+    overflow-y: hidden;
+}
+    #log_header_stat_player{
+        width: 33.33%;
+        height: 100%;
+        background-color: rgb(73, 117, 184);
+        float: left;
+        word-wrap: break-word;
+        text-align: center;
+    }
+    #log_header_stat_draw{
+        width: 33.33%;
+        height: 100%;
+        background-color: gray;
+        float: left;
+        word-wrap: break-word;
+        text-align: center;
+    }
+    #log_header_stat_enemy{
+        width: 33.33%;
+        height: 100%;
+        background-color: red;
+        float: left;
+        word-wrap: break-word;
+        text-align: center;
+    }
+    .log_history{
+        width: 100%;
+        margin-left: 0%;
+        word-wrap: break-word;
+        padding-left: 5%;
+        padding-right: 5%;
+        background-color: whitesmoke;
+        font-family: 'Courier New', Courier, monospace;
+    }
+        #log_system{
+            width: 100% !important;
+            border-left: 10px solid rgb(0, 0, 0);
+            border-bottom: 1px solid rgb(0, 0, 0);
+            background-color: rgb(66, 66, 66);
+            white-space: pre-line;
+            color: white;
+        }
+        #log_error{
+            width: 100% !important;
+            border-left: 10px solid rgb(255, 120, 120);
+            border-bottom: 1px solid rgb(0, 0, 0);
+            background-color: rgb(63, 12, 12);
+            white-space: pre-line;
+            color: rgb(255, 120, 120);
+        }
+        #log_enemy{
+            border-left: 10px solid red;
+            border-bottom: 1px solid red;
+            background-color: rgb(255, 173, 173);
+            white-space: pre
+        }
+        #log_player{
+            border-left: 10px solid rgb(73, 117, 184);
+            border-bottom: 1px solid rgb(73, 117, 184);
+            background-color: rgb(182, 200, 226);
+            font-weight: bold;
+            white-space: pre-line;
+        }
+        #log_draw{
+            border-left: 10px solid gray;
+            border-bottom: 1px solid gray;
+            white-space: pre
+        }
+    
+.chat{
+    width: 100%;
+    height: 50%;
+    background-color: rgb(214, 214, 214);
+}
+    #chat-display{
+        scroll-behavior: smooth;
+        transition: ease 250ms;
+        width: 105%;
+        height: 90%;
+        background-color: rgb(214, 214, 214);
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+        scrollbar-width: none;
+    }
+        
+        .chat_history{
+            position: relative;
+            margin-top: 0.5vh;
+            margin-bottom: 0.5vh;
+            float: left;
+            width: 100%;
+            min-height: 4vh;
+        }
+            .chat_pfp{
+                float: left;
+                height: 6vh;
+                overflow: hidden;
+                aspect-ratio: 1/1;
+                /* border-radius: 50px; */              
+            }
+            .chat_text{
+                float: left;
+                margin-left: 1%;
+                border-radius: 0px 1vh 1vh 1vh;
+                padding: 0.5vw;
+                font-size: 2.5vh;
+                width: fit-content;
+                min-height: inherit;
+                height: fit-content;
+                word-wrap: break-word;
+                max-width: 75%;
+                background-color: rgb(255, 255, 255);
+            }
+                .chat_text iframe{
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 16/9;
+                }
+                .chat_text img{
+                    width: 100%;
+                    height: auto;
+                }
+
+    #chat-area{
+        display: inline-block;
+        width: 100%;
+        height: 10%;
+        background-color: rgb(214, 214, 214);
+    }
+        #chat-input{
+            z-index: 100;
+            float: left;
+            border-color: rgba(0, 0, 0, 0.397);
+            position: relative;
+            bottom: 0%;
+            width: 85%;
+            font-size: 2vh;
+            height: 100%;
+            min-height: 100%;
+            background-color: white;
+        }
+        .chat-submit{
+            float: left;
+            position: relative;
+            bottom: 0%;
+            width: 15%;
+            height: 100%;
+            cursor: pointer;
+        }
+.main_content{
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: rgb(100, 237, 134);
+}
+    .main_content_enemyheader{
+        width: 100%;
+        height: 6%;
+        background-color: tomato;
+        overflow: hidden;
+    }
+        .main_content_enemy_name{
+            width: 100%;
+            height: fit-content;
+            font-size: 3vh;
+            background-color: thistle;
+            text-align: center;
+        }
+        .main_content_enemyhp_container{
+            position: relative;
+            width: 100%;
+            height: 70%;
+            background-color: thistle;
+        }
+            #main_content_enemyhp_bar{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(255, 0, 106);
+                z-index: 2;
+            }
+            #main_content_enemyhp_damage{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(255, 155, 255);
+                z-index: 1;
+
+                transition: ease;
+                transition-delay: 500ms;
+                transition-duration: 1s;
+            }
+            .main_content_enemyhp_base{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(83, 3, 0);
+                z-index: 0;
+            }
+    .main_content_enemy_chara{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: whitesmoke;
+        overflow: hidden;
+        background-size: cover; 
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    #chara_illust{
+        object-fit: cover;
+    }
+    .main_content_playerfooter{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: tomato;
+        overflow: hidden;
+    }
+        .main_content_player_name{
+            position: relative;
+            width: 100%;
+            height: fit-content;
+            font-size: 3vh;
+            background-color: thistle;
+            text-align: center;
+        }
+        .main_content_playerhp_container{
+            position: relative;
+            width: 100%;
+            height: 10%;
+            background-color: thistle;
+        }
+            #main_content_playerhp_bar{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(109, 124, 207);
+                z-index: 2;
+            }
+            #main_content_playerhp_damage{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(255, 155, 255);
+                z-index: 1;
+
+                transition: ease;
+                transition-delay: 500ms;
+                transition-duration: 1s;
+            }
+            .main_content_playerhp_base{
+                position: absolute;
+                float: left;
+                /* margin-left: -5%; */
+                width: 100%;
+                height: 100%;
+                background-color: rgb(83, 3, 0);
+                z-index: 0;
+            }
+            /* .main_content_player_deck_container{
+
+            }
+            #main_content_player_deck{
+                
+            } */
+            .main_content_player_card{
+                float: left;
+                width: 20%;
+                aspect-ratio: 11/16;
+                background-color: aqua;
+                transition-duration: 250ms;
+                transition-timing-function: ease;
+                outline: 2px solid;
+                outline-offset: -2px;
+                outline-color: rgb(79, 125, 184);
+                animation-name: card_slide;
+                animation-duration: 500ms;
+                animation-timing-function: ease;
+                z-index: 1;
+            }
+            .main_content_player_card:hover{
+                float: left;
+                width: 20%;
+                aspect-ratio: 11/16;
+                background-color: aqua;
+                transition-duration: 0ms;
+                outline: 4px solid;
+                outline-offset: -4px;
+                outline-color: rgb(79, 125, 184);
+                cursor: pointer;
+            }
+            @keyframes card_slide {
+                from{
+                    transform: translateY(100%);
+                }
+                to{
+                    transform: translateY(0%);
+                }
+            }
+.hurt1{
+    animation-name: hurt1;
+    animation-timing-function: linear;
+    animation-duration: 500ms;
+    animation-delay: 0ms;
+}
+@keyframes hurt1 {
+    0%{
+        filter: saturate(200%) brightness(200%);
+        transform: translate(-10%,2%);
+    }
+    25%{
+        filter: saturate(100%) brightness(100%);
+        transform: translate(5%,0%);
+    }
+    50%{
+        transform: translate(-5%,1%);
+    }
+}
+.hurt2{
+    animation-name: hurt2;
+    animation-timing-function: linear;
+    animation-duration: 350ms;
+    animation-delay: 0ms;
+}
+@keyframes hurt2 {
+    0%{
+        filter: saturate(500%) blur(10px);
+        transform: translate(1%,-1%);
+    }
+    25%{
+        filter: saturate(100%);
+        transform: translate(-5%,1%);
+    }
+    50%{
+        transform: translate(2%,-1%);
+    }
+}
+.sidebar_right{
+    position: relative;
+    float: left;
+    width: 25%;
+    height: 100%;
+    background-color: red;
+}
+.enemy_card{
+    width: 100%;
+    height: 50%;
+    background-color: rgba(165, 42, 42, 0.521);
+}
+.player_card{
+    width: 100%;
+    height: 50%;
+    background-color: rgba(255, 20, 145, 0.575);
+}

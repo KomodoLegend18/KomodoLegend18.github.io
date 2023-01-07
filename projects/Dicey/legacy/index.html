@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicey</title>
+
+    
+    <link rel="stylesheet" href="../Dicey/index.css">
+    <script src="../Dicey/dicey.js"></script>
+
+</head>
+<body onload="load()" style="background-image:url(../assets/StarsSwirl.png)">
+    <!-- <h2 style="position:static;text-align: center;">asda</h2> -->
+    <br>
+    <div id="battlelog">
+        <!-- insert log here -->
+    </div>
+    <div id="game_singleplayer">
+        <table>
+            <tbody>
+                <tr>
+                    <td id="enemy_row">
+                        <div id="enemy_plate">
+                            <p id="enemy_nameplate">Suisei (kmd #Sui53X)</p>
+                            <!-- <p id="enemy_nameplate">Player 2</p> -->
+                            <p id="enemy_hp"></p>
+                        
+                            <div class="hpbar_container_enemy">
+                                <div id="enemy_hpbardamaged" style="width: 100%;"></div>
+                                <!-- <progress id="enemy_hpbardamaged" value="100" max="100"></progress> -->
+                                <progress id="enemy_hpbar" value="100" max="100"></progress>
+                            </div>
+                        
+                        </div>
+                        <!-- <div style="background-image:url(../Dicey/assets/kv_calliope_min.png) ; width: 80vw; height: 100vh; margin-bottom: -35vh !important; background-size: 95%; background-repeat: no-repeat; background-position: center 10%; margin: auto;"></div> -->
+                        <div id="enemy_chara"></div>
+                    </td> 
+                </tr>
+                <tr>
+                    <td id="player_row">
+                        <div id="player_card">
+                            <p id="player_nameplate">Fubuki (lianee #5h0fun)</p>
+                            <!-- <p id="player_nameplate">Player 1</p> -->
+                            <p id="player_hp"></p>
+                            <div class="hpbar_container_player">
+                                <div id="player_hpbardamaged" style="width: 100%;"></div>
+                                <progress id="player_hpbar" value="100" max="100"></progress>
+                            </div>
+                            <br>
+                            <button id="roll_button" onclick="singleplayer_roll()">Roll Dice</button>
+                            <input id="colorpicker" type="color" value="#1c1c1c">
+                            <label for="colorpicker">Test: Primary Color</label>
+                            <input id="colorpicker-second" type="color" value="#1540c1">
+                            <label for="colorpicker-second">Test: Secondary Color</label>
+                            <button id="roll_button" onclick="resetname()">Test: reset name</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+#pfp_type4{
+    /* border: 2px solid; */
+    filter: grayscale();
+
+    animation-name: type4;
+    animation-duration: 1s;
+    animation-delay: 0ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease;
+    /* animation-iteration-count: infinite; */
+}
+@keyframes type4 {
+    0%{
+        /* transform: scaleY(0%); */
+        /* border-radius: 0px; */
+        border-radius: 50px;
+        outline: 500px solid;
+        outline-offset: -2px;
+        margin-left: -80%;
+        outline-color: rgba(79, 125, 184, 0.596);
+        /* transform: scaleY(0%); */
+    }
+    50%{
+        /* transform: scaleY(100%); */
+        /* border-radius: 30px; */
+        border-radius: 0px;
+        outline: 500px solid;
+        outline-offset: 500px;
+        margin-left: 0%;
+        outline-color: rgba(79, 125, 184, 0.281);
+        /* transform: scaleY(100%); */
+    }
+    100%{
+        border-radius: 0px;
+        outline: 0px solid;
+        outline-offset: 500px;
+        margin-left: 0%;
+        outline-color: rgba(79, 125, 184, 0);
+        /* transform: scaleY(100%); */
+    }
+}

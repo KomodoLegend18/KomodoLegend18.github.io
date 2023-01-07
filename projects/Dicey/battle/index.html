@@ -1,0 +1,125 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicey 2 | Battle</title>
+
+    <!--  -->
+    <link rel="stylesheet" href="../styles/battle.css">
+    <link rel="stylesheet" href="../styles/chatstyle.css">
+
+    <!-- <script src="../scripts/chat.js" defer></script> -->
+    <!-- <script src="../scripts/http.js" defer></script> -->
+    <!-- <script src="../scripts/misc.js" defer></script> -->
+    <!-- <script src="../scripts/invite.js" defer></script> -->
+    <!-- <script src="../scripts/URLParamLogic.js" defer></script> -->
+
+    <!-- <script src="../scripts/multibattle.js" defer></script> -->
+
+    <script src="../v3/scripts/playerData.js" defer></script>
+    <script src="../v3/scripts/request.js" defer></script>
+
+    <script src="../v3/scripts/versus_create.js" defer></script>
+    <script src="../v3/scripts/versus_connect.js" defer></script>
+
+    <script src="../v3/scripts/functions.js" defer></script>
+    <script src="../v3/scripts/gamelogic.js" defer></script>
+
+
+
+    
+
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" 
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <div id="blind" style="width: 100vw; height: 100vh; background-color: black; z-index: 101; position: absolute;"></div>
+    <div id="alertParent">
+        <!-- <div id="turnAlertContainer">
+            <div id="turnAlertLabel">Your Turn</div>
+        </div> -->
+    </div>
+    <div class="sidebar_left">
+        <div class="chat">
+            <div id="chat-display">
+                <!-- <div class="chat_history">
+                    <img class="chat_pfp" src="https://cdn.discordapp.com/avatars/612618043725447178/31bb9a91cf5385f1e5e9a9417402a375.png?size=256">
+                    <div class="chat_text">lorem ipsum dolor sit amet audi famam illus</div>
+                </div>
+                <div class="chat_history">
+                    <img class="chat_pfp" src="https://cdn.discordapp.com/avatars/612618043725447178/31bb9a91cf5385f1e5e9a9417402a375.png?size=256">
+                    <div class="chat_text">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+                </div> -->
+            </div>
+            <div id="chat-area">
+                <form>
+                    <input id="chat-input" type="text" placeholder="Chat" autocomplete="off">
+                    <button class="chat-submit" onclick="ChatValidator"><span class="material-symbols-rounded">
+                        send
+                        </span></button>
+                </form>
+            </div>
+            
+        </div>
+        <div class="log">
+            <!-- <div class="log_header">
+                <div id="log_header_stat_player">PLAYER:</div><div id="log_header_stat_draw">DRAW:</div><div id="log_header_stat_enemy">ENEMY:</div>
+            </div> -->
+            <div id="log_display" style="z-index: 102;">
+                <!-- <div class="log_history" id="log_system" onclick="invite_join(false)">[ JOIN ]</div> -->
+                <!-- <div class="log_history"></div> -->
+            </div>
+            
+
+            
+        </div>
+    </div>
+    <div class="main_content">
+        <div class="main_content_enemyheader">
+            <div id="chara_name" class="main_content_enemy_name">
+                
+            </div>
+            <div class="main_content_enemyhp_container">
+                <!-- <progress id="main_content_enemyhp_bar" value="65" max="100"></progress> -->
+                <div style="width: 100%;" id="main_content_enemyhp_bar"></div>
+                <div style="width: 100%;" id="main_content_enemyhp_damage"></div>
+                <div class="main_content_enemyhp_base"></div>
+                
+            </div>
+        </div>
+        <div id="chara_bg" class="main_content_enemy_chara">
+            <img id="chara_illust" width="100%" height="100%" src="" alt="Illustration of opponent's character">
+        </div>
+        <div class="main_content_playerfooter">
+            <div id="self_chara_name" class="main_content_player_name">
+                
+            </div>
+            <div class="main_content_playerhp_container">
+                <!-- <progress id="main_content_enemyhp_bar" value="65" max="100"></progress> -->
+                <div style="width: 100%;" id="main_content_playerhp_bar"></div>
+                <div style="width: 100%;" id="main_content_playerhp_damage"></div>
+                <div class="main_content_playerhp_base"></div>
+                <br>
+            </div>
+            <div class="main_content_player_deck_container">
+                <div id="main_content_player_deck">
+                    <div class="main_content_player_card" id="attack" onclick="Attack(0)">
+                        <span class="material-symbols-rounded">
+                            casino
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar_right">
+        <div class="enemy_card"></div>
+        <div class="player_card"></div>
+    </div>
+    <script>for (i = 0; i < localStorage.length; i++)   {
+        console.log("LISTED|",localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
+    }</script>
+</body>
+</html>

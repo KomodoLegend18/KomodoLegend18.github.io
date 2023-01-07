@@ -1,3 +1,10 @@
+:root{
+    --player-colorscheme-primary: rgb(69, 138, 140);
+    --player-colorscheme-secondary: rgb(162, 0, 255);
+    --enemy-colorscheme-primary: rgb(0, 60, 255);
+    --enemy-colorscheme-secondary: rgb(0, 60, 255);
+}
+
 body{
     overflow: hidden;
     margin:-1;
@@ -14,6 +21,31 @@ tbody{
     width: 100vw;
     display: table
 }
+
+#battlelog{
+    width: 20%; 
+    height: 85%;
+    padding-left: 1%;
+    position: absolute;
+    top: 100;
+    right: 0;
+    background-color:rgba(89, 112, 90, 0);
+    overflow-y: scroll;
+    z-index: 1;
+}
+#battlelog_player{
+    background-color: aquamarine;
+    padding: 3%;
+}
+#battlelog_enemy{
+    background-color: #ff0000;
+    padding: 3%;
+}
+#battlelog_neutral{
+    background-color: gray;
+    padding: 3%;
+}
+
 .hpbar_container_enemy{
     background-color: #c5c5c5;
     width: 80%;
@@ -23,7 +55,7 @@ tbody{
     left: 9.95%;
 }
 .hpbar_container_player{
-    background-color: #c5c5c5;
+    background-color: var(--player-colorscheme-secondary);
     width: 35%;
     height: 3vmin;
     position: relative;
@@ -32,7 +64,15 @@ tbody{
 }
 
 #enemy_row{
+    position: fixed;
+    top: 0;
     text-align: center;
+}
+#enemy_plate{
+    margin-top: -1%;
+    background-color: white;
+    padding-top: 1%;
+    padding-bottom: 1%;
 }
 #enemy_nameplate{
     color: black;
@@ -120,7 +160,8 @@ tbody{
     background: #ff0085;
 }
 #player_hpbar::-webkit-progress-value{
-    background: #ff0085;
+    /* background: #ff0085; */
+    background: var(--player-colorscheme-primary);
 }
 #player_hpbar::-webkit-progress-bar{
     background:#ff70ba00;

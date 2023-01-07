@@ -1,0 +1,484 @@
+.material-symbols-rounded {
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+  }
+  img.emoji {
+      height: 1em;
+      width: 1em;
+      margin: 0 .05em 0 .1em;
+      vertical-align: -0.1em;
+   }
+  
+  body{
+        width: 100vw;
+        height: 100vh;
+        margin: 0%;
+        overflow: hidden;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+  }
+  .menu_sidebar_left{
+      position: relative;
+      float: left;
+      width: 25%;
+      height: 100%;
+      background-color: red;
+  }
+  .menu_sidebar_left_button{
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+
+    font-size: 3vw;
+    width: 100%;
+    height: 20%;
+
+    background-color: thistle;
+    outline: 0.1vw solid;
+    outline-offset: 0.1vw;
+
+    transition: ease 150ms;
+
+    cursor: pointer;
+  }
+  .menu_sidebar_left_button:hover{
+    background-color: thistle;
+    outline: 1vw solid;
+    outline-offset: -1vw;
+
+    transition: ease 100ms;
+  }
+
+  .menu_main_content{
+      position: relative;
+      float: left;
+      width: 75%;
+      height: 100%;
+      background-color: rgb(100, 237, 134);
+  }
+      .menu_main_content_header{
+          width: 100%;
+          height: 6%;
+          background-color: tomato;
+          overflow: hidden;
+      }
+          .menu_main_content_header_name{
+              width: 100%;
+              height: fit-content;
+              font-size: 3vh;
+              background-color: thistle;
+              text-align: center;
+          }
+          .menu_main_content_hp_container{
+              position: relative;
+              width: 100%;
+              height: 70%;
+              background-color: thistle;
+          }
+              #menu_main_content_hp_bar{
+                  position: absolute;
+                  float: left;
+                  /* margin-left: -5%; */
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgb(255, 0, 106);
+                  z-index: 2;
+              }
+              #menu_main_content_hp_damage{
+                  position: absolute;
+                  float: left;
+                  /* margin-left: -5%; */
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgb(255, 155, 255);
+                  z-index: 1;
+  
+                  transition: ease;
+                  transition-delay: 500ms;
+                  transition-duration: 150ms;
+              }
+              .menu_main_content_hp_base{
+                  position: absolute;
+                  float: left;
+                  /* margin-left: -5%; */
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgb(83, 3, 0);
+                  z-index: 0;
+              }
+      #menu_main_content_chara_bg{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: whitesmoke;
+          overflow: hidden;
+          background-size: cover; 
+          background-position: center;
+          background-repeat: no-repeat;
+      }
+        #menu_main_content_chara_art{
+            width: 100%;
+        }
+      .menu_main_content_footer{
+            backdrop-filter: blur(4px) grayscale(100%) brightness(60%);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 16.4vw;
+            padding-left: 12%;
+            padding-right: 12%;
+            background-color: rgba(255, 99, 71, 0);
+            overflow: hidden;
+            text-align: center;
+      }
+              .menu_main_content_card{
+                  float: left;
+                  width: 15%;
+                  aspect-ratio: 11/16;
+                  background-color: aqua;
+                  transition-duration: 250ms;
+                  transition-timing-function: ease;
+                  outline: 0.4vw solid;
+                  outline-offset: -2px;
+                  outline-color: rgb(79, 125, 184);
+                  animation-name: card_slide;
+                  animation-duration: 500ms;
+                  animation-timing-function: ease;
+                  cursor: pointer;
+                  z-index: 1;
+              }
+              .menu_main_content_card:hover{
+                  float: left;
+                  aspect-ratio: 11/16;
+                  background-color: aqua;
+                  transition-duration: 0ms;
+                  outline: 0.5vw solid;
+                  outline-offset: -4px;
+                  outline-color: rgb(79, 125, 184);
+              }
+              @keyframes card_slide {
+                  from{
+                      transform: translateY(100%);
+                  }
+                  to{
+                      transform: translateY(0%);
+                  }
+              }
+
+
+
+.menu_play-open{
+position: absolute;
+width: 100%;
+height: 100%;
+/* background-color: rgba(0, 0, 0, 0.836); */
+z-index: 99;
+animation: menu_open 130ms ease;
+}
+@keyframes menu_open {
+    from{
+        opacity: 0%;
+    }
+    to{
+        opacity: 100%;
+    }
+}
+
+    .menu_play-close{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        /* background-color: rgba(0, 0, 0, 0.836); */
+        z-index: 99;
+        animation: menu_close 130ms ease;
+
+    }
+    @keyframes menu_close {
+        from{
+        opacity: 100%;
+        }
+        to{
+            opacity: 0%;
+        }
+    }
+
+    .menu_play_items_container{
+        float: left;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.829);
+        /* backdrop-filter: blur(10px); */
+    }
+    .menu_play_tabs{
+        float: left;
+        width: 75%;
+        height: 100%;
+        background-color: rgba(0, 255, 255, 0);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .menu_play_tabs_button{
+        float: left;
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center; /* align vertical */
+
+        border-radius: 0px 20px 20px 0px;
+
+        font-size: 2vmax;
+        width: 55%;
+        height: 20%;
+        margin-top: 5px;
+
+        background-color: thistle;
+        outline: 0.1vw solid;
+        outline-offset: -1vw;
+
+        transition: ease 150ms;
+
+        cursor: pointer;
+
+        animation: play_button_in 500ms ease;
+    }
+    .menu_play_tabs_button:hover{
+        box-shadow:inset 0px 0px 10px 1px black;
+        transition-duration: 100ms;
+    }
+    @keyframes play_button_in {
+        from{
+            transform: translateX(-10%);
+        }
+        to{
+            transform: translateX(0%);
+        }
+    }
+    #menu_play_close-button{
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center; /* align vertical */
+
+        font-size: 1.5vw;
+        float: left;
+        width: 25%;
+        height: 100%;
+        background-color: rgb(220, 20, 60);
+
+        cursor: pointer;
+    }
+
+
+
+.menu_profile-open{
+position: absolute;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.856);
+z-index: 99;
+
+animation-name: profile-open;
+animation-duration: 130ms;
+animation-timing-function: ease;
+animation-fill-mode: forwards;
+}
+@keyframes profile-open {
+    from{
+        transform: translate(0%,-50%) scale(100%,0%);
+    }
+    to{
+        transform: translate(0%,0%) scale(100%,100%);
+    }
+}
+    .menu_profile-close{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.856);
+        z-index: 99;
+        
+        animation-name: profile-close;
+        animation-duration: 200ms;
+        animation-timing-function: ease;
+        animation-fill-mode: forwards;
+    }
+        @keyframes profile-close {
+            from{
+                transform: translate(0%,0%) scale(100%,100%);
+            }
+            to{
+                transform: translate(0%,-50%) scale(100%,0%);
+            }
+        }
+    .menu_profile_items_container{
+        float: left;
+        width: 75%;
+        height: 100%;
+        background-color: rgb(170, 170, 170);
+        overflow-y: auto;
+    }
+        #menu_profile_items{
+            position: relative;
+            margin: 2.5%;
+            float: left;
+            width: 15%;
+            aspect-ratio: 11/16;
+            background-color: gray;
+            border-radius: .5vw;
+            background-size: cover !important; 
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            overflow: hidden;
+        }
+        #menu_profile_items_art{
+            z-index: 1;
+            position: absolute;
+            bottom: 0;
+            transform: scale(2);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+    .menu_profile_tabs{
+        float: left;
+        width: 25%;
+        height: 90%;
+        background-color: rgba(0, 255, 255, 0.527);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .menu_profile_tabs_button{
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center; /* align vertical */
+
+        font-size: 2vmax;
+        width: 100%;
+        height: 20%;
+
+        background-color: thistle;
+        outline: 0.1vw solid;
+        outline-offset: -1vw;
+
+        transition: ease 150ms;
+
+        cursor: pointer;
+    }
+    #menu_profile_close-button{
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center; /* align vertical */
+
+        font-size: 1.5vw;
+        float: left;
+        width: 25%;
+        height: 10%;
+        background-color: rgba(220, 20, 60, 0.788);
+
+        cursor: pointer;
+    }
+
+.menu_settings-open{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(0, 0, 0, 0.836); */
+    z-index: 99;
+    
+    animation-name: settings-open;
+    animation-duration: 130ms;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+}
+    @keyframes settings-open {
+        0%{
+            filter: brightness(0%);
+            opacity: 0%;
+            /* transform: translate(-100%,0%); */
+        }
+        100%{
+            opacity: 100%;
+            /* transform: translate(0%,0%); */
+        }
+    }
+        .menu_settings-close{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* background-color: rgba(0, 0, 0, 0.836); */
+            z-index: 99;
+            
+            animation-name: settings-close;
+            animation-duration: 200ms;
+            animation-timing-function: ease;
+            animation-fill-mode: forwards;
+        }
+            @keyframes settings-close {
+                0%{
+                    /* transform: translate(0%,0%); */
+                    transform: scaleY(100%);
+                }
+                100%{
+                    /* transform: translate(-100%,0%); */
+                    transform: scaleY(0%);
+                }
+            }
+        .menu_settings_items_container{
+            float: left;
+            width: 75%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.897);
+            /* backdrop-filter: blur(2px); */
+        }
+        #menu_settings_item{
+            padding: 2%;
+            margin-top: 2%;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+            height: fit-content;
+            background-color: aliceblue;
+        }
+        .menu_settings_tabs{
+            float: left;
+            width: 25%;
+            height: 90%;
+            background-color: rgb(0, 255, 255);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .menu_settings_tabs_button{
+            display: flex;
+            justify-content: center; /* align horizontal */
+            align-items: center; /* align vertical */
+    
+            font-size: 2vmax;
+            width: 100%;
+            height: 20%;
+    
+            background-color: thistle;
+            outline: 0.1vw solid;
+            outline-offset: -1vw;
+    
+            transition: ease 150ms;
+    
+            cursor: pointer;
+        }
+        #menu_settings_close-button{
+            display: flex;
+            justify-content: center; /* align horizontal */
+            align-items: center; /* align vertical */
+    
+            font-size: 1.5vw;
+            float: left;
+            width: 25%;
+            height: 10%;
+            background-color: rgb(220, 20, 60);
+    
+            cursor: pointer;
+        }

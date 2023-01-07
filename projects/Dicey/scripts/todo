@@ -1,0 +1,9 @@
+[x] rewrite chat.js
+[x] rewrite invite.js
+[] rewrite misc.js
+[] game logic
+[] sync hp and check inconsistency
+[x] check if embed deleted
+[x] menu
+
+rev 6
