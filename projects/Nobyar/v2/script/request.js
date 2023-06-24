@@ -47,7 +47,7 @@ const getAnime = (query) => {
     const promise = new Promise((resolve, reject) => {
         // console.warn(query)
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", `https://corsproxy.io/?https://api.myanimelist.net/v2/anime?q=${query}&nsfw=true&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season`, true);
+            xhr.open("GET", `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime?q=${query}&nsfw=true&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season`, true);
             xhr.responseType = 'json';
             xhr.setRequestHeader("X-MAL-CLIENT-ID", malkey) // Add Client ID header with "key" value provided by user
 
