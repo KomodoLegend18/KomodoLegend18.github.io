@@ -64,50 +64,52 @@ const POST = (POSTwait, POSTembeds) =>{
     return promise;
 };
 
+function testPost(){ // remind me to remove testpost later
+    let data = localStorage.getItem("saved_jadwal")
+    let dataData = JSON.parse(data)
+    let field = []
+    for (let i=0; i<dataData.length; i++){
+        let id = dataData[i].id
+        let title = dataData[i].title
+        let score = dataData[i].mean
+        let nextEps
+        if (dataData[i].broadcast){
+            let startDate = dataData[i].start_date
+            let startTime = dataData[i].broadcast.start_time
+            let date = new Date(`${startDate} ${startTime}`)
+            date.setDate(date.getDate()+7*dataData[i].watched_episode);
+            console.log(date)
 
-let data = localStorage.getItem("saved_jadwal")
-let dataData = JSON.parse(data)
-let field = []
-for (let i=0; i<dataData.length; i++){
-    let id = dataData[i].id
-    let title = dataData[i].title
-    let score = dataData[i].mean
-    let nextEps
-    if (dataData[i].broadcast){
-        let startDate = dataData[i].start_date
-        let startTime = dataData[i].broadcast.start_time
-        let date = new Date(`${startDate} ${startTime}`)
-        date.setDate(date.getDate()+7*dataData[i].watched_episode);
-        console.log(date)
 
+            nextEps = date.getTime()/1000
 
-        nextEps = date.getTime()/1000
-
-        console.log(nextEps)
-    } else {
-        nextEps = `unknown`
+            console.log(nextEps)
+        } else {
+            nextEps = `unknown`
+        }
+        let add = JSON.parse(`{
+            "name": ${id},
+            "value": "[ ${score} ] **${title}**\\n next episode [Ep${dataData[i].watched_episode+1}]: <t:${nextEps}:R> (estimated)\\nqueued by ***Komosan***",
+            "inline": true
+        }`)
+        field.push(add)
     }
-    let add = JSON.parse(`{
-        "name": ${id},
-        "value": "[ ${score} ] **${title}**\\n next episode [Ep${dataData[i].watched_episode+1}]: <t:${nextEps}:R> (estimated)\\nqueued by ***Komosan***",
-        "inline": true
-    }`)
-    field.push(add)
+    console.log(field)
+    let embed = [
+        {
+        "description": "[Add to queue](https://komodolegend18.github.io/projects/Nobyar?queue)",
+        "color": 15466240,
+        "fields": field,
+        "author": {
+            "name": "Nobyar Queue"
+        }
+        }
+    ]
+    POST(true,embed).then(response => {
+        console.log(response)
+    })
 }
-console.log(field)
-let embed = [
-    {
-      "description": "[Add to queue](https://komodolegend18.github.io/projects/Nobyar?queue)",
-      "color": 15466240,
-      "fields": field,
-      "author": {
-        "name": "Nobyar Queue"
-      }
-    }
-  ]
-POST(true,embed).then(response => {
-    console.log(response)
-})
+
 
 
 const PATCH = (PATCHID, PATCHembeds) =>{

@@ -1,0 +1,16 @@
+[
+    {
+        "list":[],
+        "config":[
+            {
+                "webhook":[
+                    {
+                        "url":"",
+                        "avatar":"",
+                        "username":""
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -158,8 +158,24 @@ function webhook_config_save(){
 }
 
 function webhook_post(index){
-  function mapped_title(index){
-    return [`${index.title} | Next episode <t:1665846000:R>`]
+  // console.log(jadwal_list)
+  function mapped_title(item){
+    console.warn(item)
+    if (item.broadcast){
+      let startDate = item.start_date
+      let startTime = item.broadcast.start_time
+      let date = new Date(`${startDate} ${startTime}`)
+      date.setDate(date.getDate()+7*item.watched_episode);
+      console.log(date)
+
+
+      nextEps = `<t:${date.getTime()/1000}:R>`
+
+      console.log(nextEps)
+    } else {
+        nextEps = `is unknown`
+    }
+    return [`${item.title} | Next episode (Ep.${item.watched_episode+1}) ${nextEps}`]
   }
   // var embed_desc = `${jadwal_list.map(x => x.title).join(`\\n`)}`
   var embed_desc = jadwal_list.map(mapped_title).join(`\\n`)
@@ -178,7 +194,7 @@ function webhook_post(index){
         }
       ],
       "footer": {
-        "text": "\\"adakah jadwal?\\""
+        "text": "\\"estimated time until next episode may be incorrect due to entry is being postponed\\""
       },
       "image": {
         "url": "${jadwal_list[index].main_picture.large}"
