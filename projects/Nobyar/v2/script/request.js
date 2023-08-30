@@ -47,7 +47,7 @@ const getAnime = (query) => {
     const promise = new Promise((resolve, reject) => {
         // console.warn(query)
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime?q=${query}&nsfw=true&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season`, true);
+            xhr.open("GET", `https://cors-anywhere.herokuapp.com/api.myanimelist.net/v2/anime?q=${query}&nsfw=true&fields=id,title,main_picture,alternative_titles,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season`, true);
             xhr.responseType = 'json';
             xhr.setRequestHeader("X-MAL-CLIENT-ID", malkey) // Add Client ID header with "key" value provided by user
 
@@ -79,7 +79,7 @@ const updateAnime = (id) => {
     const promise = new Promise((resolve, reject) => {
         // console.warn(query)
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", `https://cors-anywhere.herokuapp.com/https://api.myanimelist.net/v2/anime/${id}?nsfw=true&fields=id,title,main_picture,alternative_titles,average_episode_duration,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season,source,rating,studios`, true);
+            xhr.open("GET", `https://cors-anywhere.herokuapp.com/api.myanimelist.net/v2/anime/${id}?nsfw=true&fields=id,title,main_picture,alternative_titles,average_episode_duration,synopsis,genres,mean,media_type,num_episodes,broadcast,created_at,updated_at,start_date,broadcast,status,start_season,source,rating,studios`, true);
             xhr.responseType = 'json';
             xhr.setRequestHeader("X-Mal-Client-Id", malkey) // Add Client ID header with "key" value provided by user
             // xhr.setRequestHeader("Access-Control-Allow-Origin","*")

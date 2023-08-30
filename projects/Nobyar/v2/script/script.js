@@ -146,30 +146,7 @@ searchInput.addEventListener("input", function(e) {
                         // Then assign custom property above to data
                         Object.assign(data,customProperty)
     
-                        console.log(e.target.children.info.children.title.innerText,data)
-    
-                        // Search Yugen with title as query
-                        searchYugen(e.target.children.info.children.title.innerText).then(response=>{
-                            // Then parse response from Yugen
-                            let parse = new DOMParser().parseFromString(response,"text/html")
-                            let item = parse.querySelector(`[title='${e.target.children.info.children.title.innerText}']`)
-                            let url = `${sites[0].url}${item.getAttribute("href")}watch/`
-                            // console.log(url)
-    
-                            // Request Yugen again with parsed URL to get all available episodes
-                            allepsYugen(url).then(response=>{
-                                // Parse the response
-                                let parse = new DOMParser().parseFromString(response,"text/html")
-                                let item = parse.querySelectorAll(`.ep-card`)
-                                
-                                // console.log(`${item.length} episode aired`)
-    
-                                // Insert new info to data
-                                data.nobyar.aired_episodes = item.length
-                                let newExternal = {"name":"Yugen","url":url}
-                                data.nobyar.external_source.push(newExternal);
-                                addMeanHistory(data);
-                                
+                        console.log(e.target.children.info.children.title.innerText,data)                               
                                 if (savedata[0].list.length>0){ // If list in savedata not empty
                                     for(i=0;i<savedata[0].list.length;i++){ // Iterate all list in savedata
                                         console.log(savedata[0].list[i].id,savedata[0].list[i].title)
@@ -199,39 +176,6 @@ searchInput.addEventListener("input", function(e) {
                                 if(document.querySelector("#empty")){ // if empty list message exist, remove it
                                     document.querySelector("#empty").style="display:none"
                                 }
-                            }).catch(err=>{
-                                console.error(err)
-                            })
-                        }).catch(err=>{
-                            // console.error(err)
-                            sendError(err,data,`Yugen page not found for __***${e.target.children.info.children.title.innerText} (${data.id})***__`)
-                            if (savedata[0].list.length>0){ // If list in savedata not empty
-                                for(i=0;i<savedata[0].list.length;i++){ // Iterate all list in savedata
-                                    console.log(savedata[0].list[i].id,savedata[0].list[i].title)
-                                        if(data.id==savedata[0].list[i].id){ // If data id is the same as the one in save data
-                                            // console.warn("duplicate")
-                                            break; // stop iterating
-                                        } else if(i==savedata[0].list.length-1&&data.id!=savedata[0].list[i].id){ // else if done iterating AND no duplicate found, add to savedata
-                                            console.log("unique",data)
-                                            savedata[0].list.push(data)
-                                            localStorage.setItem("nobyarV2", JSON.stringify(savedata))
-                                            let save = JSON.parse(localStorage.getItem("nobyarV2"))
-                                            createcard(data,save[0].list.length-1)
-                                            toast("notice",`Successfully added "${data.title}" to the list`)
-    
-                                            console.log(save)
-                                        }
-                                        console.log(i,savedata[0].list.length)
-                                }
-                            }else if(savedata[0].list.length<1){ // Else if list in savedata is empty, just add without checking for duplicates
-                                savedata[0].list.push(data)
-                                localStorage.setItem("nobyarV2", JSON.stringify(savedata))
-                                let save = JSON.parse(localStorage.getItem("nobyarV2"))
-                                createcard(data,save[0].list.length-1)
-                                toast("notice",`Successfully added "${data.title}" to the list`)
-                                console.log(save)
-                            }
-                        })
                         // data.push(customProperty)
                         // page_loadlist()
                     })
@@ -321,153 +265,8 @@ function page_loadlist(){ // Executed when page loaded
 
                         
                         load[0].list[i] = updateMeanHistory(i,load,newData);
-                        // createcard(load[0].list[i], i);
-                        // localStorage.setItem("nobyarV2", JSON.stringify(load));
-
-                        // if(load[0].list[i].nobyar.external_source.length!=0){
-
-                        // check all eps on yugen
-                        allepsYugen(load[0].list[i].nobyar.external_source[0].url).then(response=>{
-                            let data = load[0].list[i];
-                            // Parse the response
-                            let parse = new DOMParser().parseFromString(response,"text/html")
-                            let item = parse.querySelectorAll(`.ep-card`)
-                            
-                            // console.log(`${item.length} episode aired`)
-
-                            // Insert new info to data
-                            data.nobyar.aired_episodes = item.length
-                            // data.nobyar[2].external_link[0].url = url
-                            localStorage.setItem("nobyarV2", JSON.stringify(load));
-                            // console.log(node)
-                            createcard(load[0].list[i], i);
-                        }).catch(err=>{
-                            console.error(err,"Unable to get data from external url, url may have changed. Getting new link...")
-                            searchYugen(load[0].list[i].title).then(response=>{
-                                // Then parse response from Yugen
-                                let parse = new DOMParser().parseFromString(response,"text/html")
-                                let item = parse.querySelector(`[title='${load[0].list[i].title}']`)
-                                let url = `${sites[0].url}${item.getAttribute("href")}watch/`
-                                // console.log(url)
-                                // console.log(response)
-        
-                                // Request Yugen again with parsed URL to get all available episodes
-                                allepsYugen(url).then(response=>{
-                                    // Parse the response
-                                    let parse = new DOMParser().parseFromString(response,"text/html")
-                                    let item = parse.querySelectorAll(`.ep-card`)
-                                    
-                                    // console.log(`${item.length} episode aired`)
-        
-                                    // Insert new info to data
-                                    load[0].list[i].nobyar.aired_episodes = item.length
-                                    let newExternal = {"name":"Yugen","url":`${url}`}
-                                    load[0].list[i].nobyar.external_source[0]=newExternal;
-                                    console.log(load[0].list[i].nobyar.external_source[0])
-                                    console.log(load)
-                                    addMeanHistory(load[0].list[i]);
-                                    localStorage.setItem("nobyarV2", JSON.stringify(load));
-                                    createcard(load[0].list[i], i);
-                                })
-                            })
-                            // console.error(err+", Entry does not have external url",load[0].list[i]);
-                            // sendError(err,load[0].list[i],"Entry does not have external url, allepsYugen():315");
-                        })
-
-                        // check all eps on kurama
-                        // console.log(load[0].list[i].nobyar.external_source.length);
-                        if (load[0].list[i].nobyar.external_source.length<2){
-                            console.log(load[0].list[i].nobyar.external_source.length)
-                            searchKurama(load[0].list[i].title).then(response=>{
-                                // Then parse response from Kurama
-                                let parse = new DOMParser().parseFromString(response,"text/html")
-                                let item = parse.querySelector(`#animeList > div > div > a`)
-                                // console.log(item);
-
-                                let url = `${item.getAttribute("href")}`
-                                // console.log(url)
-                                // console.log(response)
-        
-                                // Insert new info to data
-                                // load[0].list[i].nobyar.aired_episodes = item.length
-                                let newExternal = {"name":"Kurama","url":`${url}`}
-                                load[0].list[i].nobyar.external_source[1]=newExternal;
-                                console.log(load[0].list[i].nobyar.external_source[1])
-                                console.log(load)
-                                // addMeanHistory(load[0].list[i]);
-                                localStorage.setItem("nobyarV2", JSON.stringify(load));
-                                // createcard(load[0].list[i], i);
-
-                                // Request Kurama again with parsed URL to get all available episodes
-                                // allepsKurama(url).then(response=>{
-                                //     // Parse the response
-                                //     let parse = new DOMParser().parseFromString(response,"text/html")
-                                //     let itemdata = parse.querySelector("#episodeLists").getAttribute("data-content")
-                                //     let dataparsed = new DOMParser().parseFromString(itemdata,"text/html")
-                                //     console.log(dataparsed.body.children);
-                                //     // console.log(`${item.length} episode aired`)
-                                // })
-
-                            })
-                        }
-                        // allepsKurama(load[0].list[i].nobyar.external_source[1].url).then(response=>{
-                        //     // let data = load[0].list[i];
-                        //     // Parse the response
-                        //     let parse = new DOMParser().parseFromString(response,"text/html")
-                        //     let item = parse.querySelector(`#episodeLists`)
-                            
-                        //     // console.log(`${item.length} episode aired`)
-
-                        //     // Insert new info to data
-                        //     // data.nobyar.aired_episodes = item.length
-                        //     // data.nobyar[2].external_link[0].url = url
-                        //     localStorage.setItem("nobyarV2", JSON.stringify(load));
-                        //     // console.log(node)
-                        //     // createcard(load[0].list[i], i);
-                        // }).catch(err=>{
-                        //     console.error(err,"Unable to get data from external url, url may have changed. Getting new link...")
-                        //     searchKurama(load[0].list[i].title).then(response=>{
-                        //         // Then parse response from Yugen
-                        //         let parse = new DOMParser().parseFromString(response,"text/html")
-                        //         let items = parse.querySelectorAll(`h5`)
-                        //         items.forEach(target=>{
-                        //             let targetText = target.querySelector("a").innerHTML;
-                        //             if (targetText == load[0].list[i].title){
-                        //                 console.log(targetText,target)
-                        //             }
-                        //         })
-                        //         // let url = `${sites[0].url}${item.getAttribute("href")}watch/`
-                        //         // console.log(url)
-                        //         // console.log(response)
-        
-                        //         // Request Yugen again with parsed URL to get all available episodes
-
-                        //         // allepsKurama(url).then(response=>{
-                        //         //     // Parse the response
-                        //         //     let parse = new DOMParser().parseFromString(response,"text/html")
-                        //         //     let item = parse.querySelectorAll(`.ep-card`)
-                                    
-                        //         //     // console.log(`${item.length} episode aired`)
-        
-                        //         //     // Insert new info to data
-                        //         //     load[0].list[i].nobyar.aired_episodes = item.length
-                        //         //     let newExternal = {"name":"Kurama","url":`${url}`}
-                        //         //     load[0].list[i].nobyar.external_source[0]=newExternal;
-                        //         //     console.log(load[0].list[i].nobyar.external_source[0])
-                        //         //     console.log(load)
-                        //         //     addMeanHistory(load[0].list[i]);
-                        //         //     localStorage.setItem("nobyarV2", JSON.stringify(load));
-                        //         //     createcard(load[0].list[i], i);
-                        //         // })
-
-                        //     })
-                        //     // console.error(err+", Entry does not have external url",load[0].list[i]);
-                        //     // sendError(err,load[0].list[i],"Entry does not have external url, allepsYugen():315");
-                        // })
-
-                        // } else {
-                            // createcard(load[0].list[i], i);
-                        // }
+                        createcard(load[0].list[i], i);
+                        // localStorage.setItem("nobyarV2", JSON.stringify(load));                        
 
                     }).catch((err) => {
                         console.error(err);

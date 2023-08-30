@@ -17,3 +17,8 @@ var sites = [
 var errMSG = {
     "URL":"Entry does not have valid URL",
 }
+
+function resetLocalstorage(){
+    localStorage.removeItem("nobyarV2");
+    location.reload()
+}
