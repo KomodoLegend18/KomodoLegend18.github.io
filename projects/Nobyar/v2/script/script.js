@@ -1,5 +1,5 @@
 // ========================================================
-if(!user_data){
+if(!loadingUserData()){
     // Create new empty save data
     let saveArray = [
         {
@@ -11,15 +11,19 @@ if(!user_data){
             ]
         }
     ]
-    localStorage.setItem("nobyarV2", JSON.stringify(saveArray))
-    console.warn("Save data not found, new save data created",JSON.parse(localStorage.getItem("nobyarV2")))
+    // localStorage.setItem("nobyarV2", JSON.stringify(saveArray))
+    savingUserData(saveArray,"New save data")
+    console.warn("Save data not found, new save data created",loadingUserData())
 } else {
-    console.warn("Save data found, loading save data...",JSON.parse(user_data)[0])
+    console.warn("Save data found, loading save data...",loadingUserData()[0])
 }
 
 // ========================================================
 searchInput.addEventListener("focus", function(e){
     // console.log("Dim count: ",document.querySelector("#fadeDim").childElementCount)
+    // console.log(e)
+
+    // Prevent multiple dim element
     if(document.querySelector("#fadeDim").childElementCount==0){
         // Create dim element for header and container
         const dimElem = document.createElement("div");
@@ -39,13 +43,14 @@ searchInput.addEventListener("focus", function(e){
             }
     }
     
-    if(document.getElementById("search-result-overlay")){
-        document.getElementById("search-result-overlay").style="pointer-events:none"
+
+    if(e.target.value.length>=3){
+        document.getElementById("search-result-overlay").style="pointer-events: auto;"
     }
     
     // console.warn("dim applied")
     // console.log(query)
-    function clearSearch(){ // Clear searchbar when executed    
+    function clearSearch(){ // Clear search results when executed    
         // document.querySelector("#header-section > input[type=text]").value=""
         const prevresult = document.getElementById("search-result-overlay")
         if(prevresult){
@@ -56,143 +61,121 @@ searchInput.addEventListener("focus", function(e){
 })
 
 // ========================================================
-let timer
+let search_timer
 searchInput.addEventListener("input", function(e) {
     let query = e.target.value
     if (query.length>=3){ // If query is longer than/equal to 3 characters
         console.log("Search query: ",query.length,`"${query}"`)
 
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        clearTimeout(search_timer);
+        search_timer = setTimeout(() => {
             console.log("> Searching: ",query.length,`"${query}"`)
-            getAnime(query).then(response =>{ // Search MAL for specified search query
-                const result = document.getElementById("search-result-overlay")
-                result.innerHTML=""
-                result.style="pointer-events:auto;"
-    
-                for(i=0;i<response.length;i++){ // Iterate all responses to display on the page
-                    const items = document.createElement("div");
-                    items.id="items"
-                    items.setAttribute("data-index",i)
-    
-                    // Incase response does not contain "start_season" field
-                    if(response[i].node.start_season&&response[i].node.genres){ // If "start_season" exist, display on details tag
-                        items.innerHTML=`
-                        <div id="poster" style="background-image: url(${response[i].node.main_picture.large});">
-                        <div id="label">Add to list</div>
-                        </div>
-                        <div id="info">
-                            <div id="title">${response[i].node.title}</div>
-                            <div id="genre">${response[i].node.genres.map(x => x.name).join(", ")}</div>
-                            <div id="details">
-                                <div id="score">${response[i].node.mean}</div>
-                                <div id="type">${response[i].node.media_type}</div>
-                                <div id="status">${response[i].node.status}</div>
-                                <div id="season">${response[i].node.start_season.season} ${response[i].node.start_season.year}</div>
-                            </div>
-                            <div id="synopsis">${response[i].node.synopsis}</div>
-                        </div>`
-                    } else if(response[i].node.genres){ // If only "genres" exist, display on details tag
-                        // let error = new Error("start_season is undefined")
-                        // error.name = "no start_season"
-                        // sendError(`genre`,query,``)
-                        items.innerHTML=`
-                        <div id="poster" style="background-image: url(${response[i].node.main_picture.large});">
-                        <div id="label">Add to list</div>
-                        </div>
-                        <div id="info">
-                            <div id="title">${response[i].node.title}</div>
-                            <div id="genre">${response[i].node.genres.map(x => x.name).join(", ")}</div>
-                            <div id="details">
-                                <div id="score">${response[i].node.mean}</div>
-                                <div id="type">${response[i].node.media_type}</div>
-                                <div id="status">${response[i].node.status}</div>
-                            </div>
-                            <div id="synopsis">${response[i].node.synopsis}</div>
-                        </div>`
-                    } else {
-                        items.innerHTML=`
-                        <div id="poster" style="background-image: url(${response[i].node.main_picture.large});">
-                        <div id="label">Add to list</div>
-                        </div>
-                        <div id="info">
-                            <div id="title">${response[i].node.title}</div>
-                            <div id="genre">-</div>
-                            <div id="details">
-                                <div id="score">${response[i].node.mean}</div>
-                                <div id="type">${response[i].node.media_type}</div>
-                                <div id="status">${response[i].node.status}</div>
-                            </div>
-                            <div id="synopsis">${response[i].node.synopsis}</div>
-                        </div>`
-                    }
-                    
-                    // Add a click eventlistener to search results created from search response
-                    items.addEventListener("click", function(e){ 
-                        // Declare response as data
-                        let data = response[e.target.attributes["data-index"].value].node
-                        let savedata = JSON.parse(localStorage.getItem("nobyarV2"))
-                        console.log("Save data: ",savedata[0].list)
-    
-                        let customProperty = 
-                        {
-                            "nobyar": {
-                                "aired_episodes": 0,
-                                "watched_episodes": 0,
-                                "mean_history": [],
-                                "external_source":[]
-                            }
+            getMalAPISearch(query).then(response => {
+                const result = document.getElementById("search-result-overlay");
+                result.innerHTML = "";
+                result.style.pointerEvents = "auto";
+
+                for (let i = 0; i < response.length; i++) {
+                    const entry = response[i].node;
+
+                    // Add customProperty to data
+                    const customProperty = {
+                        "nobyar": {
+                        "aired_episodes": 0,
+                        "watched_episodes": 0,
+                        "mean_history": [],
+                        "external_source": []
                         }
-                        // Then assign custom property above to data
-                        Object.assign(data,customProperty)
-    
-                        console.log(e.target.children.info.children.title.innerText,data)                               
-                                if (savedata[0].list.length>0){ // If list in savedata not empty
-                                    for(i=0;i<savedata[0].list.length;i++){ // Iterate all list in savedata
-                                        console.log(savedata[0].list[i].id,savedata[0].list[i].title)
-                                            if(data.id==savedata[0].list[i].id){ // If data id is the same as the one in save data
-                                                // console.warn("duplicate")
-                                                break; // stop iterating
-                                            } else if(i==savedata[0].list.length-1&&data.id!=savedata[0].list[i].id){ // else if done iterating AND no duplicate found, add to savedata
-                                                console.log("unique",data)
-                                                savedata[0].list.push(data)
-                                                localStorage.setItem("nobyarV2", JSON.stringify(savedata))
-                                                let save = JSON.parse(localStorage.getItem("nobyarV2"))
-                                                createcard(data,save[0].list.length-1)
-                                                toast("notice",`Successfully added "${data.title}" to the list`)
-    
-                                                console.log(save)
-                                            }
-                                            console.log(i,savedata[0].list.length)
-                                    }
-                                }else if(savedata[0].list.length<1){ // Else if list in savedata is empty, just add without checking for duplicates
-                                    savedata[0].list.push(data)
-                                    localStorage.setItem("nobyarV2", JSON.stringify(savedata))
-                                    let save = JSON.parse(localStorage.getItem("nobyarV2"))
-                                    createcard(data,save[0].list.length-1)
-                                    toast("notice",`Successfully added "${data.title}" to the list`)
-                                    console.log(save)
-                                }
-                                if(document.querySelector("#empty")){ // if empty list message exist, remove it
-                                    document.querySelector("#empty").style="display:none"
-                                }
-                        // data.push(customProperty)
-                        // page_loadlist()
-                    })
-                    document.getElementById("search-result-overlay").appendChild(items);
-                }
-                // console.warn(response)
-            }).catch(err=>{
-                if (err.status<500){
-                    console.error(err)
-                    sendError(err,query,``)
-                } else {
-                    console.error(err)
+                    };
+                    Object.assign(entry, customProperty);
+
+                    const items = document.createElement("div");
+                    items.id = "items";
+                    items.setAttribute("data-index", i);
+
+                    const posterURL = entry.main_picture ? entry.main_picture.large : "";
+
+                    const genres = entry.genres ? entry.genres.map(x => x.name).join(", ") : "unavailable";
+                    const startSeason = entry.start_season ? `${entry.start_season.season} ${entry.start_season.year}` : "";
+
+                    items.innerHTML = `
+                        <div id="poster" style="background-image: url(${posterURL});">
+                        <div id="label">Add to list</div>
+                        </div>
+                        <div id="info">
+                        <div id="title">${entry.title}</div>
+                        <div id="genre">${genres}</div>
+                        <div id="details">
+                            <div id="score">${entry.mean}</div>
+                            <div id="type">${entry.media_type}</div>
+                            <div id="status">${entry.status}</div>
+                            <div id="season">${startSeason}</div>
+                        </div>
+                        <div id="synopsis">${entry.synopsis || ""}</div>
+                        </div>
+                    `;
+                    
+                    // Add a click event listener to each search result item
+                    items.addEventListener("click", function (e) {
+                        const dataIndex = e.target.getAttribute("data-index");
+                        if (!dataIndex) return; // Check if a valid data-index attribute exists
+
+                        const selectedIndex = parseInt(dataIndex, 10);
+                        const data = response[selectedIndex]?.node; // Use optional chaining to safely access data
+                        console.log("Selected data: ",data);
+
+                        if (!data) return; // Exit if data is missing
+
+                        const savedata = loadingUserData();
+                        const list = savedata[0]?.list || [];
+
+                        // Check for duplicates
+                        const isDuplicate = list.some(item => item.id === data.id);
+
+                        if (!isDuplicate) {
+                            list.push(data);
+                            savedata[0].list = list; // Update the list in savedata
+                            savingUserData(savedata, "Add from search, Non duplicate")
+
+                            updateEntry(data.id,list.length-1,true)
+
+                            // localStorage.setItem("nobyarV2", JSON.stringify(savedata));
+                            // createcard(data, list.length - 1);
+                            
+                            console.log(list.length - 1);
+                            // toast("notice", `Successfully added "${data.title}" to the list`);
+                        } else {
+                            // Handle duplicate item (if needed)
+                            toast("notice", `Duplicate found, entry is already in your list`);
+
+                            console.warn("duplicate")
+                        }
+
+                        // Remove the "empty" list message if it exists
+                        const emptyMessage = document.querySelector("#empty");
+                        if (emptyMessage) {
+                            emptyMessage.style.display = "none";
+                        }
+
+                        // console.log(e.target);
+                    });
+
+                    result.appendChild(items);
+
                 }
             })
+            .catch(err => {
+                if (err.status < 500) {
+                console.error(err);
+                sendError(err, query, "");
+                } else {
+                console.error(err);
+                }
+            });
+
         }, 1000);
-    } else if (query.length==0){ // If search query is empty, clear search results
-        clearTimeout(timer);
+    } else if (query.length<3){ // If search query is empty, clear search results
+        clearTimeout(search_timer);
         const prevresult = document.getElementById("search-result-overlay")
         prevresult.innerHTML=""
         prevresult.style="pointer-events:none"
@@ -203,24 +186,31 @@ searchInput.addEventListener("input", function(e) {
 page_loadlist()
 function page_loadlist(){ // Executed when page loaded
     try {
-        let data = JSON.parse(localStorage.getItem("nobyarV2"))
+        let data = loadingUserData()
         // console.log(data[0].list.length)
 
         if(!data){ // If save data somehow doesn't exist, refresh
             location.reload()
         }
 
-        if (data[0].list.length==0){ // If list is empty, display a message
-            // display random face just for fun :\
-            let randFace = Math.round(Math.random()*2)
-            let face
-            if (randFace==0){
-                face = ":("
-            } else {
-                face = "D:"
-            }
+        document.querySelector("#hamburger-icon").addEventListener("click", function(e){
+            document.querySelector("#menu").style="transform: translateX(0%);"
 
-            console.error("List Empty")
+            document.querySelector("#menuClose").addEventListener("click", function(){
+                document.querySelector("#menu").style="transform: translateX(-100%);"
+
+            })
+
+        });
+
+        if (data[0].list.length==0){ // If list is empty, display a message
+
+            // display random face just for fun :\
+            const randFace = Math.round(Math.random() * 2);
+            const face = randFace === 0 ? ":(" : "D:";
+
+
+            console.error("List Empty",data)
             const empty = document.createElement("div");
             empty.id="empty";
             empty.innerHTML=`
@@ -233,47 +223,13 @@ function page_loadlist(){ // Executed when page loaded
                 document.querySelector("#header-section > input[type=text]").focus();
             });
         } else if(data[0].list.length!=0){ // Else if list is not empty, display user lists
-            document.querySelector("#hamburger-icon").addEventListener("click", function(e){
-                document.querySelector("#menu").style="transform: translateX(0%);"
-
-                document.querySelector("#menuClose").addEventListener("click", function(){
-                    document.querySelector("#menu").style="transform: translateX(-100%);"
-
-                })
-
-            });
             console.warn(data[0].list)
             data[0].list = data[0].list.filter((obj) => Object.keys(obj).length !== 0);
-            localStorage.setItem("nobyarV2", JSON.stringify(data))
+            // localStorage.setItem("nobyarV2", JSON.stringify(data))
+            savingUserData(data, "Page load, List not empty")
             for (let i = 0; i < data[0].list.length; i++) {
                 setTimeout(() => {
-                    updateAnime(data[0].list[i].id).then((response) => {
-                        let load = JSON.parse(localStorage.getItem("nobyarV2"));
-                        // console.log("New: ", response);
-                        // console.log("Old: ", load[0].list[i]);
-                
-                        let newData = Object.assign({}, load[0].list[i]);
-                
-                        for (let key in response) {
-                        if (response[key] !== undefined && response[key] !== newData[key]) {
-                            // console.log("Old: ", response[key]);
-                            // console.log(newData[key], response[key]);
-
-                            newData[key] = response[key];
-                        }
-                        }
-
-                        
-                        load[0].list[i] = updateMeanHistory(i,load,newData);
-                        createcard(load[0].list[i], i);
-                        // localStorage.setItem("nobyarV2", JSON.stringify(load));                        
-
-                    }).catch((err) => {
-                        console.error(err);
-                        
-                        // sendError(err,load[0].list[i],"Error updating entry data, updateAnime():320");
-                        // createEntryWindow(node,index)
-                    });
+                    updateEntry(data[0].list[i].id,i)
                 }, i * 250); // wait between each request
             }  
         }
@@ -317,9 +273,9 @@ function createcard(node,index){ // Create cards when executed
         // console.log(node.nobyar[0].aired_episodes)
         document.getElementById("contentEntries").appendChild(card)
         card.addEventListener("click",function(e){
-            // console.log(e.target.attributes.title.value)
-            let load = JSON.parse(localStorage.getItem("nobyarV2"))
-            createEntryWindow(load[0].list[index],index,e)
+            // console.log(e.target)
+            // let load = JSON.parse(user_data)
+            createEntryWindow(node,index,e)
             // console.log(load[0].list[index])
             // console.log("Save",save)
             // let openLink = save[0].list[e.target.attributes["data-index"].value].nobyar[2].external_link[0].url
@@ -333,32 +289,44 @@ function createcard(node,index){ // Create cards when executed
 }
 
 // ========================================================
-function createEntryWindow(node,index,trigger){
-    console.log(trigger.target,node)
+function createEntryWindow(node, index, trigger) {
     try {
-        if(node.num_episodes==0){ // Total episode is unknown, make it the same as aired
-            node.num_episodes=node.nobyar.aired_episodes
-        }
-        let season
-        if(node.start_season==undefined){
-            season = `${node.start_date}`
-            if(node.start_date==undefined){
-                season = `Airing date unknown`
+        // console.log('node: ',node);
+        // console.log('index: ',index);
+        // console.log('trigger: ',trigger);
+        // Helper function to get the season string
+        function getScoreString() {
+            if (node.mean === undefined) {
+                return "???";
+            } else {
+                return `${node.mean}`;
             }
-        } else {
-            season = `${node.start_season.season} ${node.start_season.year}`
         }
-        let genres
-        if (node.genres){
-            genres = node.genres.map(x => x.name).join(", ")
-        } else {
-            genres = "-"
+
+        // Helper function to get the season string
+        function getSeasonString() {
+            if (node.start_season === undefined) {
+                return node.start_date ? `${node.start_date}` : "Airing date unknown";
+            } else {
+                return `${node.start_season.season} ${node.start_season.year}`;
+            }
         }
+
+        // Helper function to get the genres string
+        function getGenresString() {
+            return node.genres ? node.genres.map(x => x.name).join(", ") : "-";
+        }
+
+        // Create the entry window
         const entryWindow = document.createElement("div");
-        entryWindow.id="entry_container"
-        entryWindow.setAttribute("data-index",index)
-        if(node.nobyar.external_source.length!=0){
-            entryWindow.innerHTML=`
+        entryWindow.id = "entry_container";
+        entryWindow.setAttribute("data-index", index);
+
+        // Check if external sources are available
+        const hasExternalSources = node.nobyar.external_source.length !== 0;
+
+        // Generate the inner HTML based on external sources
+        entryWindow.innerHTML = `
             <div id="entry_poster" style="background-image:url(${node.main_picture.large});background-repeat: no-repeat;background-position: center;background-size:cover;">
                 <!-- Poster -->
                 <div id="entry_return">
@@ -370,9 +338,25 @@ function createEntryWindow(node,index,trigger){
                 <div class="entry_details_section">
                     <!-- Details -->
                     <a href="https://myanimelist.net/anime/${node.id}" target="_blank" style="text-decoration:none; color:white;"><h1 data-nobyarelemtype="title">${node.title}</h1></a>
-                    <h3><span style="text-transform:capitalize">${season}</span> | <span style="text-transform:uppercase">${node.media_type}, </span><span style="text-transform:capitalize">${node.status.replace(/_/g, ' ')}</span></h3>
-                    <h4>${genres}</h4>
-                    <p><span style="line-height:1.5;">${node.synopsis}</span></p>
+
+                    <div class="entry_details_overview">
+                        <div class="entry_details_overview_score">
+                            <div>
+                                <span>${getScoreString()}</span>
+                            </div>
+                            <div>Score</div>
+                        </div>
+                        <div class="entry_details_overview_info">
+                            <h3><span style="text-transform: capitalize">${getSeasonString()}</span> | <span style="text-transform: uppercase">${node.media_type}, </span><span style="text-transform: capitalize">${node.status.replace(/_/g, ' ')}</span></h3>
+                            <h4>${getGenresString()}</h4>
+                            <h5>Rank: #${node.rank} • Popularity: #${node.popularity} • MAL Users: ${node.num_list_users} • MAL Users Favorite: ${node.num_favorites}</h5>
+                        </div>
+                    </div>
+
+                    <div id="synopsisContainer">
+                        <p id="synopsis" class="entry_details_synopsisCollapsed">${node.synopsis}</p>
+                        <div id="toggleSynopsis">Show More</div>
+                    </div>
                     <div id="entry_remove" style="background-color:red;color:white;cursor:pointer;width:fit-content"><span id="entry_remove" class="material-symbols-outlined">delete</span></div>
                 </div>
                 <div class="entry_details_section">
@@ -382,8 +366,8 @@ function createEntryWindow(node,index,trigger){
                     <br>
                     <br>
                     <div id="card-episode-bar">
-                        <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes/node.num_episodes*100}%;"></div>
-                        <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes/node.num_episodes*100}%;"></div>
+                        <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes / node.num_episodes * 100}%;"></div>
+                        <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes / node.num_episodes * 100}%;"></div>
                     </div>
                     <p>Watched: ${node.nobyar.watched_episodes}</p>
                     <p>Aired: ${node.nobyar.aired_episodes}</p>
@@ -392,154 +376,91 @@ function createEntryWindow(node,index,trigger){
                 <div class="entry_details_section">
                     <!-- Details -->
                     <h2>Watch</h2>
-                    <p><a href="${node.nobyar.external_source[0].url}" target="_blank" style="color:inherit;">YugenAnime</a></p>
-                    <p><a href="${node.nobyar.external_source[1].url}" target="_blank" style="color:inherit;">Kuramanime</a></p>
-                </div>
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <h2>Score History</h2>
-                    <div id="myChart"></div>
+                    ${hasExternalSources ? node.nobyar.external_source.map(source => `<p><a href="${source.url}" target="_blank" style="color:inherit;">${source.name}</a></p>`).join('') : ''}
                 </div>
             </div>`;
+
+        // Append the entry window to the overlay
+        document.querySelector("#overlay").appendChild(entryWindow);
+       
+        extraData(index,node.id,node)
+
+        // Event listeners 
+        document.querySelector("#entry_return").addEventListener("click", function (e) {
+            e.target.parentElement.parentElement.remove();
+        });
+
+        // Add a click event listener to toggle the synopsis
+        const maxHeight = 4.5 * parseFloat(window.getComputedStyle(document.querySelector("#synopsis")).fontSize); // Convert 4.5em to pixels
+        // console.log("MaxHeight: ",maxHeight)
+        if (document.querySelector("#synopsis").scrollHeight > maxHeight) {
+            // console.log('More');
+            document.querySelector("#toggleSynopsis").addEventListener("click", function (e) {
+                const synopsis = document.querySelector("#synopsis");
+                const isCollapsed = synopsis.classList.contains("entry_details_synopsisCollapsed");
+                if (isCollapsed) {
+                    // Expand the synopsis
+                    // synopsis.classList.remove("entry_details_synopsisCollapsed");
+                    synopsis.classList.value = "entry_details_synopsisExpanded";
+                    // console.log(synopsis.classList);
+                    document.querySelector("#toggleSynopsis").textContent = "Show Less";
+                } else {
+                    // Collapse the synopsis
+                    // synopsis.classList.remove("entry_details_synopsisExpanded");
+                    synopsis.classList.value = "entry_details_synopsisCollapsed";
+                    // console.log(synopsis.classList);
+                    document.querySelector("#toggleSynopsis").textContent = "Show More";
+                }
+            });
         } else {
-            entryWindow.innerHTML=`
-            <div id="entry_poster" style="background-image:url(${node.main_picture.large});background-repeat: no-repeat;background-position: center;background-size:cover;">
-                <!-- Poster -->
-                <div id="entry_return">
-                    <span class="material-symbols-outlined">close</span>
-                </div>
-            </div>
-            <div id="entry_details_container">
-                <!-- Details container -->
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <a href="https://myanimelist.net/anime/${node.id}" target="_blank" style="text-decoration:none; color:white;"><h1>${node.title}</h1></a>
-                    <h3><span style="text-transform:capitalize">${season}</span> | <span style="text-transform:uppercase">${node.media_type}, </span><span style="text-transform:capitalize">${node.status.replace(/_/g, ' ')}</span></h3>
-                    <h4>${genres}</h4>
-                    <p><span style="line-height:1.5;">${node.synopsis}</span></p>
-                    <div id="entry_remove" style="background-color:red;color:white;cursor:pointer;width:fit-content"><span id="entry_remove" class="material-symbols-outlined">delete</span></div>
-                </div>
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <h2>Episodes</h2>
-                    <div id="ep_rem"><span class="material-symbols-outlined">remove</span></div><div id="ep_add"><span class="material-symbols-outlined">add</span></div>
-                    <br>
-                    <br>
-                    <div id="card-episode-bar">
-                        <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes/node.num_episodes*100}%;"></div>
-                        <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes/node.num_episodes*100}%;"></div>
-                    </div>
-                    <p>Watched: ${node.nobyar.watched_episodes}</p>
-                    <p>Aired: ${node.nobyar.aired_episodes}</p>
-                    <strong>Total: ${node.num_episodes}</strong>
-                </div>
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <h2>Score History</h2>
-                    <div id="myChart"></div>
-                </div>
-            </div>`;
+            // console.log('Less');
+            document.querySelector("#toggleSynopsis").style = `
+                pointer-events:none; display:none;
+            `;
         }
-        
-        // console.log(node.nobyar[0].aired_episodes)
-        document.querySelector("#overlay").appendChild(entryWindow)
 
-        createHistoryChart(node);
+        document.querySelector("#entry_remove").addEventListener("click", function (e) {
+            const load = loadingUserData();
+            load[0].list.splice(index, 1);
+            // localStorage.setItem("nobyarV2", JSON.stringify(load));
+            savingUserData(load, "Entry window, User manual delete entry")
+            location.reload();
+        });
 
-        document.querySelector("#entry_return").addEventListener("click",function(e){
-            // console.log("Index: ",e.target.attributes["data-index"].value)
-            // console.log(e)
-            e.target.parentElement.parentElement.remove()
-            // let save = JSON.parse(localStorage.getItem("nobyarV2"))
-            // console.log("Save",save)
-        })
-        document.querySelector("#entry_remove").addEventListener("click",function(e){
-            // console.log("Index: ",e.target.attributes["data-index"].value)
-            // console.log(e)
-            e.target.parentElement.parentElement.parentElement.remove()
-            let load = JSON.parse(localStorage.getItem("nobyarV2"))
-            load[0].list.splice(index,1);
-            // trigger.target.parentElement.remove();
-            // console.log("Save",load[0].list)
-            // document.querySelector(`#card[data-index="${index}"]`).remove()
-            // console.log(trigger)
-            localStorage.setItem("nobyarV2", JSON.stringify(load))
-            location.reload()
-        })
-        document.querySelector("#ep_rem").addEventListener("click",function(e){
-            let load = JSON.parse(localStorage.getItem("nobyarV2"))
-            // console.log(e.target);
-            // console.log(load[0].list[index]);
-            // console.log(load[0].list[index].nobyar[1].watched_episodes);
-            if(load[0].list[index].nobyar.watched_episodes>1){
-                load[0].list[index].nobyar.watched_episodes-=1;
+        // Add/Remove episode event listeners
+        const epRem = document.querySelector("#ep_rem");
+        const epAdd = document.querySelector("#ep_add");
 
-                if(load[0].list[index].num_episodes!=0){
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
+        epRem.addEventListener("click", function () {
+            updateWatchedEpisodes(-1);
+        });
 
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].num_episodes}`
-                } else {
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].nobyar.aired_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
+        epAdd.addEventListener("click", function () {
+            updateWatchedEpisodes(1);
+        });
 
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].nobyar.aired_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].nobyar.aired_episodes}`
-                }
-                // console.log(load[0].list[index].nobyar[1].watched_episodes);
-                // console.log(JSON.parse(localStorage.nobyarV2)[0].list[index])
-                localStorage.setItem("nobyarV2", JSON.stringify(load))
-            } else if(load[0].list[index].nobyar.watched_episodes==1){
-                load[0].list[index].nobyar.watched_episodes=0;
+        // Helper function to update watched episodes
+        function updateWatchedEpisodes(change) {
+            if (node.nobyar.watched_episodes + change >= 0) {
+                node.nobyar.watched_episodes += change;
 
-                if(load[0].list[index].num_episodes!=0){
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
+                const watchedPercentage = node.num_episodes !== 0 ? (node.nobyar.watched_episodes / node.num_episodes * 100) : (node.nobyar.watched_episodes / node.nobyar.aired_episodes * 100);
 
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].num_episodes}`
-                } else {
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].nobyar.aired_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
+                epRem.parentElement.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
+                document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${node.nobyar.watched_episodes}`;
+                trigger.target.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
+                trigger.target.querySelector("#card-episode-num > span").innerText = `${node.nobyar.watched_episodes}[${node.nobyar.aired_episodes}]/${node.num_episodes || node.nobyar.aired_episodes}`;
 
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].aired_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].aired_episodes}`
-                }
-                localStorage.setItem("nobyarV2", JSON.stringify(load))
+                // localStorage.setItem("nobyarV2", JSON.stringify(load));
+                savingUserData(load, "Entry window, User manual episode change")
             }
-        })
-        document.querySelector("#ep_add").addEventListener("click",function(e){
-            let load = JSON.parse(localStorage.getItem("nobyarV2"))
-            // console.log(e.target);
-            // console.log(load[0].list[index]);
-            // console.log(load[0].list[index].nobyar[1].watched_episodes);
-            if(load[0].list[index].nobyar.watched_episodes>=0){
-                load[0].list[index].nobyar.watched_episodes+=1;
+        }
 
-                if(load[0].list[index].num_episodes!=0){
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
-
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].num_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].num_episodes}`
-                } else {
-                    e.target.parentElement.children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].nobyar.aired_episodes*100}%`;
-                    document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${load[0].list[index].nobyar.watched_episodes}`
-
-                    trigger.target.children["card-title"].children["card-episode-bar"].children["card-episode-bar-watched"].style.width=`${load[0].list[index].nobyar.watched_episodes/load[0].list[index].nobyar.aired_episodes*100}%`;
-                    trigger.target.children["card-episode-num"].children[0].innerText = `${load[0].list[index].nobyar.watched_episodes}[${load[0].list[index].nobyar.aired_episodes}]/${load[0].list[index].nobyar.aired_episodes}`
-                }
-                // console.log(load[0].list[index].nobyar[1].watched_episodes);
-                // console.log(JSON.parse(localStorage.nobyarV2)[0].list[index])
-                localStorage.setItem("nobyarV2", JSON.stringify(load))
-                // console.log(JSON.parse(localStorage.nobyarV2)[0].list[index])
-            }
-        })
     } catch (error) {
-        sendError(error,node,"Error creating entry, createEntryWindow()")
+        sendError(error, node, "Error creating entry, createEntryWindow()");
     }
 }
+
 
 // ========================================================
 function toast(type, text){ // Create toast notification when executed
@@ -551,7 +472,7 @@ function toast(type, text){ // Create toast notification when executed
     for(i=0;i<alert.length;i++){
         alert[i].addEventListener("animationend", function(e){
             e.target.remove()
-            console.log("remove",e)
+            // console.log("removed alert :",e)
         })
     }
 }
@@ -573,32 +494,345 @@ function updateMeanHistory(index,oldNode,newNode){
         newNode.nobyar.mean_history.push(newMean)
         oldNode[0].list[index] = newNode;
     }
+
+    // function findObjectDifference(obj1, obj2) {
+    //     const keys1 = Object.keys(obj1);
+    //     const keys2 = Object.keys(obj2);
+    
+    //     // Check if the keys are the same
+    //     if (!keys1.every(key => keys2.includes(key)) || !keys2.every(key => keys1.includes(key))) {
+    //         return "Objects have different keys.";
+    //     }
+    
+    //     // Compare the values of each property
+    //     const differences = {};
+    //     for (const key of keys1) {
+    //         if (obj1[key] !== obj2[key]) {
+    //             differences[key] = {
+    //                 oldValue: obj1[key],
+    //                 newValue: obj2[key]
+    //             };
+    //         }
+    //     }
+    
+    //     return differences;
+    // }
+    // const diff = findObjectDifference(oldNode[0].list[index], newNode);
+    // console.log("Object differences:", diff);
+
     return newNode
 }
 
 // ========================================================
 function createHistoryChart(node){
     google.charts.load('current',{packages:['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+
+    // Set Data
+    let meanarr
+
+    // if (Array.isArray(node.nobyar.mean_history) && node.nobyar.mean_history.length > 0) {
+    //     // console.log(node.nobyar.mean_history);
+    //     meanarr = node.nobyar.mean_history;
+    //     google.charts.setOnLoadCallback(drawChart);
+    // } else {
+    //     getAnimeScoreHistory(node.id).then((response) => {
+    //         let ratingData = response.anime.eps
+    //         console.log(ratingData);
+    //         meanarr = []
+    //         for (let i = 1; i < ratingData.length; i++) {
+    //             meanarr.push({
+    //                 timestamp: ratingData[i].created_at,
+    //                 mean: ratingData[i].malRating,
+    //             });
+    //             console.log(meanarr);
+
+    //             if (i==ratingData.length-1){
+    //                 google.charts.setOnLoadCallback(drawChart);
+    //             }  
+    //         }
+
+    //         // Create the Score History section
+    //         const scoreHistorySection = document.createElement("div");
+    //         scoreHistorySection.className = "entry_details_section";
+    //         scoreHistorySection.innerHTML = `
+    //             <h2>Score History</h2>
+    //             <div id="myChart"></div>
+    //         `;
+    //         document.querySelector("#entry_details_container").appendChild(scoreHistorySection);
+    //     })
+    //     .catch((error) => {
+    //         console.error("Error fetching score history:", error);
+    //     });
+    // }
+    getAnimeScoreHistory(node.id).then((response) => {
+        let ratingData = response.anime.eps
+        // console.log(ratingData);
+        meanarr = []
+        for (let i = 1; i < ratingData.length; i++) {
+            meanarr.push({
+                timestamp: ratingData[i].created_at,
+                mean: ratingData[i].malRating,
+            });
+            // console.log(meanarr);
+
+            if (i==ratingData.length-1){
+                google.charts.setOnLoadCallback(drawChart);
+            }  
+        }
+
+        // Create the Score History section
+        const scoreHistorySection = document.createElement("div");
+        scoreHistorySection.className = "entry_details_section";
+        scoreHistorySection.innerHTML = `
+            <h2>Score History</h2>
+            <div id="myChart"></div>
+        `;
+        document.querySelector("#entry_details_container").appendChild(scoreHistorySection);
+    })
+    .catch((error) => {
+        console.groupCollapsed(`[Score History] Error getting score history for (${node.id}) ${node.title}`)
+        console.error(error);
+        console.groupEnd()
+    });
+      
 
     function drawChart() {
-    // Set Data
-    var meanarr = node.nobyar.mean_history
-    var label = [['Date', 'Score']]
-    for(i=0;i<meanarr.length;i++){
-        let currDate = new Date(meanarr[i].timestamp)
-        label.push([currDate,meanarr[i].mean])
-        // console.log(currDate)
+    var label = [['Date', 'Score', {'type': 'string', 'role': 'style'}]]
+    var maxMean = -Infinity; // Initialize to a very low value
+    var maxMeanIndex = -1;
+
+    // Find the maximum mean and its index
+    for (i = 0; i < meanarr.length; i++) {
+        let mean = meanarr[i].mean;
+        if (mean > maxMean) {
+            maxMean = mean;
+            maxMeanIndex = i;
+        }
     }
+
+    // Populate the label array with data and styles
+    for (i = 0; i < meanarr.length; i++) {
+        let currDate = new Date(meanarr[i].timestamp);
+        let mean = meanarr[i].mean;
+        let style = i === maxMeanIndex ? 'point { size: 18; shape-type: star; fill-color: #FFD700; }' : '';
+        label.push([currDate, mean, style]);
+    }
+
     var data = google.visualization.arrayToDataTable(label);
     // Set Options
     var options = {
     lineWidth: 5,
     pointSize: 8,
-    legend: 'none'
+    colors: ['#fff'],
+    backgroundColor: { fill:'transparent' },
+    hAxis: {
+        title:'Timestamp',
+        slantedText: false,
+        format:'MMM d, y',
+        maxAlternation: 2,
+        textStyle:{color: '#FFF'},
+	    titleTextStyle:{color: '#FFF'}
+    },
+    vAxis: {
+        title:'Score',
+        textStyle:{color: '#FFF'},
+        titleTextStyle:{color: '#FFF'},
+            gridlines: {color: '#787878'}
+    },
+    legend:'none'
     };
     // Draw
+    
     var chart = new google.visualization.LineChart(document.getElementById('myChart'));
     chart.draw(data, options);
+    
     }
+}
+
+function updateEntry(id,index,fresh){
+    getMalAPIDetail(id,"anime").then((response) => {
+        let load = loadingUserData();
+        let parsedResponse = JSON.parse(response);
+        // console.log("New: ", parsedResponse);
+        // console.log("Old: ", load[0].list[i]);
+
+        let newData = Object.assign({}, load[0].list[index]);
+
+        for (let key in parsedResponse) {
+            if (parsedResponse[key] !== undefined && parsedResponse[key] !== newData[key]) {
+                // console.log("Old: ", response[key]);
+                // console.log(newData[key], response[key]);
+
+                newData[key] = parsedResponse[key];
+            }
+        }
+
+        // load[0].list[index] = updateMeanHistory(index,load,newData);
+        load[0].list[index] = newData
+        // console.log(newData,load[0].list[index]);
+        // localStorage.setItem("nobyarV2", JSON.stringify(load));  
+        savingUserData(load, "Entry update")
+
+        // extraData(index,id)
+
+        createcard(load[0].list[index], index);
+        if(fresh){
+            toast("notice", `Successfully added "${load[0].list[index].title}" to the list`);
+        } else {
+            toast("notice", `"${load[0].list[index].title}" data successfully updated`);
+        }
+    }).catch((err) => {
+        console.error(err);
+        let i = 0
+        if (i==0&&err.status>=400){
+            i=1
+            toast('notice','Open <b>https://cors-anywhere.herokuapp.com</b> and click <b>\'request temporary access to the demo server\'</b>')
+            window.open('https://cors-anywhere.herokuapp.com/', '_blank');
+        }
+        // sendError(err,load[0].list[i],"Error updating entry data, updateAnime():320");
+        // createEntryWindow(node,index)
+    });
+}
+
+function extraData(index,id,node){
+    createHistoryChart(node);
+    // GET anime page
+    getMalPage(id,"anime").then((response) => {
+        try {
+            // parse HTML
+            const parser = new DOMParser().parseFromString(response, 'text/html');
+            const parentElement = document.querySelector(`#entry_container[data-index='${index}']`)
+
+
+            // Characters scraper ==================================================================================================================
+            const characters = parser.querySelector('.detail-characters-list')
+            const character = characters.querySelectorAll('div > table > tbody > tr')
+            console.groupCollapsed(`[Scrape Chara] ${index} | ${id}`)
+
+            const charaSection = document.createElement("div");
+            charaSection.className = "entry_details_section";
+            // charaSection.setAttribute("section-type", "characters");
+            charaSection.innerHTML = `
+                <h2>Characters</h2>
+                <div section-type="characters"></div>
+            `;
+            parentElement.querySelector("#entry_details_container").appendChild(charaSection);
+
+            const charaContainer = parentElement.querySelector("div[section-type='characters']")
+
+            character.forEach((items) => {
+                try {
+                    const name = items.children[0].querySelector('img').alt
+                    const img = items.children[0].querySelector('img').attributes[3].value
+                    // Use a regular expression to remove "/r/42x62"
+                    const cleanimg = img.replace(/\/r\/42x62/, '');
+                    const role = items.children[1].querySelector('small').innerText
+                    const vaname = items.children[2].querySelector('.va-t > a').innerText
+                    const vaurl = items.children[2].querySelector('.va-t > a').attributes.href.value
+
+                    const charaItem = document.createElement("a");
+                    charaItem.href= vaurl
+                    charaItem.target=`_blank`
+                    charaItem.style="aspect-ratio:3/4;width:calc(20% - 10px);margin:5px;float:left"
+                    charaItem.innerHTML = `
+                        <div style="background-image:url('${cleanimg}');background-size:cover; width:100%; height:100%;position:relative;">
+                            <div>${name}</div>
+                        </div>
+                    `
+                    charaContainer.appendChild(charaItem);
+
+                    console.log(items,name,role,cleanimg)
+                    console.log(vaname,vaurl);
+                } catch (error) {
+                    const name = items.children[0].querySelector('img').alt
+                    const img = items.children[0].querySelector('img').attributes[3].value
+                    // Use a regular expression to remove "/r/42x62"
+                    const cleanimg = img.replace(/\/r\/42x62/, '');
+                    const role = items.children[1].querySelector('small').innerText
+
+                    const charaItem = document.createElement("a");
+                    charaItem.href= `https://myanimelist.net/anime/${id}`
+                    charaItem.target=`_blank`
+                    charaItem.style="aspect-ratio:3/4;width:calc(20% - 10px);margin:5px;float:left"
+                    charaItem.innerHTML = `
+                        <div style="background-image:url('${cleanimg}');background-size:cover; width:100%; height:100%;position:relative;">
+                            <div>${name}</div>
+                        </div>
+                    `
+                    charaContainer.appendChild(charaItem);
+
+                    console.error("Failed to get character data",error);
+                }
+                
+            })
+            console.groupEnd()
+
+            // Related scraper =====================================================================================================================
+            const related = parser.querySelector('.anime_detail_related_anime')
+            const adaptation = related.querySelector("#content > table > tbody > tr > td:nth-child(2) > div.rightside.js-scrollfix-bottom-rel > table > tbody > tr:nth-child(3) > td > table > tbody > tr:nth-child(1) > td:nth-child(2)")
+            const adaptationLinks = adaptation.querySelectorAll('a')
+            console.groupCollapsed(`[Scrape Related] ${index} | ${id}`)
+
+
+            const relatedSection = document.createElement("div");
+            relatedSection.className = "entry_details_section";
+            relatedSection.setAttribute("section-type", "related");
+            relatedSection.innerHTML = `
+                <h2>Related Entry</h2>
+            `;
+            parentElement.querySelector("#entry_details_container").appendChild(relatedSection);
+
+            const relatedContainer = parentElement.querySelector(".entry_details_section[section-type='related']")
+
+            adaptationLinks.forEach((items) => {
+                const href = items.attributes.href.value
+                const regex = href.match(/\/(\d+)\//); // Using regular expression to find the id
+                const id = regex ? regex[1] : null; // The id is captured in the first capturing group
+                if (id){
+                    mangaDetail(id)
+                }
+                console.log(id, `https://myanimelist.net${href}`);
+            });
+            console.groupEnd()
+
+            function mangaDetail(id){
+                getMalAPIDetail(id,"manga").then((response) => {
+                    console.groupCollapsed(`[Manga Detail] ${id}`)
+
+                    let resp = JSON.parse(response)
+                    // console.log(resp)
+                    let obj = {
+                        "node": {
+                            "id": resp.id,
+                            "title": resp.title,
+                            "main_picture": resp.main_picture
+                        },
+                        "relation_type": "adaptation",
+                        "relation_type_formatted": "Adaptation"
+                    }
+                    console.log(obj);
+                    const relatedItem = document.createElement("a");
+                    relatedItem.href=`https://myanimelist.net/manga/${obj.node.id}`
+                    relatedItem.target=`_blank`
+                    relatedItem.style="aspect-ratio:3/4;width:20%;margin:5px;float:left;"
+                    relatedItem.innerHTML = `
+                        <div style="background-image:url('${obj.node.main_picture.large}');background-size:cover; width:100%; height:100%;"></div>
+                    `
+                    relatedContainer.appendChild(relatedItem);
+                    
+                    // let list = loadingUserData()
+                    // if (list){
+                    //     list[0].list[index].related_manga.push(obj)
+                    //     savingUserData(list, "Added related manga to entry")
+                    // }
+                    // console.log(list[0].list[index].related_manga);
+                    console.groupEnd()
+                })    
+            }
+        } catch (error) {
+            console.error(`Entry window is not opened for ${index} | ${id}`,error);
+        }
+        // console.log("Save: ",JSON.parse(loadingUserData())[0].list[index].related_manga)
+        // console.log(parser);
+    })
 }

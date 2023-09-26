@@ -1,8 +1,27 @@
-var user_data = localStorage.getItem("nobyarV2")
-var searchInput = document.querySelector("#header-section > input[type=text]")
-var overlayDim = document.querySelectorAll(".dim")
+var user_data = loadingUserData();
 
-var sites = [
+function loadingUserData(){ 
+    let data = JSON.parse(localStorage.getItem("nobyarV2"))
+    if(data){
+        return data
+    }else{
+        console.error("Save doesn't exist???");
+        return
+    }
+}
+function savingUserData(parameter,info){
+    if (parameter){
+        localStorage.setItem("nobyarV2", JSON.stringify(parameter))
+        console.groupCollapsed(`[Save] ${info}`)
+        console.log("[Save] Saving...",parameter[0].list,loadingUserData()[0].list)
+        console.trace("[Save] Saving...",parameter,loadingUserData())
+        console.groupEnd()
+    }
+}
+const searchInput = document.querySelector("#header-section > input[type=text]")
+const overlayDim = document.querySelectorAll(".dim")
+
+const sites = [
     {
         "url":"https://yugenanime.tv"
     },
@@ -14,7 +33,15 @@ var sites = [
     }
 ]
 
-var errMSG = {
+// note: doesnt return if there is query
+const cors_proxy = "https://corsmirror.com/v1?url="
+// const cors_proxy = "https://cors-anywhere.herokuapp.com/"
+const mal_field_anime = "nsfw=true&fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,num_favorites,nsfw,created_at,updated_at,media_type,status,genres,pictures,background,related_anime,related_manga,recommendations,num_episodes,start_season,broadcast,source,average_episode_duration,rating,studios,statistics,opening_themes,ending_themes"
+const mal_field_manga = "nsfw=true&fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,num_favorites,nsfw,created_at,updated_at,media_type,status,genres,pictures,background,related_anime,related_manga,recommendations"
+
+
+
+const errMSG = {
     "URL":"Entry does not have valid URL",
 }
 

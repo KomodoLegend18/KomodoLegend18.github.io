@@ -1,0 +1,150 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NobyarV2 | Watch</title>
+
+    <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
+    <!-- <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script> -->
+    <link rel="stylesheet" href="../watch/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+    <script src="../script/request.js" async></script>
+
+    <!-- <script src="../v2/script/page.js" defer></script> -->
+
+    <script src="../script/config.js" defer></script>
+
+    <script src="../watch/script.js" defer></script>
+    <script src="../watch/param.js" defer></script>
+
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <!-- <script src="../Nobyar/scripts/main.js" defer></script>
+    <script src="../Nobyar/scripts/eventlistener.js" defer></script>
+    <script src="../Nobyar/scripts/promise.js"></script>
+
+    <script src="../Nobyar/scripts/webhook.js" defer></script>
+    <script src="../Nobyar/scripts/site.js"></script>
+    <script src="../Nobyar/scripts/loader.js"></script>
+
+    <script src="../Nobyar/scripts/config.js" defer></script> -->
+</head>
+<body>
+    <div id="container">
+        <div id="overlay">
+            <div id="alert"></div>
+            <div id="menu" style="transform: translateX(-100%);">
+                <div id="menuItems"><span>Top Anime</span></div>
+                <div id="menuItems">Webhook mode</div>
+                <div id="menuItems">Settings</div>
+                <div id="menuClose">Close</div>
+            </div>
+            <div id="search-result-overlay" style="pointer-events: none;"></div>
+            
+            
+            <div id="fadeDim"></div>
+
+        </div>
+        <div id="netStat" style="width: 100%; height: fit-content; text-align: center; background-color: red; display: none;">No Connection</div>
+        <div id="header">
+            <div id="header-section">
+                <div id="hamburger-icon"><span class="material-symbols-outlined">menu</span></div>
+            </div>
+            <div id="header-section">
+                <input type="text" tabindex="1" autocomplete="off" placeholder="Search Kurama">
+                <div id="search" tabindex="2"><span class="material-symbols-outlined">search</span></div>
+                
+            </div>
+            <div id="header-section">
+                <button onclick="resetLocalstorage()">Reset</button>
+            </div>
+            
+        </div>
+        <div id="content">
+            <div id="contentEntries">
+                <div style="border: 1px red dashed;aspect-ratio: 16/9;width: 70vw;background-color: black; position: relative; overflow: hidden;">
+                    <div style="width: 30%; height: fit-content; max-height: 30vh; max-width: 25vw;border: 1px mediumslateblue dashed; border-radius: 5px;position: absolute; z-index: 3; bottom: 40; right: 0; display: block; overflow-y: auto; overflow-x: hidden;background-color: var(--color-primary); color: white; opacity: 75%;">
+                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                            <label for="vidQuality">Quality: </label>
+                            <select name="vidQuality" id="">
+                                <option value="lowQ">placeholder</option>
+                                <option value="medQ">placeholder</option>
+                                <option value="hiQ">placeholder</option>
+                            </select>
+                        </div>
+                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                            <label for="sync2Host">Automatically sync to host: </label>
+                            <select name="sync2Host" id="">
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                            </select>
+                        </div>
+                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                            <label for="aniSkip">When available, Automatically skip opening & ending: </label>
+                            <select name="aniSkip" id="">
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                            </select>
+                        </div>
+                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;"><button>Download</button><button>Copy URL</button></div>
+                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;"><Button>Reset to default</Button></div>                        
+                    </div>
+
+                    <div style="justify-content: center; align-items: center; text-align: center; width: 100%; height: 100%; position: absolute; background-color: rgba(0, 0, 0, 0.418); backdrop-filter: blur(2px) grayscale();display: grid;">Buffer</div>
+
+
+                    <div class="vidcontrols">
+                        <div id="play-container">
+                            <span class="material-symbols-rounded">play_arrow</span>
+                        </div>
+                        <div id="progress-container">
+                            <div style="width: 100%; min-width: 42px;height: fit-content; border: 1px cyan dotted; position: absolute; bottom: 45; text-align: center; background-color: var(--color-primary); padding: 5px; border-radius: 5px; overflow: hidden; opacity: 70%;">
+                                <p style="float: left; margin: 0;">00:00</p>
+                                <p style="float: left; margin: 0; margin-left: 10px; padding-left: 10px;border-left: 1px white dashed;">No data</p>
+                                <p style="float: right; margin: 0;padding-left: 10px;border-left: 1px white dashed;">00:00</p>
+                            </div>
+                            <input type="range" value="" step="0.04167">
+                            <progress></progress>
+                        </div>
+                        <div id="volume-container">
+                            <span class="material-symbols-rounded">
+                                volume_up
+                            </span>
+                            <input value="1" type="range" max="1" min="0" step="0.01">
+                        </div>
+                        <div id="controls-container">
+                            <span class="material-symbols-rounded">settings_cinematic_blur</span>
+                            <span class="material-symbols-rounded">
+                                sync
+                            </span>
+                            <span class="material-symbols-rounded">
+                                skip_next
+                            </span>
+                        </div>
+                        <div id="fullscreen-container">
+                            <span class="material-symbols-rounded">fullscreen</span>
+                        </div>
+                    </div>
+                    
+                
+                    <video poster="https://cdn.discordapp.com/attachments/636600433799856128/1151476930005180446/9B.png" src="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>
+                </div>
+                <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+                </div>
+                <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+                    <button style="display: none;" data-id="" data-eps="" data-length="" onclick="skipOP()">Manual Skip</button>
+                </div>
+
+                <!-- <video controls src="https://asuna.my.id/0:/HAZw6uBFIZy/Kuramanime-GRTCLRC-11-360p-BGlobal.mp4?id=37306029706-usgjft2cm5e67pf27h96pv92ssu7s73b.apps.googleusercontent.com&sc=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&rt=1//09BMOgMCYhn4SCgYIARAAGAkSNwF-L9IrmaBqOqrNrxjHZ_TPCyc-HFZcGWqf48AYV0ciiTZugXBcA0WmsMBu0Q4gPML9E2lKsyE&gid=1Q7PmAUYrImAOi0qRfy-YP58D0xmGY0vz"></video>
+                <button onclick="skipOP()">Skip Opening</button> -->
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

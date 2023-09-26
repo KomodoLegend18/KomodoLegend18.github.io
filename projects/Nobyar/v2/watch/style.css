@@ -16,8 +16,19 @@
         box-sizing: border-box; 
     }
     .material-symbols-outlined {
+        -webkit-user-select: none;
+        user-select: none;
         pointer-events: none;
         cursor: default;
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48
+    }
+    .material-symbols-rounded {
+        -webkit-user-select: none;
+        user-select: none;
         font-variation-settings:
         'FILL' 0,
         'wght' 400,
@@ -35,6 +46,114 @@
     body{
         margin: 0;
         overflow: hidden;
+    }
+
+    video{
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        /* aspect-ratio: 16/9; */
+    }
+    
+    .vidcontrols{
+        background-color: rgba(15, 15, 15, 0.8);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        color: white;
+        display: flex;
+        cursor: auto;
+        /* overflow: hidden; */
+    }
+    .vidcontrols span{
+        aspect-ratio: 1/1;
+        border: 1px pink dotted;
+        margin: 5px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.281);
+        cursor: pointer;
+    }
+    .vidcontrols > #play-container{
+        border: 1px aquamarine dashed;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0.5;
+        /* overflow: hidden; */
+    }
+    .vidcontrols > #progress-container{
+        border: 1px purple dashed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 10;
+        position: relative;
+        overflow: visible;
+        min-width: 42px;
+    }
+        
+        .vidcontrols > #progress-container > input{
+            /* border: 1px orangered dashed; */
+            background: transparent;
+            width: 95%;
+            z-index: 2;
+            margin: 0;
+            -webkit-appearance: none;
+        }
+        .vidcontrols > #progress-container > progress{
+            /* border: 1px rgb(40, 173, 0) dashed; */
+            width: 95%;
+            accent-color: var(--color-primary);
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+    .vidcontrols > #volume-container{
+        border: 1px yellow dashed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 2;
+        /* overflow: hidden; */
+    }
+    .vidcontrols > #controls-container{
+        border: 1px green dashed;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        /* overflow: hidden; */
+    }
+    .vidcontrols > #fullscreen-container{
+        border: 1px orange dashed;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0.5;
+        /* overflow: hidden; */
+    }
+
+    #contentEntries > div:nth-child(2) > #items{
+        /* padding-bottom: 1%; */
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: fit-content;
+        background-color: rgb(255, 255, 255);
+        overflow: hidden;
+        border: 1px green dashed;
+        margin: 2px;
+        cursor:pointer;
+        /* border-bottom: 1vh solid rgba(0, 0, 0, 0.192); */
+        transition-duration: var(--transition-duration);
+        z-index: var(--background-index);
+        /* box-shadow: 0px 50px 10px rgb(0, 0, 0); */
     }
     
     #header{
@@ -297,10 +416,10 @@
         overflow-x: hidden;
     }
     #contentEntries{
-        padding: 25px;
+        padding: 10px;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: 25px;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
     }
     #empty{
         text-align: center;
@@ -761,63 +880,3 @@
         align-items: center;
         justify-content: center;
     }
-
-@media only screen and (max-width: 889px) {
-    /* Styles to apply when the screen width is 768px or less */
-    #header-section input{
-        width: 60%;
-    }
-    /* ============================================ */
-    #contentEntries{
-        padding: 10px;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 10px;
-    }
-    #card-episode-num{
-        border-radius: 3vw;
-        padding: 5px;
-        height: fit-content;
-    }
-    #card-episode-num span{
-        font-size: 3.5vw;
-    }
-    #card-title p{
-        padding:5px;
-        font-size: 3.5vw;
-        margin: 0;
-        /* margin-top: 1vw; */
-        text-align: center;
-        pointer-events: none;
-        /* mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-        max-height: 100%; */
-    }
-    #entry_container{
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        overflow-y: auto; 
-        /* grid-gap: 5px; */
-        /* display: flex; */
-    }
-    #entry_poster{
-        position: sticky; 
-        top: 0;
-        width: 100%;
-        height: 30vh;
-        background-position: center !important;
-        /* aspect-ratio: 3/4;  */
-    }
-    #entry_details_container{
-        height: fit-content; 
-        z-index: 10;
-    }
-    .entry_details_section{
-        padding: 5%; 
-    }
-    #menu{
-        width: 70%;
-    }
-    #menuItems{
-        font-size: 5vw;
-    }
-}
