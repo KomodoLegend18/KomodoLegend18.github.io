@@ -400,12 +400,12 @@ searchInput.addEventListener("input", function(e) {
 
                             player.title = title
 
-
                             clientGET(selected).then(response => {
                                 const html = new DOMParser().parseFromString(response, 'text/html');
                                 const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
                                 const episodeList = episode.querySelectorAll("a")
                                 for (let i = 0; i < episodeList.length; i++) {
+                                    console.log("Loop: ",i,episodeList.length);
                                     const title = episodeList[i].innerHTML
                                     const url = episodeList[i].attributes["href"].value
                                     const epsCount = i+1
@@ -474,7 +474,94 @@ searchInput.addEventListener("input", function(e) {
                                         })
                                         console.log(epsUrl);
                                     })
+                                    if(i==episodeList.length-1){
+                                        next_page()
+                                    }
                                     // console.log(episodeList[i]);
+                                }
+                                function next_page(){
+                                    const nextURL = episode.querySelector(".page__link__episode").attributes["href"].value
+                                    console.log(nextURL);
+
+                                    clientGET(nextURL).then(response=>{
+                                        const html = new DOMParser().parseFromString(response, 'text/html');
+                                        const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
+                                        const episodeList = episode.querySelectorAll("a")
+                                        for (let i = 0; i < episodeList.length; i++) {
+                                            const title = episodeList[i].innerHTML
+                                            const url = episodeList[i].attributes["href"].value
+                                            const epsCount = i+1
+            
+                                            const items = document.createElement("div");
+                                            items.id = "items";
+                                            items.setAttribute("data-index", i);
+                                            items.innerHTML = `
+                                                <div id="info" style="pointer-events:none;">
+                                                    <a href="${url}" target="_blank" id="title">${title}</a>
+                                                </div>
+                                            `;
+                                            sidebar.appendChild(items);
+                                            items.addEventListener("click", function (e){
+                                                document.querySelector("#progress-container > progress").removeAttribute("value");
+                                                document.querySelector("#progress-container > progress").removeAttribute("max");
+                                                document.querySelector("#progress-container > input").attributes["value"].value = "0";
+                                                document.querySelector("#progress-container > input").removeAttribute("max");
+
+                                                document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-eps"].value = epsCount
+                                                // console.log(e);
+                                                const epsUrl = e.target.querySelector("a").attributes["href"].value
+                                                clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
+                                                    const target = document.querySelector(".settingItems > #qualitySelect")
+                                                    target.innerHTML = ""
+
+                                                    const html = new DOMParser().parseFromString(response, 'text/html');
+                                                    console.log(html);
+
+                                                    document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
+
+                                                    for (let i = 0; i < html.querySelectorAll("#player > source").length; i++) {
+                                                        const data = html.querySelectorAll("#player > source")[i]
+                                                        console.log(data);
+                                                        
+                                                        // Create a new option element
+                                                        var option = document.createElement("option");
+
+                                                        // Set the value attribute
+                                                        option.value = `${data.attributes["src"].value}`;
+                                                        
+                                                        // Set the text content
+                                                        option.textContent = `${data.attributes["size"].value}p`;
+
+                                                        if (data.attributes["size"].value==defaultQuality){
+                                                            option.selected = true
+                                                            player.src = data.attributes["src"].value
+                                                        }
+
+                                                        target.appendChild(option);
+                                                    }
+                                                    // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
+                                                    // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
+                                                    // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
+
+                                                    const regex = /https:\/\/(.+)\.my\.id\//;
+                                                    // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
+                                                    // console.log(lowQ);
+                                                    // document.querySelector("video").src = lowQ
+
+                                                    console.groupCollapsed("[Video URL]")
+                                                    console.log("Low",lowQ);
+                                                    console.log("Med",medQ);
+                                                    console.log("High",hiQ);
+                                                    console.groupEnd()
+                                                    if(i==episodeList.length-1){
+                                                        next_page()
+                                                    }
+                                                })
+                                                console.log(epsUrl);
+                                            })
+                                            // console.log(episodeList[i]);
+                                        }
+                                    })
                                 }
     
                             })
