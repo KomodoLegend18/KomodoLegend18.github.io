@@ -1,4 +1,6 @@
 const player = document.querySelector("video")
+
+const defaultQuality = 360
 const netStatus =  document.querySelector("#netStat")
 const play_button = document.querySelector("#play-container > span")
 const progress_current = document.querySelector("#progress-container > div > p:nth-child(1)")
@@ -9,6 +11,7 @@ const progress_bar = document.querySelector("#progress-container > progress")
 const mute_button = document.querySelector("#volume-container > span")
 const volume_input = document.querySelector("#volume-container > input")
 const setting_button = document.querySelector("#controls-container > span:nth-child(1)")
+const quality_button = document.querySelector(".settingItems > #qualitySelect")
 const sync_button = document.querySelector("#controls-container > span:nth-child(2)")
 const skip_button = document.querySelector("#controls-container > span:nth-child(3)")
 const fullscreen_button = document.querySelector("#fullscreen-container > span")
@@ -112,8 +115,27 @@ function watchPageLoad(){
             setting_menu.style["display"] = "block"
         }
     })
+    quality_button.addEventListener("change", function(e) {
+        // The value of the selected option
+        var value = e.target.value;
+
+        // The text of the selected option
+        var text = e.target.options[e.target.selectedIndex].text;
+
+        player.src = value
+        // Now you can use the value and text as needed
+        console.log("Selected option value: " + value);
+        console.log("Selected option text: " + text);
+    });
+
     sync_button.addEventListener("click", function(e){
-        
+        if(urlParams.has("id")==true){
+            if (syncTime<player.duration){
+                sync()
+            }else{
+                player.currentTime = player.duration
+            }
+        }
     })
     skip_button.addEventListener("click", function(e){
         
@@ -121,16 +143,20 @@ function watchPageLoad(){
     fullscreen_button.addEventListener("click", function(e){
         const player_element = document.querySelector("#contentEntries > div:nth-child(1)")
         if (document.fullscreenElement) {
+            fullscreen_button.innerHTML = "fullscreen"
             document.exitFullscreen();
-          } else if (document.webkitFullscreenElement) {
+        } else if (document.webkitFullscreenElement) {
             // Need this to support Safari
+            fullscreen_button.innerHTML = "fullscreen"
             document.webkitExitFullscreen();
-          } else if (player_element.webkitRequestFullscreen) {
+        } else if (player_element.webkitRequestFullscreen) {
             // Need this to support Safari
+            fullscreen_button.innerHTML = "fullscreen_exit"
             player_element.webkitRequestFullscreen();
-          } else {
+        } else {
+            fullscreen_button.innerHTML = "fullscreen_exit"
             player_element.requestFullscreen();
-          }
+        }
     })
 
     player.oncanplay = function(){
@@ -403,18 +429,42 @@ searchInput.addEventListener("input", function(e) {
                                         // console.log(e);
                                         const epsUrl = e.target.querySelector("a").attributes["href"].value
                                         clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
+                                            const target = document.querySelector(".settingItems > #qualitySelect")
+                                            target.innerHTML = ""
+
+                                            const html = new DOMParser().parseFromString(response, 'text/html');
+                                            console.log(html);
+
                                             document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
-                                            const html = new DOMParser().
-                                            parseFromString(response, 'text/html');
-                                            // console.log(html);
-                                            const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
-                                            const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
-                                            const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
+
+                                            for (let i = 0; i < html.querySelectorAll("#player > source").length; i++) {
+                                                const data = html.querySelectorAll("#player > source")[i]
+                                                console.log(data);
+                                                
+                                                // Create a new option element
+                                                var option = document.createElement("option");
+
+                                                // Set the value attribute
+                                                option.value = `${data.attributes["src"].value}`;
+                                                
+                                                // Set the text content
+                                                option.textContent = `${data.attributes["size"].value}p`;
+
+                                                if (data.attributes["size"].value==defaultQuality){
+                                                    option.selected = true
+                                                    player.src = data.attributes["src"].value
+                                                }
+
+                                                target.appendChild(option);
+                                            }
+                                            // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
+                                            // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
+                                            // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
 
                                             const regex = /https:\/\/(.+)\.my\.id\//;
                                             // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
                                             // console.log(lowQ);
-                                            document.querySelector("video").src = lowQ
+                                            // document.querySelector("video").src = lowQ
 
                                             console.groupCollapsed("[Video URL]")
                                             console.log("Low",lowQ);

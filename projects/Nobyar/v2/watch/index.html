@@ -68,31 +68,33 @@
         <div id="content">
             <div id="contentEntries">
                 <div style="border: 1px red dashed;aspect-ratio: 16/9;width: 70vw;background-color: black; position: relative; overflow: hidden;">
-                    <div style="width: 30%; height: fit-content; max-height: 30vh; max-width: 25vw;border: 1px mediumslateblue dashed; border-radius: 5px;position: absolute; z-index: 3; bottom: 40; right: 0; display: block; overflow-y: auto; overflow-x: hidden;background-color: var(--color-primary); color: white; opacity: 75%;">
-                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                    <div class="vidSettingOverlay">
+                        <div class="settingItems">
                             <label for="vidQuality">Quality: </label>
-                            <select name="vidQuality" id="">
-                                <option value="lowQ">placeholder</option>
-                                <option value="medQ">placeholder</option>
-                                <option value="hiQ">placeholder</option>
+                            <select name="vidQuality" id="qualitySelect">
+                                <option value="" selected hidden>No data</option>
                             </select>
                         </div>
-                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                        <div class="settingItems">
                             <label for="sync2Host">Automatically sync to host: </label>
                             <select name="sync2Host" id="">
                                 <option value="true">True</option>
                                 <option value="false">False</option>
                             </select>
                         </div>
-                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;">
+                        <div class="settingItems">
                             <label for="aniSkip">When available, Automatically skip opening & ending: </label>
                             <select name="aniSkip" id="">
                                 <option value="true">True</option>
                                 <option value="false">False</option>
                             </select>
                         </div>
-                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;"><button>Download</button><button>Copy URL</button></div>
-                        <div style="width: 100%; height: fit-content; border: 1px springgreen dashed; padding: 5px;"><Button>Reset to default</Button></div>                        
+                        <div class="settingItems">
+                            <button>Download</button><button>Copy URL</button>
+                        </div>
+                        <div class="settingItems">
+                            <Button>Reset to default</Button>
+                        </div>                        
                     </div>
 
                     <div style="justify-content: center; align-items: center; text-align: center; width: 100%; height: 100%; position: absolute; background-color: rgba(0, 0, 0, 0.418); backdrop-filter: blur(2px) grayscale();display: grid;">Buffer</div>
@@ -134,6 +136,7 @@
                 
                     <video poster="https://cdn.discordapp.com/attachments/636600433799856128/1151476930005180446/9B.png" src="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>
                 </div>
+
                 <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
                 </div>
                 <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">

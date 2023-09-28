@@ -138,17 +138,43 @@
         flex: 0.5;
         /* overflow: hidden; */
     }
+    .vidSettingOverlay{
+        width: 30%;
+        height: fit-content;
+        max-height: 30vh;
+        max-width: 25vw;
+
+        border: 1px mediumslateblue dashed;
+        border-radius: 5px;
+
+        position: absolute;
+        z-index: 3;
+        bottom: 40;
+        right: 0;
+        display: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: var(--color-primary);
+        color: white;
+        opacity: 75%;
+    }
+        .vidSettingOverlay > .settingItems{
+            width: 100%;
+            height: fit-content;
+            border: 1px springgreen dashed;
+            padding: 5px;
+        }
 
     #contentEntries > div:nth-child(2) > #items{
         /* padding-bottom: 1%; */
-        display: flex;
+        display: block;
         position: relative;
         width: 100%;
         height: fit-content;
         background-color: rgb(255, 255, 255);
         overflow: hidden;
         border: 1px green dashed;
-        margin: 2px;
+        /* margin: 2px; */
         cursor:pointer;
         /* border-bottom: 1vh solid rgba(0, 0, 0, 0.192); */
         transition-duration: var(--transition-duration);
