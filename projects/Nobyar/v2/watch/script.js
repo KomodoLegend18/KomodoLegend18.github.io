@@ -1,7 +1,10 @@
 const player = document.querySelector("video")
+var hidePlayerControlsTimer
 
 const defaultQuality = 360
 const netStatus =  document.querySelector("#netStat")
+
+const player_element = document.querySelector(".vidContainer")
 const play_button = document.querySelector("#play-container > span")
 const progress_current = document.querySelector("#progress-container > div > p:nth-child(1)")
 const progress_status = document.querySelector("#progress-container > div > p:nth-child(2)")
@@ -11,6 +14,7 @@ const progress_bar = document.querySelector("#progress-container > progress")
 const mute_button = document.querySelector("#volume-container > span")
 const volume_input = document.querySelector("#volume-container > input")
 const setting_button = document.querySelector("#controls-container > span:nth-child(1)")
+const setting_menu = document.querySelector("#contentEntries > div:nth-child(1) > div:nth-child(1)")
 const quality_button = document.querySelector(".settingItems > #qualitySelect")
 const sync_button = document.querySelector("#controls-container > span:nth-child(2)")
 const skip_button = document.querySelector("#controls-container > span:nth-child(3)")
@@ -21,7 +25,7 @@ const poster = "https://cdn.discordapp.com/attachments/636600433799856128/115147
 
 let posted = false
 let postid
-const webhookurl = "https://discord.com/api/webhooks/835374841455443968/IHdR8hm8AES_l15uwQBIAjnZHmHafkDqXUpr7LX3RSEPcMY5LfpOMcZ0HmT9n25al6GF"
+const webhookurl = "https://discord.com/api/webhooks/979944457350823986/btUsQ7W2rjoTF8HcqST1qvFBHc1gYAHv2nfUOo-R_UAQPDeS8od0z7Ymh5nxRkoMv1Ji"
 const embedtest = [
     {
       "title": "body title",
@@ -47,17 +51,17 @@ const embedtest = [
         "url": "https://www.google.com",
         "icon_url": "https://discord.com/assets/c09a43a372ba81e3018c3151d4ed4773.png"
       },
-      "footer": {
-        "text": "footer",
-        "icon_url": "https://www.google.com"
-      },
-      "timestamp": "2023-09-26T13:12:00.000Z",
       "image": {
         "url": "https://www.google.com"
       },
       "thumbnail": {
         "url": "https://www.google.com"
       }
+    },
+    {
+        "title": "viData",
+        "description": "data here",
+        "color": null
     }
   ]
 
@@ -68,23 +72,11 @@ function watchPageLoad(){
     setInterval(checkInternet, 1000)
     play_button.addEventListener("click", function(e){
         togglePlay()
-        if (player.readyState>=3){
-            if (player.paused || player.ended) {
-                player.play();
-
-                // if not host
-                if(urlParams.has("id")==true){
-                    if (syncTime<player.duration){
-                        sync()
-                    }else{
-                        player.currentTime = player.duration
-                    }
-                }
-            } else {
-                player.pause();
-            }
-        }
     })
+    player.addEventListener('click', function(e) {
+        // console.log(e.target);
+        togglePlay()
+    });
     progress_input.addEventListener("input", function(e){
         // console.log(e.target.value);
         const seek = e.target.value
@@ -95,25 +87,14 @@ function watchPageLoad(){
         progress_input.attributes[1].value = `${seek}`
     })
     mute_button.addEventListener("click",function(e){
-        if (player.muted){
-            mute_button.innerHTML = "volume_up"
-            player.muted = false
-        } else {
-            mute_button.innerHTML = "volume_off"
-            player.muted = true
-        }
+        toggleMute();
     })
     volume_input.addEventListener("input",function(e){
         const vol = e.target.value
         player.volume = vol
     })
     setting_button.addEventListener("click", function(e){
-        const setting_menu = document.querySelector("#contentEntries > div:nth-child(1) > div:nth-child(1)")
-        if (setting_menu.style["display"]=="block"){
-            setting_menu.style["display"] = "none"
-        } else {
-            setting_menu.style["display"] = "block"
-        }
+        toggleSetting();
     })
     quality_button.addEventListener("change", function(e) {
         // The value of the selected option
@@ -141,23 +122,137 @@ function watchPageLoad(){
         
     })
     fullscreen_button.addEventListener("click", function(e){
-        const player_element = document.querySelector("#contentEntries > div:nth-child(1)")
-        if (document.fullscreenElement) {
-            fullscreen_button.innerHTML = "fullscreen"
-            document.exitFullscreen();
-        } else if (document.webkitFullscreenElement) {
-            // Need this to support Safari
-            fullscreen_button.innerHTML = "fullscreen"
-            document.webkitExitFullscreen();
-        } else if (player_element.webkitRequestFullscreen) {
-            // Need this to support Safari
-            fullscreen_button.innerHTML = "fullscreen_exit"
-            player_element.webkitRequestFullscreen();
-        } else {
-            fullscreen_button.innerHTML = "fullscreen_exit"
-            player_element.requestFullscreen();
-        }
+        toggleFullscreen();
     })
+
+    // Skip opening
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowRight' && event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            player.currentTime += 85;
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowRight' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            player.currentTime += 5;
+        }
+    });
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowLeft' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            player.currentTime -= 5;
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'Space' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            togglePlay();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyM' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            toggleMute();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyC' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            toggleSetting();
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyF' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.log(event);
+            event.preventDefault();
+            toggleFullscreen();
+        }
+    });
+
+    // Leave search
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'Escape' && !event.ctrlKey) {
+            console.log(event);
+            event.preventDefault();
+            closeSearch()
+        }
+    });
+
+    // Enter search
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyF' && event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;
+            }
+            console.log(event);
+            event.preventDefault();
+            searchInput.focus()
+        }
+    });
+
+    player_element.addEventListener('mousemove', function() {
+        clearTimeout(hidePlayerControlsTimer);
+        player_element.querySelector(".vidcontrols").style.opacity = 1;
+        player_element.querySelector(".vidcontrols").style.cursor = "auto";
+        player_element.style.cursor = "auto";
+    
+        hidePlayerControlsTimer = setTimeout(function() {
+            player_element.querySelector(".vidcontrols").style.opacity = 0;
+            player_element.querySelector(".vidcontrols").style.cursor = "none";
+            player_element.style.cursor = "none";
+            // document.body.style.cursor = "none";
+        }, 2000);  // Change this to the number of milliseconds you want to wait
+    });
+    
+    player_element.addEventListener('mouseout', function() {
+        clearTimeout(hidePlayerControlsTimer);
+        player_element.querySelector(".vidcontrols").style.opacity = 0;
+        player_element.querySelector(".vidcontrols").style.cursor = "none";
+        player_element.style.cursor = "none";
+        // document.body.style.cursor = "auto";
+    });
+    
 
     player.oncanplay = function(){
         // document.querySelector("#progress-container > progress").value = 0 
@@ -185,7 +280,7 @@ function watchPageLoad(){
     }
     // Downloading video
     player.onprogress = function() {
-        buffer_overlay.style["display"] = "none"
+        // buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Downloading data`
         console.log("onprogress");
     }
@@ -200,6 +295,7 @@ function watchPageLoad(){
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Waiting`
         console.log("onwaiting");
+        // hostSend("Host Waiting")
     }
     player.onloadeddata = function() {
         buffer_overlay.style["display"] = "none"
@@ -211,62 +307,91 @@ function watchPageLoad(){
         progress_status.innerHTML = `Playing`
 
         // if host
-        if(urlParams.has("id")==false){
-            let embed = embedtest
-            embed[0].title = `${player.title}`
-            embed[0].url = `https://myanimelist.net/anime/${document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value}`
-            embed[0].description = `${progress_current.innerHTML} - ${progress_duration.innerHTML}`
-            embed[0].fields[0].name = `Last updated:`
-            embed[0].fields[0].value = `<t:${Math.round(new Date().getTime() / 1000)}:R>`
-            embed[0].fields[1].name = `Video data`
-            embed[0].fields[1].value = `\`\`\`${player.src}\`\`\``
-            embed[0].fields[2].name = `Current time`
-            embed[0].fields[2].value = `${player.currentTime}`
-
-
-            console.log(embed);
-            if(posted==false){
-                discordWebhook("POST",webhookurl,true,embed).then(response => {
-                    let resp = response.response[0]
-                    postid = resp.id
-                    console.log("discord Response",resp.id);
-                    posted = true
-                })
-            } else {
-                discordWebhook("PATCH",`${webhookurl}/messages/${postid}`,"true",embed).then(response => {
-                    console.log(response);
-                })
-            }
-        }
+        hostSend("Playing");
         console.log("onplaying");
     }
     player.onplay = function() {
         buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Play`
         console.log("onplay");
-        togglePlay()
+        // togglePlay()
     }
     player.onpause = function() {
         buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Paused`
         console.log("onpause");
-        togglePlay()
+        hostSend("Paused")
+        // togglePlay()
     }
     player.onended = function() {
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Data Ended`
         console.log("onended");
-        togglePlay()
+        hostSend("Ended");
+        // togglePlay()
     }
 }
 
-function togglePlay(){
-    if (player.paused){
-        play_button.innerHTML = "play_arrow"
-        // player.play()
-    } else {
+function togglePlay(state){
+    console.log("togglePlay");
+    if (player.readyState>=3){
+        console.log("player state >=3");
+        if (player.paused || player.ended) {
+            console.log("paused/ended > play");
+            player.play();
+            play_button.innerHTML = "pause"
+            
+        } else {
+            console.log("playing > pause");
+            player.pause();
+            play_button.innerHTML = "play_arrow"
+        }
+    }
+    // if not host
+    if(state=="Playing"){
+        player.play();
+        // player.muted = false;
         play_button.innerHTML = "pause"
-        // player.pause()
+    }else if(state=="Paused"){
+        player.pause();
+        // player.muted = false;
+        play_button.innerHTML = "play_arrow"
+    }
+}
+
+function toggleMute(){
+    if (player.muted){
+        mute_button.innerHTML = "volume_up"
+        player.muted = false
+    } else {
+        mute_button.innerHTML = "volume_off"
+        player.muted = true
+    }
+}
+
+function toggleSetting(){
+    if (setting_menu.style["display"]=="block"){
+        setting_menu.style["display"] = "none"
+    } else {
+        setting_menu.style["display"] = "block"
+    }
+}
+
+function toggleFullscreen() {
+    if (document.fullscreenElement) {
+        fullscreen_button.innerHTML = "fullscreen"
+        document.exitFullscreen();
+    } else if (document.webkitFullscreenElement) {
+        // Need this to support Safari
+        fullscreen_button.innerHTML = "fullscreen"
+        document.webkitExitFullscreen();
+    } else if (player_element.webkitRequestFullscreen) {
+        // Need this to support Safari
+        fullscreen_button.innerHTML = "fullscreen_exit"
+        player_element.webkitRequestFullscreen();
+    } else {
+        fullscreen_button.innerHTML = "fullscreen_exit"
+        player_element.requestFullscreen();
     }
 }
 
@@ -275,7 +400,7 @@ function updateProgress(){
         // Update Player Progress
         // # Progress Bar
         progress_bar.value = player.currentTime
-        progress_bar.max = player.duration + 20
+        progress_bar.max = player.duration
         // # Progress Input
         progress_input.attributes[1].value = `${player.currentTime}`
         progress_input.value = player.currentTime
@@ -315,31 +440,69 @@ searchInput.addEventListener("focus", function(e){
         const alldim = document.querySelectorAll(".dim")
             for (i=0;i<alldim.length;i++){
                 // Then add eventlistener to those elements
-                alldim[i].addEventListener("click", function(e){
-                    for(i=0;i<alldim.length;i++){
-                        alldim[i].remove()
-                    }
-                    clearSearch()
-                })
+                alldim[i].addEventListener("click", closeSearch)
             }
     }
-    
-
     if(e.target.value.length>=3){
         document.getElementById("search-result-overlay").style="pointer-events: auto;"
     }
     
     // console.warn("dim applied")
     // console.log(query)
-    function clearSearch(){ // Clear search results when executed    
-        // document.querySelector("#header-section > input[type=text]").value=""
-        const prevresult = document.getElementById("search-result-overlay")
-        if(prevresult){
-            // prevresult.innerHTML=""
-            prevresult.style="pointer-events:none;display:none"
+})
+
+function closeSearch() {
+    const alldim = document.querySelectorAll(".dim")
+    for(i=0;i<alldim.length;i++){
+        alldim[i].remove()
+    }
+    const prevresult = document.getElementById("search-result-overlay")
+    if(prevresult){
+        // prevresult.innerHTML=""
+        prevresult.style="pointer-events:none;display:none"
+    }
+    searchInput.blur();
+}
+
+function hostSend(status){
+    if(urlParams.has("id")==false){
+        let embed = embedtest
+        let vq = []
+        console.log(quality_button.children);
+        for (let i = 0; i < quality_button.children.length; i++) {
+            let obj = {
+                type:`${quality_button.children[i].innerHTML}`,
+                url:`${quality_button.children[i].value}`
+            }
+            vq.push(obj);
+        }
+        embed[0].title = `${player.title}`
+        embed[0].url = `https://myanimelist.net/anime/${document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value}`
+        embed[0].description = `${progress_current.innerHTML} - ${progress_duration.innerHTML})`
+        embed[0].fields[0].name = `Last updated:`
+        embed[0].fields[0].value = `<t:${Math.round(new Date().getTime() / 1000)}:R>`
+        embed[0].fields[1].name = `Status`
+        embed[0].fields[1].value = `${status}`
+        embed[0].fields[2].name = `Current time`
+        embed[0].fields[2].value = `${player.currentTime}`
+        embed[1].description = `\`\`\`${JSON.stringify(vq)}\`\`\``
+        
+        console.log(embed);
+        if(posted==false){
+            posted = true
+            discordWebhook("POST",webhookurl,true,embed).then(response => {
+                let resp = response.response[0]
+                postid = resp.id
+                console.log("discord Response",resp.id);
+            })
+        } else if(posted==true){
+            embed[0].description = `${progress_current.innerHTML} - ${progress_duration.innerHTML}\n# [__Join Nobyar__](https://komodolegend18.github.io/projects/Nobyar/v2/watch/?id=${postid})`
+            discordWebhook("PATCH",`${webhookurl}/messages/${postid}`,"true",embed).then(response => {
+                console.log(response);
+            })
         }
     }
-})
+}
 
 
 let search_timer
@@ -405,7 +568,7 @@ searchInput.addEventListener("input", function(e) {
                                 const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
                                 const episodeList = episode.querySelectorAll("a")
                                 for (let i = 0; i < episodeList.length; i++) {
-                                    console.log("Loop: ",i,episodeList.length);
+                                    console.log("episode list loop: ",i,episodeList.length);
                                     const title = episodeList[i].innerHTML
                                     const url = episodeList[i].attributes["href"].value
                                     const epsCount = i+1
@@ -429,16 +592,15 @@ searchInput.addEventListener("input", function(e) {
                                         // console.log(e);
                                         const epsUrl = e.target.querySelector("a").attributes["href"].value
                                         clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
-                                            const target = document.querySelector(".settingItems > #qualitySelect")
-                                            target.innerHTML = ""
+                                            quality_button.innerHTML = ""
 
-                                            const html = new DOMParser().parseFromString(response, 'text/html');
-                                            console.log(html);
+                                            const responseHTML = new DOMParser().parseFromString(response, 'text/html');
+                                            console.log(responseHTML);
 
                                             document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
 
-                                            for (let i = 0; i < html.querySelectorAll("#player > source").length; i++) {
-                                                const data = html.querySelectorAll("#player > source")[i]
+                                            for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
+                                                const data = responseHTML.querySelectorAll("#player > source")[i]
                                                 console.log(data);
                                                 
                                                 // Create a new option element
@@ -455,7 +617,7 @@ searchInput.addEventListener("input", function(e) {
                                                     player.src = data.attributes["src"].value
                                                 }
 
-                                                target.appendChild(option);
+                                                quality_button.appendChild(option);
                                             }
                                             // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
                                             // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
@@ -475,10 +637,15 @@ searchInput.addEventListener("input", function(e) {
                                         console.log(epsUrl);
                                     })
                                     if(i==episodeList.length-1){
-                                        next_page()
+                                        try {
+                                            next_page()
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
                                     }
                                     // console.log(episodeList[i]);
                                 }
+                                
                                 function next_page(){
                                     const nextURL = episode.querySelector(".page__link__episode").attributes["href"].value
                                     console.log(nextURL);

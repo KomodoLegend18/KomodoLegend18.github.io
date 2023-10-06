@@ -1,7 +1,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NobyarV2 | Watch</title>
 
@@ -11,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
 
-    <script src="../script/request.js" async></script>
+    <script src="../script/request.js" defer></script>
 
     <!-- <script src="../v2/script/page.js" defer></script> -->
 
@@ -50,13 +49,15 @@
             <div id="fadeDim"></div>
 
         </div>
+
         <div id="netStat" style="width: 100%; height: fit-content; text-align: center; background-color: red; display: none;">No Connection</div>
+
         <div id="header">
             <div id="header-section">
                 <div id="hamburger-icon"><span class="material-symbols-outlined">menu</span></div>
             </div>
             <div id="header-section">
-                <input type="text" tabindex="1" autocomplete="off" placeholder="Search Kurama">
+                <input type="text" tabindex="1" autocomplete="off" placeholder="Search Kurama (ctrl+f)">
                 <div id="search" tabindex="2"><span class="material-symbols-outlined">search</span></div>
                 
             </div>
@@ -65,9 +66,11 @@
             </div>
             
         </div>
+
         <div id="content">
             <div id="contentEntries">
-                <div style="border: 1px red dashed;aspect-ratio: 16/9;width: 70vw;background-color: black; position: relative; overflow: hidden;">
+                <div class="vidContainer">
+
                     <div class="vidSettingOverlay">
                         <div class="settingItems">
                             <label for="vidQuality">Quality: </label>
@@ -97,7 +100,7 @@
                         </div>                        
                     </div>
 
-                    <div style="justify-content: center; align-items: center; text-align: center; width: 100%; height: 100%; position: absolute; background-color: rgba(0, 0, 0, 0.418); backdrop-filter: blur(2px) grayscale();display: grid;">Buffer</div>
+                    <div class="bufferOverlay">Buffer</div>
 
 
                     <div class="vidcontrols">
