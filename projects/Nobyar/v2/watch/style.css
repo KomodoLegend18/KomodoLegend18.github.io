@@ -298,6 +298,7 @@
         -webkit-backdrop-filter: blur(2px) grayscale();
         backdrop-filter: blur(2px) grayscale();
         display: grid;
+        z-index: 2;
     }
 
     #contentEntries > div:nth-child(2) > #items{
