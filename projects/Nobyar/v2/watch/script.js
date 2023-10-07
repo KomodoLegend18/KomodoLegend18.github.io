@@ -295,7 +295,6 @@ function watchPageLoad(){
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Waiting`
         console.log("onwaiting");
-        // hostSend("Host Waiting")
     }
     player.onloadeddata = function() {
         buffer_overlay.style["display"] = "none"
@@ -307,29 +306,28 @@ function watchPageLoad(){
         progress_status.innerHTML = `Playing`
 
         // if host
-        hostSend("Playing");
+        // hostSend("Playing");
         console.log("onplaying");
     }
     player.onplay = function() {
         buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Play`
         console.log("onplay");
-        // togglePlay()
     }
     player.onpause = function() {
         buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Paused`
         console.log("onpause");
-        hostSend("Paused")
-        // togglePlay()
+        // hostSend("Paused")
     }
     player.onended = function() {
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Data Ended`
         console.log("onended");
-        hostSend("Ended");
-        // togglePlay()
+        // hostSend("Ended");
     }
+
+    document.querySelector("#camera").addEventListener("click",captureVid)
 }
 
 function togglePlay(state){
@@ -504,6 +502,40 @@ function hostSend(status){
     }
 }
 
+function captureVid() {
+    // Get the video and canvas elements
+    let canvas = document.querySelector('canvas');
+
+    // Get the 2D context of the canvas
+    let ctx = canvas.getContext('2d');
+    // Set the canvas dimensions to match the video
+    // canvas.width = player.videoWidth;
+    // canvas.height = player.videoHeight;
+
+    // Draw the current frame of the video onto the canvas
+    ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
+    // Convert the canvas to a Blob
+    canvas.toBlob(blob => {
+        // Now you can use the blob as you wish
+        console.log(blob);
+        var payload = {
+            file: blob,
+        };
+        
+        var params = {
+            method: "post",
+            payload: payload,
+            muteHttpExceptions: false
+        };
+        discordWebhook("POST","https://discord.com/api/webhooks/835374841455443968/IHdR8hm8AES_l15uwQBIAjnZHmHafkDqXUpr7LX3RSEPcMY5LfpOMcZ0HmT9n25al6GF",true,params).then(response => {
+            let resp = response.response[0]
+            postid = resp.id
+            console.log("discord Response",resp.id);
+        })
+    });
+
+    
+}
 
 let search_timer
 searchInput.addEventListener("input", function(e) {
@@ -701,6 +733,7 @@ searchInput.addEventListener("input", function(e) {
 
                                                         if (data.attributes["size"].value==defaultQuality){
                                                             option.selected = true
+                                                            player.crossOrigin = "anonymous";
                                                             player.src = data.attributes["src"].value
                                                         }
 
