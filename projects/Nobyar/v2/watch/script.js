@@ -26,46 +26,46 @@ const poster = "https://cdn.discordapp.com/attachments/636600433799856128/115147
 let posted = false
 let postid
 const webhookurl = "https://discord.com/api/webhooks/979944457350823986/btUsQ7W2rjoTF8HcqST1qvFBHc1gYAHv2nfUOo-R_UAQPDeS8od0z7Ymh5nxRkoMv1Ji"
-const embedtest = [
-    {
-      "title": "body title",
-      "description": `body desc`,
-      "url": "https://www.google.com",
-      "color": 13311,
-      "fields": [
-        {
-          "name": "lastupdate",
-          "value": "timestamp"
-        },
-        {
-            "name": "vidurl",
-            "value": "url"
-        },
-        {
-            "name": "vidcurrtime",
-            "value": "0"
-        }
-      ],
-      "author": {
-        "name": "author",
+const embedtest = [{
+        "title": "body title",
+        "description": `body desc`,
         "url": "https://www.google.com",
-        "icon_url": "https://discord.com/assets/c09a43a372ba81e3018c3151d4ed4773.png"
-      },
-      "image": {
-        "url": "https://www.google.com"
-      },
-      "thumbnail": {
-        "url": "https://www.google.com"
-      }
+        "color": 13311,
+        "fields": [
+            {
+                "name": "lastupdate",
+                "value": "timestamp",
+                "inline": true
+            },
+            {
+                "name": "vidurl",
+                "value": "url",
+                "inline": true
+            },
+            {
+                "name": "vidcurrtime",
+                "value": "0",
+                "inline": true
+            }
+        ],
+        "author": {
+            "name": "author",
+            "url": "https://www.google.com",
+            "icon_url": "https://discord.com/assets/c09a43a372ba81e3018c3151d4ed4773.png"
+        },
+        "image": {
+            "url": "https://www.google.com"
+        },
+        "thumbnail": {
+            "url": "https://www.google.com"
+        }
     },
     {
         "title": "viData",
         "description": "data here",
         "color": null
     }
-  ]
-
-
+]
 
 watchPageLoad()
 function watchPageLoad(){
@@ -228,6 +228,19 @@ function watchPageLoad(){
             console.log(event);
             event.preventDefault();
             searchInput.focus()
+        }
+    });
+
+    // Sync
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'Space' && event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;
+            }
+            console.log(event);
+            event.preventDefault();
+            sync()
         }
     });
 
