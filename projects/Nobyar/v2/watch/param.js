@@ -105,8 +105,6 @@ function sync(){
             console.log("Paused",syncTime);
         }else if(respEmbed[0].fields[1].value=="Ended"){
             player.currentTime = player.duration
-            buffer_overlay.style["display"] = "grid"
-            progress_status.innerHTML = `Data Ended`
             console.log("Ended",player.duration);
         }
 
