@@ -38,8 +38,6 @@
         <div id="overlay">
             <div id="alert"></div>
             <div id="menu" style="transform: translateX(-100%);">
-                <div id="menuItems"><span>Top Anime</span></div>
-                <div id="menuItems">Webhook mode</div>
                 <div id="menuItems">Settings</div>
                 <div id="menuClose">Close</div>
             </div>
@@ -54,7 +52,7 @@
 
         <div id="header">
             <div id="header-section">
-                <div id="hamburger-icon"><span class="material-symbols-outlined">menu</span></div>
+                <div id="hamburger-icon" class="notImplemented"><span class="material-symbols-outlined">menu</span></div>
             </div>
             <div id="header-section">
                 <input type="text" tabindex="1" autocomplete="off" placeholder="Search Kurama (ctrl+f)">
@@ -62,7 +60,7 @@
                 
             </div>
             <div id="header-section">
-                <button onclick="resetLocalstorage()">Reset</button>
+                <button onclick="resetLocalstorage()" class="notImplemented">Reset</button>
             </div>
             
         </div>
@@ -80,27 +78,27 @@
                         </div>
                         <div class="settingItems">
                             <label for="sync2Host">Automatically sync to host: </label>
-                            <select name="sync2Host" id="">
+                            <select name="sync2Host" id="syncMode">
                                 <option value="true">True</option>
                                 <option value="false">False</option>
                             </select>
                         </div>
-                        <div class="settingItems">
+                        <div class="settingItems notImplemented">
                             <label for="aniSkip">When available, Automatically skip opening & ending: </label>
                             <select name="aniSkip" id="">
                                 <option value="true">True</option>
                                 <option value="false">False</option>
                             </select>
                         </div>
-                        <div class="settingItems">
+                        <div class="settingItems notImplemented">
                             <button>Download</button><button>Copy URL</button>
                         </div>
-                        <div class="settingItems">
+                        <div class="settingItems notImplemented">
                             <Button>Reset to default</Button>
                         </div>                        
                     </div>
 
-                    <div class="bufferOverlay">Buffer</div>
+                    <div class="bufferOverlay"></div>
 
 
                     <div class="vidcontrols">
@@ -127,7 +125,7 @@
                             <span class="material-symbols-rounded">
                                 sync
                             </span>
-                            <span class="material-symbols-rounded">
+                            <span class="material-symbols-rounded disabled">
                                 skip_next
                             </span>
                         </div>
@@ -137,13 +135,17 @@
                     </div>
                     
                 
-                    <video poster="https://cdn.discordapp.com/attachments/636600433799856128/1151476930005180446/9B.png" src="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>
+                    <video poster="https://cdn.discordapp.com/attachments/636600433799856128/1151476930005180446/9B.png" src="" data-title="" 
+                    data-eps="" data-idmal="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>
                 </div>
 
-                <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+                <div class="epsContainer">
                 </div>
-                <div style="border: 1px red dashed;width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
-                    <button style="display: none;" data-id="" data-eps="" data-length="" onclick="skipOP()">Manual Skip</button>
+                <div class="miscContainer">
+                    <p>space = play/pause, left / right = -5s / +5s, ctrl+right = +85s, f = fullscreen, c = setting, m = mute, ctrl+f = search, esc (while search) = leave search, ctrl+space = manual sync (disabled if auto sync is on)</p>
+                    <!-- <button style="display: none;" data-id="" data-eps="" data-length="" onclick="skipOP()">Manual Skip</button> -->
+                    <p>Webhook URL</p>
+                    <input type="text" name="" id="">
                 </div>
 
                 <!-- <video controls src="https://asuna.my.id/0:/HAZw6uBFIZy/Kuramanime-GRTCLRC-11-360p-BGlobal.mp4?id=37306029706-usgjft2cm5e67pf27h96pv92ssu7s73b.apps.googleusercontent.com&sc=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&rt=1//09BMOgMCYhn4SCgYIARAAGAkSNwF-L9IrmaBqOqrNrxjHZ_TPCyc-HFZcGWqf48AYV0ciiTZugXBcA0WmsMBu0Q4gPML9E2lKsyE&gid=1Q7PmAUYrImAOi0qRfy-YP58D0xmGY0vz"></video>

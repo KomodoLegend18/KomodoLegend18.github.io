@@ -15,17 +15,21 @@ const mute_button = document.querySelector("#volume-container > span")
 const volume_input = document.querySelector("#volume-container > input")
 const setting_button = document.querySelector("#controls-container > span:nth-child(1)")
 const setting_menu = document.querySelector("#contentEntries > div:nth-child(1) > div:nth-child(1)")
-const quality_button = document.querySelector(".settingItems > #qualitySelect")
+const quality_setting = document.querySelector(".settingItems > #qualitySelect")
+const sync_setting = document.querySelector(".settingItems > #syncMode")
 const sync_button = document.querySelector("#controls-container > span:nth-child(2)")
 const skip_button = document.querySelector("#controls-container > span:nth-child(3)")
 const fullscreen_button = document.querySelector("#fullscreen-container > span")
 const buffer_overlay = document.querySelector("#contentEntries > div:nth-child(1) > div:nth-child(2)")
 
+const episodeContainer = document.querySelector(".epsContainer")
+const miscContainer = document.querySelector(".miscContainer")
+
 const poster = "https://cdn.discordapp.com/attachments/636600433799856128/1151476930005180446/9B.png"
 
 let posted = false
 let postid
-const webhookurl = "https://discord.com/api/webhooks/979944457350823986/btUsQ7W2rjoTF8HcqST1qvFBHc1gYAHv2nfUOo-R_UAQPDeS8od0z7Ymh5nxRkoMv1Ji"
+
 const embedtest = [{
         "title": "body title",
         "description": `body desc`,
@@ -49,15 +53,14 @@ const embedtest = [{
             }
         ],
         "author": {
-            "name": "author",
-            "url": "https://www.google.com",
-            "icon_url": "https://discord.com/assets/c09a43a372ba81e3018c3151d4ed4773.png"
+            "name": "Nobyar v2 | Watch",
+            "url": "https://komodolegend18.github.io/",
         },
         "image": {
-            "url": "https://www.google.com"
+            "url": ""
         },
         "thumbnail": {
-            "url": "https://www.google.com"
+            "url": ""
         }
     },
     {
@@ -96,7 +99,7 @@ function watchPageLoad(){
     setting_button.addEventListener("click", function(e){
         toggleSetting();
     })
-    quality_button.addEventListener("change", function(e) {
+    quality_setting.addEventListener("change", function(e) {
         // The value of the selected option
         var value = e.target.value;
 
@@ -108,11 +111,16 @@ function watchPageLoad(){
         console.log("Selected option value: " + value);
         console.log("Selected option text: " + text);
     });
+    updateSyncMode()
+    sync_setting.addEventListener("change", function(e) {
+        updateSyncMode()
+    });
+    
 
     sync_button.addEventListener("click", function(e){
         if(urlParams.has("id")==true){
             if (syncTime<player.duration){
-                sync()
+                sync(watchID,watchURL)
             }else{
                 player.currentTime = player.duration
             }
@@ -240,30 +248,21 @@ function watchPageLoad(){
             }
             console.log(event);
             event.preventDefault();
-            sync()
+            if(sync_setting.value=="false"){
+                console.log("Manual Sync");
+                sync(watchID,watchURL)
+            }else{
+                console.log("Manual sync disabled");
+            }
         }
     });
 
+    // Toggle controls visibility
     player_element.addEventListener('mousemove', function() {
-        clearTimeout(hidePlayerControlsTimer);
-        player_element.querySelector(".vidcontrols").style.opacity = 1;
-        player_element.querySelector(".vidcontrols").style.cursor = "auto";
-        player_element.style.cursor = "auto";
-    
-        hidePlayerControlsTimer = setTimeout(function() {
-            player_element.querySelector(".vidcontrols").style.opacity = 0;
-            player_element.querySelector(".vidcontrols").style.cursor = "none";
-            player_element.style.cursor = "none";
-            // document.body.style.cursor = "none";
-        }, 2000);  // Change this to the number of milliseconds you want to wait
+        hideControls();
     });
-    
     player_element.addEventListener('mouseout', function() {
-        clearTimeout(hidePlayerControlsTimer);
-        player_element.querySelector(".vidcontrols").style.opacity = 0;
-        player_element.querySelector(".vidcontrols").style.cursor = "none";
-        player_element.style.cursor = "none";
-        // document.body.style.cursor = "auto";
+        hideControls();
     });
     
 
@@ -274,9 +273,9 @@ function watchPageLoad(){
         updateProgress()
         progress_status.innerHTML = `Can play data`
         buffer_overlay.style["display"] = "none"
-        player.poster = ""
+        // player.poster = ""
 
-        console.log("oncanplay");
+        // console.log("oncanplay");
         // skipOP()
     }
     player.ontimeupdate = function() {
@@ -287,53 +286,54 @@ function watchPageLoad(){
     // Try to load video
     player.onloadstart = function() {
         buffer_overlay.style["display"] = "grid"
-        player.poster = poster
+        // player.poster = poster
         progress_status.innerHTML = `Loading data`
-        console.log("onloadstart");
+        // console.log("onloadstart");
     }
     // Downloading video
     player.onprogress = function() {
         // buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Downloading data`
-        console.log("onprogress");
+        // console.log("onprogress");
     }
     // Can't load video
-    player.onerror = function() {
+    player.onerror = function(e) {
         buffer_overlay.style["display"] = "grid"
         player.poster = poster
         progress_status.innerHTML = `No Data`
-        console.log("onerror");
+        console.error("Error loading video",e);
     }
     player.onwaiting = function() {
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Waiting`
-        console.log("onwaiting");
+        // console.log("onwaiting");
         // hostSend("Host Waiting")
     }
     player.onloadeddata = function() {
         buffer_overlay.style["display"] = "none"
         progress_status.innerHTML = `Data ready`
-        console.log("onloadeddata");
+        // console.log("onloadeddata");
     }
     player.onplaying = function() {
         buffer_overlay.style["display"] = "none"
-        progress_status.innerHTML = `Playing`
+        // console.log("onplaying");
 
         // if host
         hostSend("Playing");
-        console.log("onplaying");
     }
     player.onplay = function() {
         buffer_overlay.style["display"] = "none"
-        progress_status.innerHTML = `Play`
-        console.log("onplay");
+        // console.log("onplay");
+
+        hideControls()
         // togglePlay()
     }
     player.onpause = function() {
         buffer_overlay.style["display"] = "none"
-        progress_status.innerHTML = `Paused`
-        console.log("onpause");
-        hostSend("Paused")
+        // console.log("onpause");
+
+        hostSend("Paused");
+        hideControls()
         // togglePlay()
     }
     player.onended = function() {
@@ -343,31 +343,44 @@ function watchPageLoad(){
         hostSend("Ended");
         // togglePlay()
     }
+    updateWebhook()
 }
 
 function togglePlay(state){
     console.log("togglePlay");
     if (player.readyState>=3){
-        console.log("player state >=3");
+        // data for the current and at least the next frame is available
         if (player.paused || player.ended) {
             console.log("paused/ended > play");
+            progress_status.innerHTML = `Playing`
             player.play();
-            play_button.innerHTML = "pause"
-            
+
+            // Icon
+            play_button.innerHTML = "pause"            
         } else {
             console.log("playing > pause");
             player.pause();
+            progress_status.innerHTML = `Paused`
+
+            // Icon
             play_button.innerHTML = "play_arrow"
         }
     }
-    // if not host
+
+    // if NOT host
     if(state=="Playing"){
         player.play();
+        progress_status.innerHTML = `Playing`
         // player.muted = false;
+        
+        // Icon
         play_button.innerHTML = "pause"
     }else if(state=="Paused"){
         player.pause();
+        progress_status.innerHTML = `Host Paused`
         // player.muted = false;
+
+        // Icon
         play_button.innerHTML = "play_arrow"
     }
 }
@@ -387,6 +400,32 @@ function toggleSetting(){
         setting_menu.style["display"] = "none"
     } else {
         setting_menu.style["display"] = "block"
+    }
+}
+
+function updateSyncMode() {
+    let value = sync_setting.value
+    // console.log(value);
+    if(value=="true"){
+        console.log("[Sync Mode] Auto");
+        sync_button.classList.add("disabled")
+    }else{
+        console.log("[Sync Mode] Manual");
+        sync_button.classList.remove("disabled")
+    }
+}
+
+function hideControls() {
+    clearTimeout(hidePlayerControlsTimer);
+
+    if(!player.paused){
+        player_element.querySelector(".vidcontrols").classList.remove("hidden");
+
+        hidePlayerControlsTimer = setTimeout(function() {
+            player_element.querySelector(".vidcontrols").classList.add("hidden");
+        }, 2100);
+    }else if(player.paused){
+        player_element.querySelector(".vidcontrols").classList.remove("hidden");
     }
 }
 
@@ -481,17 +520,19 @@ function hostSend(status){
     if(urlParams.has("id")==false){
         let embed = embedtest
         let vq = []
-        console.log(quality_button.children);
-        for (let i = 0; i < quality_button.children.length; i++) {
+        console.log(quality_setting.children);
+        for (let i = 0; i < quality_setting.children.length; i++) {
             let obj = {
-                type:`${quality_button.children[i].innerHTML}`,
-                url:`${quality_button.children[i].value}`
+                type:`${quality_setting.children[i].innerHTML}`,
+                url:`${quality_setting.children[i].value}`
             }
             vq.push(obj);
         }
-        embed[0].title = `${player.title}`
-        embed[0].url = `https://myanimelist.net/anime/${document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value}`
-        embed[0].description = `${progress_current.innerHTML} - ${progress_duration.innerHTML})`
+        embed[0].title = `${player.attributes["data-title"].value}`
+        embed[0].url = `https://myanimelist.net/search/all?cat=all&q=${encodeURIComponent(player.attributes["data-title"].value)}`
+        embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML}`
+        embed[0].image.url = `${player.poster}`
+        // embed[0].thumbnail.url = `${player.poster}`
         embed[0].fields[0].name = `Last updated:`
         embed[0].fields[0].value = `<t:${Math.round(new Date().getTime() / 1000)}:R>`
         embed[0].fields[1].name = `Status`
@@ -501,22 +542,34 @@ function hostSend(status){
         embed[1].description = `\`\`\`${JSON.stringify(vq)}\`\`\``
         
         console.log(embed);
-        if(posted==false){
-            posted = true
-            discordWebhook("POST",webhookurl,true,embed).then(response => {
-                let resp = response.response[0]
-                postid = resp.id
-                console.log("discord Response",resp.id);
-            })
-        } else if(posted==true){
-            embed[0].description = `${progress_current.innerHTML} - ${progress_duration.innerHTML}\n# [__Join Nobyar__](https://komodolegend18.github.io/projects/Nobyar/v2/watch/?id=${postid})`
-            discordWebhook("PATCH",`${webhookurl}/messages/${postid}`,"true",embed).then(response => {
-                console.log(response);
-            })
+        createEmbed()
+
+        function createEmbed() {
+            if(posted==false){
+                posted = true
+                discordWebhook("POST",updateWebhook(),true,embed).then(response => {
+                    let resp = response.response[0]
+                    postid = resp.id
+                    console.log("discord Response",resp.id);
+    
+                    updateEmbed()
+                })
+            }else{
+                updateEmbed()
+            }
+        }
+        
+        function updateEmbed() {
+            if(posted==true){
+                embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML}\n# [__Join Nobyar__](https://komodolegend18.github.io/projects/Nobyar/v2/watch/?id=${postid}&url=${updateWebhook()})`
+                discordWebhook("PATCH",`${updateWebhook()}/messages/${postid}`,"true",embed).then(response => {
+                    console.log(response);
+                    console.log(`?id=${postid}&url=${updateWebhook()}`);
+                })
+            }
         }
     }
 }
-
 
 let search_timer
 searchInput.addEventListener("input", function(e) {
@@ -562,190 +615,31 @@ searchInput.addEventListener("input", function(e) {
                     
                     // Add a click event listener to each search result item
                     items.addEventListener("click", function (e) {
-                        const sidebar = document.querySelector("#contentEntries > div:nth-child(2)")
-                        sidebar.innerHTML = ""
+                        player.poster = poster
+                        episodeContainer.innerHTML = ""
 
                         const dataIndex = e.target.getAttribute("data-index");
                         if (!dataIndex) return; // Check if a valid data-index attribute exists
                         const selected = e.target.children[1].querySelector("#synopsis").innerHTML
+                        closeSearch()
 
-                        getMalAPISearch(title).then(response => {
-                            const animeID = response[0].node.id
-                            document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value = animeID
-                            console.log(animeID);
-
-                            player.title = title
-
-                            clientGET(selected).then(response => {
-                                const html = new DOMParser().parseFromString(response, 'text/html');
-                                const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
-                                const episodeList = episode.querySelectorAll("a")
-                                for (let i = 0; i < episodeList.length; i++) {
-                                    console.log("episode list loop: ",i,episodeList.length);
-                                    const title = episodeList[i].innerHTML
-                                    const url = episodeList[i].attributes["href"].value
-                                    const epsCount = i+1
-    
-                                    const items = document.createElement("div");
-                                    items.id = "items";
-                                    items.setAttribute("data-index", i);
-                                    items.innerHTML = `
-                                        <div id="info" style="pointer-events:none;">
-                                            <a href="${url}" target="_blank" id="title">${title}</a>
-                                        </div>
-                                    `;
-                                    sidebar.appendChild(items);
-                                    items.addEventListener("click", function (e){
-                                        document.querySelector("#progress-container > progress").removeAttribute("value");
-                                        document.querySelector("#progress-container > progress").removeAttribute("max");
-                                        document.querySelector("#progress-container > input").attributes["value"].value = "0";
-                                        document.querySelector("#progress-container > input").removeAttribute("max");
-
-                                        document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-eps"].value = epsCount
-                                        // console.log(e);
-                                        const epsUrl = e.target.querySelector("a").attributes["href"].value
-                                        clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
-                                            quality_button.innerHTML = ""
-
-                                            const responseHTML = new DOMParser().parseFromString(response, 'text/html');
-                                            console.log(responseHTML);
-
-                                            document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
-
-                                            for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
-                                                const data = responseHTML.querySelectorAll("#player > source")[i]
-                                                console.log(data);
-                                                
-                                                // Create a new option element
-                                                var option = document.createElement("option");
-
-                                                // Set the value attribute
-                                                option.value = `${data.attributes["src"].value}`;
-                                                
-                                                // Set the text content
-                                                option.textContent = `${data.attributes["size"].value}p`;
-
-                                                if (data.attributes["size"].value==defaultQuality){
-                                                    option.selected = true
-                                                    player.src = data.attributes["src"].value
-                                                }
-
-                                                quality_button.appendChild(option);
-                                            }
-                                            // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
-                                            // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
-                                            // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
-
-                                            const regex = /https:\/\/(.+)\.my\.id\//;
-                                            // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
-                                            // console.log(lowQ);
-                                            // document.querySelector("video").src = lowQ
-
-                                            console.groupCollapsed("[Video URL]")
-                                            console.log("Low",lowQ);
-                                            console.log("Med",medQ);
-                                            console.log("High",hiQ);
-                                            console.groupEnd()
-                                        })
-                                        console.log(epsUrl);
-                                    })
-                                    if(i==episodeList.length-1){
-                                        try {
-                                            next_page()
-                                        } catch (error) {
-                                            console.error(error);
-                                        }
-                                    }
-                                    // console.log(episodeList[i]);
-                                }
-                                
-                                function next_page(){
-                                    const nextURL = episode.querySelector(".page__link__episode").attributes["href"].value
-                                    console.log(nextURL);
-
-                                    clientGET(nextURL).then(response=>{
-                                        const html = new DOMParser().parseFromString(response, 'text/html');
-                                        const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
-                                        const episodeList = episode.querySelectorAll("a")
-                                        for (let i = 0; i < episodeList.length; i++) {
-                                            const title = episodeList[i].innerHTML
-                                            const url = episodeList[i].attributes["href"].value
-                                            const epsCount = i+1
-            
-                                            const items = document.createElement("div");
-                                            items.id = "items";
-                                            items.setAttribute("data-index", i);
-                                            items.innerHTML = `
-                                                <div id="info" style="pointer-events:none;">
-                                                    <a href="${url}" target="_blank" id="title">${title}</a>
-                                                </div>
-                                            `;
-                                            sidebar.appendChild(items);
-                                            items.addEventListener("click", function (e){
-                                                document.querySelector("#progress-container > progress").removeAttribute("value");
-                                                document.querySelector("#progress-container > progress").removeAttribute("max");
-                                                document.querySelector("#progress-container > input").attributes["value"].value = "0";
-                                                document.querySelector("#progress-container > input").removeAttribute("max");
-
-                                                document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-eps"].value = epsCount
-                                                // console.log(e);
-                                                const epsUrl = e.target.querySelector("a").attributes["href"].value
-                                                clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
-                                                    const target = document.querySelector(".settingItems > #qualitySelect")
-                                                    target.innerHTML = ""
-
-                                                    const html = new DOMParser().parseFromString(response, 'text/html');
-                                                    console.log(html);
-
-                                                    document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
-
-                                                    for (let i = 0; i < html.querySelectorAll("#player > source").length; i++) {
-                                                        const data = html.querySelectorAll("#player > source")[i]
-                                                        console.log(data);
-                                                        
-                                                        // Create a new option element
-                                                        var option = document.createElement("option");
-
-                                                        // Set the value attribute
-                                                        option.value = `${data.attributes["src"].value}`;
-                                                        
-                                                        // Set the text content
-                                                        option.textContent = `${data.attributes["size"].value}p`;
-
-                                                        if (data.attributes["size"].value==defaultQuality){
-                                                            option.selected = true
-                                                            player.src = data.attributes["src"].value
-                                                        }
-
-                                                        target.appendChild(option);
-                                                    }
-                                                    // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
-                                                    // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
-                                                    // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
-
-                                                    const regex = /https:\/\/(.+)\.my\.id\//;
-                                                    // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
-                                                    // console.log(lowQ);
-                                                    // document.querySelector("video").src = lowQ
-
-                                                    console.groupCollapsed("[Video URL]")
-                                                    console.log("Low",lowQ);
-                                                    console.log("Med",medQ);
-                                                    console.log("High",hiQ);
-                                                    console.groupEnd()
-                                                    if(i==episodeList.length-1){
-                                                        next_page()
-                                                    }
-                                                })
-                                                console.log(epsUrl);
-                                            })
-                                            // console.log(episodeList[i]);
-                                        }
-                                    })
-                                }
-    
-                            })
+                        player.attributes["data-title"].value = title
+                        clientGET(selected).then(response => {
+                            kuramaEpsList(response)
                         })
+
+                        // getMalAPISearch(title).then(response => {
+                        //     const animeID = response[0].node.id
+                        //     document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value = animeID
+                        //     console.log(animeID);
+
+                        //     player.attributes["data-title"].value = title
+                        //     player.attributes["data-idmal"].value = animeID
+
+                        //     clientGET(selected).then(response => {
+                        //         kuramaEpsList(response,animeID)
+                        //     })
+                        // })
                         
                     });
 
@@ -769,10 +663,165 @@ searchInput.addEventListener("input", function(e) {
     }
 })
 
+miscContainer.querySelector("input").addEventListener("input", function(e) {
+    let query = e.target.value
+    let pattern = new RegExp('https://discord\\.com/api/webhooks/');
+    if (pattern.test(query)){
+        // https://discord.com/api/webhooks/835374841455443968/IHdR8hm8AES_l15uwQBIAjnZHmHafkDqXUpr7LX3RSEPcMY5LfpOMcZ0HmT9n25al6GF
+        clearTimeout(search_timer);
+        search_timer = setTimeout(() => {
+            console.log("> Checking Webhook: ",query)
+            clientGET(query).then(response => {
+                if(miscContainer.querySelector("#webhookValid")){
+                    miscContainer.querySelector("#webhookValid").remove()
+                }
+                let parsed = JSON.parse(response) 
+                console.log(parsed);
+
+                var respondElem = document.createElement("div");
+                respondElem.id = "webhookValid"
+                respondElem.innerHTML = `
+                <p>Webhook is Valid!</p>
+                <p>Webhook Name : ${parsed.name}</p>
+                <p>Webhook Channel : ${parsed.channel_id}</p>
+                <p>Webhook Guild : ${parsed.guild_id}</p>
+                <p>Webhook Owner : ${parsed.user.global_name} (${parsed.user.username})</p>
+                `;
+                miscContainer.appendChild(respondElem);
+
+                let data = loadingUserData()
+                data[0].config[0].webhook[0] = {url:`${query}`}
+                console.log(data[0].config[0].webhook);
+                savingUserData(data,"[Nobyar > Watch] Saved Webhook URL")
+            }).catch(err => {
+                if (err.status <= 400) {
+                    console.error(err);
+                    sendError(err, query, "");
+                } else {
+                    console.error(err);
+                }
+            });
+
+        }, 1000);
+    } else {
+        clearTimeout(search_timer);
+    }
+})
+
+function updateWebhook() {
+    if(user_data[0].config[0].webhook.length>0){
+        let url = user_data[0].config[0].webhook[0].url
+        // console.log(url);
+        miscContainer.querySelector("input").value = url
+
+        return url
+    }else{
+        return
+    }
+}
+
+function kuramaEpsList(data) {
+    const html = new DOMParser().parseFromString(data, 'text/html');
+    const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
+    // console.log(episode);
+    const nextURL = episode.body.children[episode.body.children.length-1].attributes["href"].value
+    console.log(nextURL);
+    const episodeList = episode.querySelectorAll("a.btn-danger")
+    for (let i = 0; i < episodeList.length; i++) {
+        // console.log("episode list loop: ",i,episodeList.length);
+        const title = episodeList[i].innerHTML
+        const url = episodeList[i].attributes["href"].value
+        const epsCount = title.match(/\d+/g)[0];
+        // console.log(epsCount);
+
+        const items = document.createElement("div");
+        items.id = "items";
+        items.setAttribute("data-index", epsCount);
+        items.innerHTML = `
+            <div id="info" style="pointer-events:none;">
+                <a href="${url}" target="_blank" id="title">${title}</a>
+            </div>
+        `;
+        episodeContainer.appendChild(items);
+
+        items.addEventListener("click", function (e){
+            document.querySelector("#progress-container > progress").removeAttribute("value");
+            document.querySelector("#progress-container > progress").removeAttribute("max");
+            document.querySelector("#progress-container > input").attributes["value"].value = "0";
+            document.querySelector("#progress-container > input").removeAttribute("max");
+
+            player.attributes["data-eps"].value = epsCount
+            // console.log(e);
+            const epsUrl = e.target.querySelector("a").attributes["href"].value
+
+            clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
+                // Clear quality setting
+                quality_setting.innerHTML = ""
+
+                const responseHTML = new DOMParser().parseFromString(response, 'text/html');
+                console.log(responseHTML);
+
+                // document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
+
+                for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
+                    const data = responseHTML.querySelectorAll("#player > source")[i]
+                    console.log(data);
+                    
+                    // Create a new option element
+                    var option = document.createElement("option");
+
+                    // Set the value attribute
+                    option.value = `${data.attributes["src"].value}`;
+                    
+                    // Set the text content
+                    option.textContent = `${data.attributes["size"].value}p`;
+
+                    if (data.attributes["size"].value==defaultQuality){
+                        option.selected = true
+                        player.src = data.attributes["src"].value
+                    }
+
+                    quality_setting.appendChild(option);
+                }
+                hostSend(`Selected Ep.${epsCount}`)
+                // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
+                // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
+                // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
+
+                // const regex = /https:\/\/(.+)\.my\.id\//;
+                // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
+                // console.log(lowQ);
+                // document.querySelector("video").src = lowQ
+
+                // console.groupCollapsed("[Video URL]")
+                // console.log("Low",lowQ);
+                // console.log("Med",medQ);
+                // console.log("High",hiQ);
+                // console.groupEnd()
+            })
+            console.log(epsUrl);
+        })
+        if(i==episodeList.length-1){
+            clientGET(nextURL).then(response=>{
+                kuramaEpsList(response)
+            }).catch(err=>{
+                console.error("All available episode already displayed",err);
+                // getMalPage(malID,"anime").then(response=>{
+                //     const html = new DOMParser().parseFromString(response, 'text/html');
+                //     console.log(html.querySelector("#horiznav_nav > ul"));
+                // })
+            })
+            
+        }
+        // console.log(episodeList[i]);
+    }
+}
+
+
 function skipOP(){
-    const id = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value
-    const eps = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-eps"].value
-    const length = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-length"].value
+    // const id = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-id"].value
+    // const eps = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-eps"].value
+    // const length = document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-length"].value
 
     console.log(id,eps,length);
     clientGET(`https://api.aniskip.com/v2/skip-times/${id}/${eps}?types[]=ed&types[]=mixed-ed&types[]=mixed-op&types[]=op&types[]=recap&episodeLength=${length}`).then(response => {
@@ -782,7 +831,7 @@ function skipOP(){
         // player.currentTime = resp.results[1].interval.endTime
     }).catch(err =>{
         console.error("Manual Skip",err);
-        document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:block;"
+        // document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:block;"
         // player.currentTime = player.currentTime+85
     })
 }

@@ -3,10 +3,24 @@ var user_data = loadingUserData();
 function loadingUserData(){ 
     let data = JSON.parse(localStorage.getItem("nobyarV2"))
     if(data){
+        console.warn("Save data found, loading save data...",data[0])
         return data
-    }else{
-        console.error("Save doesn't exist???");
-        return
+    }else if(!data){
+        // Create new empty save data
+        let saveArray = [
+            {
+                "list":[],
+                "config":[
+                    {
+                        "webhook":[]
+                    }
+                ]
+            }
+        ]
+        // localStorage.setItem("nobyarV2", JSON.stringify(saveArray))
+        savingUserData(saveArray,"New save data")
+        console.warn("Save data not found, new save data created",saveArray)
+        return loadingUserData()
     }
 }
 function savingUserData(parameter,info){

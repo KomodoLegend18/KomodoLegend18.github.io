@@ -246,7 +246,7 @@ const discordWebhook = (method,url,wait,embed) => {
         };
         
         let params = {
-            username: `Nobyar test`,
+            username: `Nobyar v2 test`,
             avatar_url: `https://discord.com/assets/c09a43a372ba81e3018c3151d4ed4773.png?size=1024&width=0&height=256`,
             embeds: embed
         }

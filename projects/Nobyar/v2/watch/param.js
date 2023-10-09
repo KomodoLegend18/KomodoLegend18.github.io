@@ -2,43 +2,68 @@ const queryString = window.location.search;
 // console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 
-let URLfromHost
-let syncTime
+var URLfromHost
+var syncTime
+
+var watchID
+var watchURL
 
 if (urlParams.has('id')==true){
-    var watchID = urlParams.get('id')    
+    watchID = urlParams.get('id')
+    watchURL = urlParams.get('url')
+    watchJoin(watchID,watchURL);
 
     setInterval(() => {
-        sync()
-    }, 6000);
-    console.log(watchID);
-    watchJoin(watchID);
-} else if (urlParams.has('id')==false){
+        if(sync_setting.value=="true"){
+            console.log("> Auto-Syncing...");
+            autoSync(watchID,watchURL)
+        }
+    }, 5000);
+    console.log("Connected to ",watchID,watchURL);
 
-    // host_invite()
+    searchInput.classList.add("disabled")
+    searchInput.placeholder = "Only host can search anime"
+} 
+
+
+setInterval(initAutoSend,10000)
+function initAutoSend(){
+    if (urlParams.has('id')==false){
+        if(posted==true){
+            if (player.paused==false){
+                console.log(player.paused);
+                console.log("> Auto send data");
+                hostSend("Playing")
+            }
+        }
+        // host_invite()
+    }
 }
 
-function watchJoin(watchID){
+function watchJoin(watchID,watchURL){
     console.warn("Join");
-    discordWebhook("GET",`${webhookurl}/messages/${watchID}?${new Date().getTime()}`,true).then(response=>{
+    discordWebhook("GET",`${watchURL}/messages/${watchID}?${new Date().getTime()}`,true).then(response=>{
+        console.groupCollapsed("[join connection]")
         let resp = response.response[0]
         let respEmbed = resp.embeds
-        console.log(respEmbed);
+        console.log("discord response",respEmbed);
 
         // When the last time host update
         const hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
         // Time diff between host and client
         let localTimestamp = Math.round(new Date().getTime()/1000)
         let lastUpdate = localTimestamp-hostTimestamp
-        console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
+        // console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
 
         // Get available video url from host
         URLfromHost = JSON.parse(respEmbed[1].description.replace(/`/g, ''));
-        console.log(URLfromHost);
+        console.log("video urls",URLfromHost);
 
         // Get host video time
         syncTime = Number(respEmbed[0].fields[2].value)
+        // console.log(syncTime+lastUpdate);
 
+        player.poster = respEmbed[0].image.url
 
         for (let i = 0; i < URLfromHost.length; i++) {
             const data = URLfromHost[i]
@@ -54,17 +79,16 @@ function watchJoin(watchID){
             if (data.type==`${defaultQuality}p`){
                 option.selected = true
                 player.src = option.value
-                player.autoplay = true
                 // player.muted = true
             } else {
                 player.src = URLfromHost[0].url
-                player.autoplay = true
+                // player.autoplay = true
                 // player.muted = true
             }
-            quality_button.appendChild(option);
+            quality_setting.appendChild(option);
         }
 
-        console.log(syncTime+lastUpdate);
+        console.groupEnd()
         // debugger
 
         // setInterval(() => {
@@ -73,45 +97,71 @@ function watchJoin(watchID){
     })
 }
 
-function sync(){
-    console.log("> Syncing...");
-    discordWebhook("GET",`${webhookurl}/messages/${watchID}?${new Date().getTime()}`,true).then(response=>{
-        let resp = response.response[0]
-        let respEmbed = resp.embeds
-        console.log(respEmbed);
+function sync(watchID,watchURL){
+    if(urlParams.has('id')==true){
+        discordWebhook("GET",`${watchURL}/messages/${watchID}?${new Date().getTime()}`,true).then(response=>{
+            console.groupCollapsed("[sync success]")
+            let resp = response.response[0]
+            let respEmbed = resp.embeds
+            console.log(respEmbed);
 
-        // When the last time host update
-        const hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
-        // Time diff between host and client
-        let localTimestamp = Math.round(new Date().getTime()/1000)
-        let lastUpdate = localTimestamp-hostTimestamp
-        console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
+            const hostStatus = respEmbed[0].fields[1].value
+            console.log(hostStatus);
 
-        // Get available video url from host
-        URLfromHost = JSON.parse(respEmbed[1].description.replace(/`/g, ''));
-        console.log(URLfromHost);
+            // When the last time host update
+            const hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
+            // Time diff between host and client
+            let localTimestamp = Math.round(new Date().getTime()/1000)
+            let lastUpdate = localTimestamp-hostTimestamp
+            console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
+    
+            // Get available video url from host
+            URLfromHost = JSON.parse(respEmbed[1].description.replace(/`/g, ''));
+            console.log(URLfromHost);
+    
+            // Get host video time
+            syncTime = Number(respEmbed[0].fields[2].value)
+    
+            let frameDiff = Math.round((syncTime+lastUpdate)*24)-Math.round(player.currentTime*24)
+    
+            let secondDiff = frameDiff/24
+    
+    
+            if(hostStatus=="Playing"){
+            console.warn("Frame Diff: ",frameDiff,`${secondDiff} Seconds`);
 
-        // Get host video time
-        syncTime = Number(respEmbed[0].fields[2].value)
+            document.title = `${frameDiff}f / ${secondDiff}s diff`
 
-        if(respEmbed[0].fields[1].value=="Playing"){
+            let diffThreshold = 8
+            let frameOffset = 4
+
             // player.play()
-            player.currentTime = syncTime+lastUpdate
-            togglePlay("Playing")
-            console.log("Playing",syncTime+lastUpdate);
-        }else if(respEmbed[0].fields[1].value=="Paused"){
-            player.currentTime = syncTime
-            togglePlay("Paused")
-            console.log("Paused",syncTime);
-        }else if(respEmbed[0].fields[1].value=="Ended"){
-            player.currentTime = player.duration
-            console.log("Ended",player.duration);
-        }
-
-        console.log("Playing",syncTime+lastUpdate);
-        // debugger
-
-    })
+            player.autoplay = true
+                if (frameDiff>=diffThreshold||frameDiff<=-20){
+                    player.currentTime = syncTime+lastUpdate+(frameOffset/24)
+                    togglePlay("Playing")
+                    console.log("Playing",syncTime+lastUpdate);
+                }else{
+                    console.warn(`${frameDiff}f / ${secondDiff}s difference, no need to update`);
+                }
+            }else if(hostStatus=="Paused"){
+                player.currentTime = syncTime
+                togglePlay("Paused")
+                console.log("Paused",syncTime);
+            }else if(hostStatus=="Ended"){
+                player.currentTime = player.duration
+                console.log("Ended",player.duration);
+            }
+            // debugger
+            console.groupEnd()
+        })
+    }
+}
+function autoSync(watchID,watchURL){
+    // console.log(sync_setting.value);
+    
+    // console.log("egg");
+    sync(watchID,watchURL)
 }
 
 

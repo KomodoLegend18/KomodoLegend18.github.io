@@ -1,24 +1,4 @@
 // ========================================================
-if(!loadingUserData()){
-    // Create new empty save data
-    let saveArray = [
-        {
-            "list":[],
-            "config":[
-                {
-                    "webhook":[]
-                }
-            ]
-        }
-    ]
-    // localStorage.setItem("nobyarV2", JSON.stringify(saveArray))
-    savingUserData(saveArray,"New save data")
-    console.warn("Save data not found, new save data created",loadingUserData())
-} else {
-    console.warn("Save data found, loading save data...",loadingUserData()[0])
-}
-
-// ========================================================
 searchInput.addEventListener("focus", function(e){
     // console.log("Dim count: ",document.querySelector("#fadeDim").childElementCount)
     // console.log(e)
