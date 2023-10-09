@@ -235,7 +235,9 @@ function watchPageLoad(){
             }
             console.log(event);
             event.preventDefault();
-            searchInput.focus()
+            if (urlParams.has('id')==false){
+                searchInput.focus()
+            }
         }
     });
 

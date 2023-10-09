@@ -23,6 +23,9 @@ if (urlParams.has('id')==true){
 
     searchInput.classList.add("disabled")
     searchInput.placeholder = "Only host can search anime"
+
+    miscContainer.querySelector("input").remove()
+    miscContainer.querySelector("p:nth-child(2)").remove()
 } 
 
 
@@ -132,12 +135,12 @@ function sync(watchID,watchURL){
 
             document.title = `${frameDiff}f / ${secondDiff}s diff`
 
-            let diffThreshold = 8
-            let frameOffset = 4
+            let diffThreshold = 4
+            let frameOffset = 2
 
             // player.play()
             player.autoplay = true
-                if (frameDiff>=diffThreshold||frameDiff<=-20){
+                if (frameDiff>=diffThreshold||frameDiff<=(diffThreshold-diffThreshold*2)){
                     player.currentTime = syncTime+lastUpdate+(frameOffset/24)
                     togglePlay("Playing")
                     console.log("Playing",syncTime+lastUpdate);
