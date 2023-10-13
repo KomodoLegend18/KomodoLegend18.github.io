@@ -166,7 +166,7 @@ searchInput.addEventListener("input", function(e) {
 page_loadlist()
 function page_loadlist(){ // Executed when page loaded
     try {
-        let data = loadingUserData()
+        let data = user_data
         // console.log(data[0].list.length)
 
         if(!data){ // If save data somehow doesn't exist, refresh
@@ -210,7 +210,7 @@ function page_loadlist(){ // Executed when page loaded
             for (let i = 0; i < data[0].list.length; i++) {
                 setTimeout(() => {
                     updateEntry(data[0].list[i].id,i)
-                }, i * 250); // wait between each request
+                }, i * 500); // wait between each request
             }  
         }
     } catch (error) {
