@@ -11,7 +11,7 @@
 
     function get(){
         var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", `https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez/messages/${id}`, false ); // false for synchronous request 
+    xmlHttp.open( "GET", `https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez/messages/${id}?${new Date().getTime()}`, false ); // false for synchronous request 
     // xmlHttp.setRequestHeader("Cache-Control", "no-cache");
     // xmlHttp.setRequestHeader("Pragma", "no-cache");
     // xmlHttp.setRequestHeader("Expires", "0");
