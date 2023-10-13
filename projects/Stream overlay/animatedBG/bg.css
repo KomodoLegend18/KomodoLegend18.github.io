@@ -1,0 +1,17 @@
+body{
+    margin:0;
+    animation: scroll 5s infinite;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    background-size:200px 200px;
+    background-image: url("https://cdn.discordapp.com/attachments/1079715420954710057/1081258440804020275/Pattern.png");
+}
+@keyframes scroll {
+    from{
+        background-position: 0vw 0%;
+    }
+    to{
+        /* hoz 51.5% */
+        background-position: 51.5% 35%;
+    }
+}
