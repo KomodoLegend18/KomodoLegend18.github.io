@@ -2,10 +2,10 @@ var user_data = loadingUserData();
 
 function loadingUserData(){ 
     let data = JSON.parse(localStorage.getItem("nobyarV2"))
-    if(data){
+    if(data&&data[0]){
         console.warn("Save data found, loading save data...",data[0])
         return data
-    }else if(!data){
+    }else{
         // Create new empty save data
         let saveArray = [
             {

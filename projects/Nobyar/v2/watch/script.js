@@ -606,7 +606,9 @@ function hostSend(status){
         embed[1].description = `\`\`\`${JSON.stringify(vq)}\`\`\``
         
         console.log("Embed data: ",embed);
-        createEmbed()
+        if(updateWebhook()){
+            createEmbed()
+        }
 
         function createEmbed() {
             if(posted==false){
@@ -775,6 +777,12 @@ miscContainer.querySelector("input").addEventListener("input", function(e) {
         }, 1000);
     } else {
         clearTimeout(search_timer);
+        let data = loadingUserData()
+        // Remove the first item from the webhook array
+        if (data[0].config[0].webhook.length > 0) {
+            data[0].config[0].webhook.splice(0, 1);
+        }
+        savingUserData(data,"[Nobyar > Watch] Saved Webhook URL")
     }
 })
 
