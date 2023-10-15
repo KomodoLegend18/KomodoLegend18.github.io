@@ -30,7 +30,7 @@ const poster = "https://cdn.discordapp.com/attachments/636600433799856128/115147
 let posted = false
 let postid
 
-const embedtest = [{
+const embedTemplate = [{
         "title": "body title",
         "description": `body desc`,
         "url": "https://www.google.com",
@@ -69,8 +69,14 @@ const embedtest = [{
         "color": null
     }
 ]
+try {
 
-watchPageLoad()
+} catch (error) {
+    console.groupCollapsed(`=========[SCRIPT ERROR]=========\n${error.message}`)
+    console.error(error);
+    console.groupEnd()
+}
+    watchPageLoad()
 function watchPageLoad(){
     setInterval(checkInternet, 1000)
     play_button.addEventListener("click", function(e){
@@ -133,6 +139,7 @@ function watchPageLoad(){
         toggleFullscreen();
     })
 
+
     // Skip opening
     document.addEventListener('keydown', function(event) {
         if (event.code == 'ArrowRight' && event.ctrlKey) {
@@ -140,7 +147,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] +85s")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             player.currentTime += 85;
         }
@@ -152,7 +161,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] +5s")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             player.currentTime += 5;
         }
@@ -163,7 +174,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] -5s")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             player.currentTime -= 5;
         }
@@ -175,7 +188,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Play/Pause")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             togglePlay();
         }
@@ -187,7 +202,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Mute")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             toggleMute();
         }
@@ -199,7 +216,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Setting Menu")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             toggleSetting();
         }
@@ -211,7 +230,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;  // Don't do anything if the user is focused on an input element
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Fullscreen")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             toggleFullscreen();
         }
@@ -220,7 +241,9 @@ function watchPageLoad(){
     // Leave search
     document.addEventListener('keydown', function(event) {
         if (event.code == 'Escape' && !event.ctrlKey) {
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Leave search")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             closeSearch()
         }
@@ -233,7 +256,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Search")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             if (urlParams.has('id')==false){
                 searchInput.focus()
@@ -248,7 +273,9 @@ function watchPageLoad(){
             if (event.target.tagName.toLowerCase() === 'input') {
                 return;
             }
-            console.log(event);
+            console.groupCollapsed("[Keyboard Shortcut] Sync")
+                console.log(event);
+            console.groupEnd()
             event.preventDefault();
             if(sync_setting.value=="false"){
                 console.log("Manual Sync");
@@ -267,24 +294,6 @@ function watchPageLoad(){
         hideControls();
     });
     
-
-    player.oncanplay = function(){
-        // document.querySelector("#progress-container > progress").value = 0 
-        // document.querySelector("#progress-container > input").attributes[1].value = `0`
-        // document.querySelector("#contentEntries > div:nth-child(3) > button").attributes["data-length"].value = duration
-        updateProgress()
-        progress_status.innerHTML = `Can play data`
-        buffer_overlay.style["display"] = "none"
-        // player.poster = ""
-
-        // console.log("oncanplay");
-        // skipOP()
-    }
-    player.ontimeupdate = function() {
-        // console.log(player.currentTime,player.duration);
-        updateProgress()
-    };
-
     // Try to load video
     player.onloadstart = function() {
         buffer_overlay.style["display"] = "grid"
@@ -292,10 +301,33 @@ function watchPageLoad(){
         progress_status.innerHTML = `Loading data`
         // console.log("onloadstart");
     }
-    // Downloading video
+    // data loaded
+    player.onloadeddata = function() {
+        buffer_overlay.style["display"] = "none"
+        progress_status.innerHTML = `Data ready`
+        // console.log("onloadeddata");
+    }
+    // Video can start
+    player.oncanplay = function(){
+        updateProgress()
+        // progress_status.innerHTML = `Can play data`
+        buffer_overlay.style["display"] = "none"
+        // player.poster = ""
+
+        // console.log("oncanplay");
+        // skipOP()
+    }
+    // Update progress display
+    player.ontimeupdate = function() {
+        // console.log(player.currentTime,player.duration);
+        updateProgress()
+
+        syncSpeedUp() // if Viewer
+    };
+    // Downloading video / buffer
     player.onprogress = function() {
         // buffer_overlay.style["display"] = "none"
-        progress_status.innerHTML = `Downloading data`
+        // progress_status.innerHTML = `Downloading data`
         // console.log("onprogress");
     }
     // Can't load video
@@ -303,33 +335,29 @@ function watchPageLoad(){
         buffer_overlay.style["display"] = "grid"
         player.poster = poster
         progress_status.innerHTML = `No Data`
-        console.error("Error loading video",e);
+        console.error(`[player.onerror] Video Player Error\n${e.target.error.message}`,e);
     }
+    // Player waiting to play
     player.onwaiting = function() {
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Waiting`
+        // hideControls()
         // console.log("onwaiting");
         // hostSend("Host Waiting")
     }
-    player.onloadeddata = function() {
-        buffer_overlay.style["display"] = "none"
-        progress_status.innerHTML = `Data ready`
-        // console.log("onloadeddata");
-    }
+    // Player playing
     player.onplaying = function() {
         buffer_overlay.style["display"] = "none"
         // console.log("onplaying");
-
-        // if host
-        hostSend("Playing");
+        hostSend("Playing"); // if host
     }
     player.onplay = function() {
-        buffer_overlay.style["display"] = "none"
+        // buffer_overlay.style["display"] = "none"
         // console.log("onplay");
-
         hideControls()
         // togglePlay()
     }
+    // Player paused
     player.onpause = function() {
         buffer_overlay.style["display"] = "none"
         // console.log("onpause");
@@ -338,6 +366,7 @@ function watchPageLoad(){
         hideControls()
         // togglePlay()
     }
+    // Player ended
     player.onended = function() {
         buffer_overlay.style["display"] = "grid"
         progress_status.innerHTML = `Data Ended`
@@ -355,7 +384,11 @@ function togglePlay(state){
         if (player.paused || player.ended) {
             console.log("paused/ended > play");
             progress_status.innerHTML = `Playing`
-            player.play();
+            try {
+                player.play();
+            } catch (error) {
+                console.error(error);
+            }
 
             // Icon
             play_button.innerHTML = "pause"            
@@ -371,7 +404,11 @@ function togglePlay(state){
 
     // if NOT host
     if(state=="Playing"){
-        player.play();
+        try {
+            player.play();
+        } catch (error) {
+            console.error(error);
+        }
         progress_status.innerHTML = `Playing`
         // player.muted = false;
         
@@ -409,10 +446,10 @@ function updateSyncMode() {
     let value = sync_setting.value
     // console.log(value);
     if(value=="true"){
-        console.log("[Sync Mode] Auto");
+        console.log("[updateSyncMode] Sync mode: Auto");
         sync_button.classList.add("disabled")
     }else{
-        console.log("[Sync Mode] Manual");
+        console.log("[updateSyncMode] Sync mode: Manual");
         sync_button.classList.remove("disabled")
     }
 }
@@ -420,14 +457,34 @@ function updateSyncMode() {
 function hideControls() {
     clearTimeout(hidePlayerControlsTimer);
 
+    // console.log("[hideControls] paused: ",player.paused);
     if(!player.paused){
         player_element.querySelector(".vidcontrols").classList.remove("hidden");
+        player.style.cursor = "default"
+        if (document.fullscreenElement) {
+            document.fullscreenElement.style.cursor = "default"
+        } else if (document.webkitFullscreenElement) {
+            document.webkitFullscreenElement.style.cursor = "default"
+        }
 
         hidePlayerControlsTimer = setTimeout(function() {
             player_element.querySelector(".vidcontrols").classList.add("hidden");
-        }, 2100);
+            player.style.cursor = "none"
+            // document.body.style.cursor = "none"
+            if (document.fullscreenElement) {
+                document.fullscreenElement.style.cursor = "none"
+            } else if (document.webkitFullscreenElement) {
+                document.webkitFullscreenElement.style.cursor = "none"
+            }
+        }, 2000);
     }else if(player.paused){
         player_element.querySelector(".vidcontrols").classList.remove("hidden");
+        player.style.cursor = "default"
+        if (document.fullscreenElement) {
+            document.fullscreenElement.style.cursor = "default"
+        } else if (document.webkitFullscreenElement) {
+            document.webkitFullscreenElement.style.cursor = "default"
+        }
     }
 }
 
@@ -464,7 +521,7 @@ function updateProgress(){
         progress_status.innerHTML = `${player.currentTime}/${player.duration}, Frame: ${Math.round(player.currentTime*24)}`
         progress_duration.innerHTML = new Date(player.duration*1000).toISOString().substr(11, 8);
     } catch (error) {
-        console.groupCollapsed("[updateProgress]")
+        console.groupCollapsed(`## ERROR ##\n[updateProgress]`)
         console.error(error);
         console.groupEnd()
     }
@@ -520,41 +577,49 @@ function closeSearch() {
 
 function hostSend(status){
     if(urlParams.has("id")==false){
-        let embed = embedtest
+        console.groupCollapsed("[hostSend] Sending data")
+        let embed = embedTemplate
         let vq = []
-        console.log(quality_setting.children);
+        // console.log(quality_setting.children);
+        console.groupCollapsed("> Video Quality")
         for (let i = 0; i < quality_setting.children.length; i++) {
             let obj = {
                 type:`${quality_setting.children[i].innerHTML}`,
                 url:`${quality_setting.children[i].value}`
             }
+            console.log(obj);
             vq.push(obj);
         }
+        console.groupEnd()
+
         embed[0].title = `${player.attributes["data-title"].value}`
         embed[0].url = `https://myanimelist.net/search/all?cat=all&q=${encodeURIComponent(player.attributes["data-title"].value)}`
-        embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML}`
+        embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML} <t:${Math.round(new Date().getTime() / 1000)}:R>`
         embed[0].image.url = `${player.poster}`
         // embed[0].thumbnail.url = `${player.poster}`
         embed[0].fields[0].name = `Last updated:`
-        embed[0].fields[0].value = `<t:${Math.round(new Date().getTime() / 1000)}:R>`
+        embed[0].fields[0].value = `${new Date().getTime() / 1000}`
         embed[0].fields[1].name = `Status`
         embed[0].fields[1].value = `${status}`
         embed[0].fields[2].name = `Current time`
         embed[0].fields[2].value = `${player.currentTime}`
         embed[1].description = `\`\`\`${JSON.stringify(vq)}\`\`\``
         
-        console.log(embed);
+        console.log("Embed data: ",embed);
         createEmbed()
 
         function createEmbed() {
             if(posted==false){
                 posted = true
                 discordWebhook("POST",updateWebhook(),true,embed).then(response => {
+                    console.groupCollapsed("[hostSend] > [createEmbed] 🟢 Received response")
+
                     let resp = response.response[0]
                     postid = resp.id
-                    console.log("discord Response",resp.id);
+                    console.trace("Webhook Message ID:\n",resp.id);
     
                     updateEmbed()
+                    console.groupEnd()
                 })
             }else{
                 updateEmbed()
@@ -563,13 +628,16 @@ function hostSend(status){
         
         function updateEmbed() {
             if(posted==true){
-                embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML}\n# [__Join Nobyar__](https://komodolegend18.github.io/projects/Nobyar/v2/watch/?id=${postid}&url=${updateWebhook()})`
+                embed[0].description = `[Ep.${player.attributes["data-eps"].value}] ${progress_current.innerHTML} - ${progress_duration.innerHTML} <t:${Math.round(new Date().getTime() / 1000)}:R>\n# [__Join Nobyar__](https://komodolegend18.github.io/projects/Nobyar/v2/watch/?id=${postid}&url=${updateWebhook()})\n\`\`\`?id=${postid}&url=${updateWebhook()}\`\`\``
                 discordWebhook("PATCH",`${updateWebhook()}/messages/${postid}`,"true",embed).then(response => {
+                    console.groupCollapsed("[hostSend] > [updateEmbed] 🟡 Received response")
                     console.log(response);
-                    console.log(`?id=${postid}&url=${updateWebhook()}`);
+                    console.trace("Connection parameter:\n",`?id=${postid}&url=${updateWebhook()}`);
+                    console.groupEnd()
                 })
             }
         }
+        console.groupEnd()
     }
 }
 
@@ -723,100 +791,111 @@ function updateWebhook() {
 }
 
 function kuramaEpsList(data) {
-    const html = new DOMParser().parseFromString(data, 'text/html');
-    const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value,"text/html")
-    // console.log(episode);
-    const nextURL = episode.body.children[episode.body.children.length-1].attributes["href"].value
-    console.log(nextURL);
-    const episodeList = episode.querySelectorAll("a.btn-danger")
-    for (let i = 0; i < episodeList.length; i++) {
-        // console.log("episode list loop: ",i,episodeList.length);
-        const title = episodeList[i].innerHTML
-        const url = episodeList[i].attributes["href"].value
-        const epsCount = title.match(/\d+/g)[0];
-        // console.log(epsCount);
+    console.groupCollapsed("[kuramaEpsList] Getting episode list...")
 
-        const items = document.createElement("div");
-        items.id = "items";
-        items.setAttribute("data-index", epsCount);
-        items.innerHTML = `
+    try {
+        const html = new DOMParser().parseFromString(data, 'text/html');
+        const episode = new DOMParser().parseFromString(html.querySelector("#episodeLists").attributes["data-content"].value, "text/html")
+        // console.log(episode);
+        const nextURL = episode.body.children[episode.body.children.length - 1].attributes["href"].value
+        console.log("nextURL: \n", nextURL);
+        const episodeList = episode.querySelectorAll("a.btn-danger")
+
+        for (let i = 0; i < episodeList.length; i++) {
+            // console.log("episode list loop: ",i,episodeList.length);
+            const title = episodeList[i].innerHTML
+            const url = episodeList[i].attributes["href"].value
+            const epsCount = title.match(/\d+/g)[0];
+            // console.log(epsCount);
+
+            const items = document.createElement("div");
+            items.id = "items";
+            items.setAttribute("data-index", epsCount);
+            items.innerHTML = `
             <div id="info" style="pointer-events:none;">
                 <a href="${url}" target="_blank" id="title">${title}</a>
-            </div>
-        `;
-        episodeContainer.appendChild(items);
+            </div>`;
+            episodeContainer.appendChild(items);
 
-        items.addEventListener("click", function (e){
-            document.querySelector("#progress-container > progress").removeAttribute("value");
-            document.querySelector("#progress-container > progress").removeAttribute("max");
-            document.querySelector("#progress-container > input").attributes["value"].value = "0";
-            document.querySelector("#progress-container > input").removeAttribute("max");
+            items.addEventListener("click", function (e) {
+                console.groupCollapsed("[kuramaEpsList] Episode selected")
+                document.querySelector("#progress-container > progress").removeAttribute("value");
+                document.querySelector("#progress-container > progress").removeAttribute("max");
+                document.querySelector("#progress-container > input").attributes["value"].value = "0";
+                document.querySelector("#progress-container > input").removeAttribute("max");
 
-            player.attributes["data-eps"].value = epsCount
-            // console.log(e);
-            const epsUrl = e.target.querySelector("a").attributes["href"].value
+                player.attributes["data-eps"].value = epsCount
+                // console.log(e);
+                const epsUrl = e.target.querySelector("a").attributes["href"].value
+                console.log(epsUrl);
+                console.groupEnd()
 
-            clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
-                // Clear quality setting
-                quality_setting.innerHTML = ""
 
-                const responseHTML = new DOMParser().parseFromString(response, 'text/html');
-                console.log(responseHTML);
+                clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
+                    console.groupCollapsed("[kuramaEpsList] Getting episode data")
 
-                // document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
+                    // Clear quality setting
+                    quality_setting.innerHTML = ""
 
-                for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
-                    const data = responseHTML.querySelectorAll("#player > source")[i]
-                    console.log(data);
-                    
-                    // Create a new option element
-                    var option = document.createElement("option");
+                    const responseHTML = new DOMParser().parseFromString(response, 'text/html');
+                    console.log(responseHTML);
 
-                    // Set the value attribute
-                    option.value = `${data.attributes["src"].value}`;
-                    
-                    // Set the text content
-                    option.textContent = `${data.attributes["size"].value}p`;
+                    // document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
 
-                    if (data.attributes["size"].value==defaultQuality){
-                        option.selected = true
-                        player.src = data.attributes["src"].value
+                    for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
+                        const data = responseHTML.querySelectorAll("#player > source")[i]
+                        console.log(data);
+
+                        // Create a new option element
+                        var option = document.createElement("option");
+
+                        // Set the value attribute
+                        option.value = `${data.attributes["src"].value}`;
+
+                        // Set the text content
+                        option.textContent = `${data.attributes["size"].value}p`;
+
+                        if (data.attributes["size"].value == defaultQuality) {
+                            option.selected = true
+                            player.src = data.attributes["src"].value
+                        }
+
+                        quality_setting.appendChild(option);
                     }
+                    hostSend(`Selected Ep.${epsCount}`)
+                    console.groupEnd()
 
-                    quality_setting.appendChild(option);
-                }
-                hostSend(`Selected Ep.${epsCount}`)
-                // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
-                // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
-                // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
+                    // const hiQ = html.querySelector("#player > source:nth-child(1)").attributes["src"].value
+                    // const medQ = html.querySelector("#player > source:nth-child(2)").attributes["src"].value
+                    // const lowQ = html.querySelector("#player > source:nth-child(3)").attributes["src"].value
 
-                // const regex = /https:\/\/(.+)\.my\.id\//;
-                // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
-                // console.log(lowQ);
-                // document.querySelector("video").src = lowQ
+                    // const regex = /https:\/\/(.+)\.my\.id\//;
+                    // const replacedUrl = lowQ.replace(regex, "https://komi.my.id/");
+                    // console.log(lowQ);
+                    // document.querySelector("video").src = lowQ
 
-                // console.groupCollapsed("[Video URL]")
-                // console.log("Low",lowQ);
-                // console.log("Med",medQ);
-                // console.log("High",hiQ);
-                // console.groupEnd()
+                    // console.groupCollapsed("[Video URL]")
+                    // console.log("Low",lowQ);
+                    // console.log("Med",medQ);
+                    // console.log("High",hiQ);
+                    // console.groupEnd()
+                })
             })
-            console.log(epsUrl);
-        })
-        if(i==episodeList.length-1){
-            clientGET(nextURL).then(response=>{
-                kuramaEpsList(response)
-            }).catch(err=>{
-                console.error("All available episode already displayed",err);
-                // getMalPage(malID,"anime").then(response=>{
-                //     const html = new DOMParser().parseFromString(response, 'text/html');
-                //     console.log(html.querySelector("#horiznav_nav > ul"));
-                // })
-            })
-            
+            if (i == episodeList.length - 1) {
+                clientGET(nextURL).then(response => {
+                    kuramaEpsList(response)
+                })
+            }
         }
         // console.log(episodeList[i]);
+    }catch (error) {
+        console.error("All available episode may already displayed\n", error);
+        // getMalPage(malID,"anime").then(response=>{
+        //     const html = new DOMParser().parseFromString(response, 'text/html');
+        //     console.log(html.querySelector("#horiznav_nav > ul"));
+        // })
     }
+    console.groupEnd()
 }
 
 

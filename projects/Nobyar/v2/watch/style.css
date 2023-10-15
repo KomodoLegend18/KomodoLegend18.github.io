@@ -243,6 +243,20 @@
             z-index: 1;
             pointer-events: none;
         }
+        .vidcontrols > #progress-container > #progressStatus{
+            width: 100%;
+            min-width: 42px;
+            height: fit-content;
+            /* border: 1px cyan dotted; */
+            position: absolute;
+            bottom: 45;
+            text-align: center;
+            background-color: var(--color-primary);
+            padding: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+            opacity: 50%;
+        }
     .vidcontrols > #volume-container{
         /* border: 1px yellow dashed; */
         display: flex;

@@ -2,11 +2,13 @@ const queryString = window.location.search;
 // console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 
-var URLfromHost
-var syncTime
-
 var watchID
 var watchURL
+
+var URLfromHost
+var hostTimestamp
+var hostStatus
+var syncTime
 
 if (urlParams.has('id')==true){
     watchID = urlParams.get('id')
@@ -26,21 +28,24 @@ if (urlParams.has('id')==true){
 
     miscContainer.querySelector("input").remove()
     miscContainer.querySelector("p:nth-child(2)").remove()
-} 
+} else if (urlParams.has('id')==false){
+    // When host, auto send data every 10s
+    setInterval(initAutoSend,10000)
+}
 
-
-setInterval(initAutoSend,10000)
 function initAutoSend(){
-    if (urlParams.has('id')==false){
-        if(posted==true){
-            if (player.paused==false){
-                console.log(player.paused);
-                console.log("> Auto send data");
-                hostSend("Playing")
-            }
+    if(posted==true){
+        // console.log(player.paused);
+        console.log("> Auto send data");
+        if(player.paused){
+            hostSend("Paused")
+        }else if(player.ended){
+            hostSend("Ended")
+        }else{
+            hostSend("Playing")
         }
-        // host_invite()
     }
+    // host_invite()
 }
 
 function watchJoin(watchID,watchURL){
@@ -52,10 +57,10 @@ function watchJoin(watchID,watchURL){
         console.log("discord response",respEmbed);
 
         // When the last time host update
-        const hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
+        hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
         // Time diff between host and client
-        let localTimestamp = Math.round(new Date().getTime()/1000)
-        let lastUpdate = localTimestamp-hostTimestamp
+        // let localTimestamp = Math.round(new Date().getTime()/1000)
+        // let lastUpdate = localTimestamp-hostTimestamp
         // console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
 
         // Get available video url from host
@@ -82,11 +87,10 @@ function watchJoin(watchID,watchURL){
             if (data.type==`${defaultQuality}p`){
                 option.selected = true
                 player.src = option.value
-                // player.muted = true
+                player.load()
             } else {
                 player.src = URLfromHost[0].url
-                // player.autoplay = true
-                // player.muted = true
+                player.load()
             }
             quality_setting.appendChild(option);
         }
@@ -103,49 +107,40 @@ function watchJoin(watchID,watchURL){
 function sync(watchID,watchURL){
     if(urlParams.has('id')==true){
         discordWebhook("GET",`${watchURL}/messages/${watchID}?${new Date().getTime()}`,true).then(response=>{
-            console.groupCollapsed("[sync success]")
             let resp = response.response[0]
             let respEmbed = resp.embeds
-            console.log(respEmbed);
-
-            const hostStatus = respEmbed[0].fields[1].value
-            console.log(hostStatus);
-
+            hostStatus = respEmbed[0].fields[1].value
             // When the last time host update
-            const hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
+            hostTimestamp = Number(respEmbed[0].fields[0].value.match(/\d+/g)[0])
             // Time diff between host and client
-            let localTimestamp = Math.round(new Date().getTime()/1000)
+            let localTimestamp = new Date().getTime()/1000
             let lastUpdate = localTimestamp-hostTimestamp
-            console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
-    
             // Get available video url from host
             URLfromHost = JSON.parse(respEmbed[1].description.replace(/`/g, ''));
-            console.log(URLfromHost);
-    
             // Get host video time
             syncTime = Number(respEmbed[0].fields[2].value)
-    
             let frameDiff = Math.round((syncTime+lastUpdate)*24)-Math.round(player.currentTime*24)
-    
             let secondDiff = frameDiff/24
-    
+
+            console.groupCollapsed(`[sync] 🟢 Success Getting data | ${frameDiff}f/${secondDiff}s`)
+            console.log(respEmbed);
+            console.log(hostStatus);            
+            console.log(hostTimestamp,localTimestamp,lastUpdate,`${Math.round(lastUpdate/60)} minutes ago`);
+            console.log(URLfromHost);
     
             if(hostStatus=="Playing"){
-            console.warn("Frame Diff: ",frameDiff,`${secondDiff} Seconds`);
-
-            document.title = `${frameDiff}f / ${secondDiff}s diff`
-
-            let diffThreshold = 4
-            let frameOffset = 2
-
-            // player.play()
-            player.autoplay = true
-                if (frameDiff>=diffThreshold||frameDiff<=(diffThreshold-diffThreshold*2)){
-                    player.currentTime = syncTime+lastUpdate+(frameOffset/24)
-                    togglePlay("Playing")
-                    console.log("Playing",syncTime+lastUpdate);
-                }else{
-                    console.warn(`${frameDiff}f / ${secondDiff}s difference, no need to update`);
+                // document.title = `${frameDiff}f / ${secondDiff}s diff`
+                let frameDiffThreshold = 24*5
+                let secondOffset = 0
+                if(player.readyState==4){
+                    // togglePlay("Playing")
+                    if (frameDiff>=frameDiffThreshold*2){
+                        player.currentTime = syncTime+lastUpdate+(secondOffset/24)
+                        togglePlay("Playing")
+                        console.warn(`${frameDiff}f / ${secondDiff}s difference, Skipping ahead...`);
+                    }else if(frameDiff>=24){
+                        togglePlay("Playing")
+                    }
                 }
             }else if(hostStatus=="Paused"){
                 player.currentTime = syncTime
@@ -157,13 +152,60 @@ function sync(watchID,watchURL){
             }
             // debugger
             console.groupEnd()
+        }).catch(err=>{
+            console.groupCollapsed(`[sync] 🔴 Failed Getting data (${err.message})`)
+            console.trace(err)
+            console.groupEnd()
         })
+    }
+}
+
+function syncSpeedUp() {
+    if (urlParams.has('id')==true&&hostStatus=="Playing"&&sync_setting.value=="true"){
+        let localTimestamp = Date.now()/1000
+        let lastUpdate = localTimestamp-hostTimestamp
+        let targetPlayerTime = syncTime+lastUpdate
+        let frameDiff = Math.round((syncTime+lastUpdate)*24)-Math.round(player.currentTime*24)
+        let secondDiff = frameDiff/24
+
+        // console.log(player.currentTime,targetPlayerTime);
+        if(player.currentTime>=targetPlayerTime){
+            player.playbackRate = 1
+            player.currentTime = targetPlayerTime
+        }else if(frameDiff>24){
+            // player.playbackRate = 2
+            console.warn(`${frameDiff}f / ${secondDiff}s difference, Speed up!`);
+            if(player.buffered.length>0){
+                // console.groupCollapsed("Buffer")
+                for (let i = 0; i < player.buffered.length; i++) {
+                    let recentBufferStart = player.buffered.start(i)
+                    let recentBufferEnd = player.buffered.end(i)
+                    // console.warn("Buffer Distance:\n",i,`Start: ${recentBufferStart}`,`End: ${recentBufferEnd}`);
+                    if(player.currentTime>=recentBufferStart&&player.currentTime<=recentBufferEnd){
+                        let bufferDist = Math.round(recentBufferEnd-player.currentTime)
+                        console.log(`buffer index ${i} is the closest: ${player.currentTime} => ${bufferDist}s`,recentBufferStart,recentBufferEnd);
+                        console.warn(bufferDist);
+                        if(bufferDist>=55){
+                            console.log("x2");
+                            player.playbackRate = 2
+                        }else if(bufferDist<35){
+                            console.log("too slow, skip");
+                            player.playbackRate = 1
+                            player.currentTime = targetPlayerTime
+                        }else if(bufferDist<55){
+                            console.log("x1.5");
+                            player.playbackRate = 1.5
+                        }
+                    }
+                }
+                // console.groupEnd()
+            }
+        }
+        document.title = `${frameDiff}f / ${secondDiff}s diff`
     }
 }
 function autoSync(watchID,watchURL){
     // console.log(sync_setting.value);
-    
-    // console.log("egg");
     sync(watchID,watchURL)
 }
 
