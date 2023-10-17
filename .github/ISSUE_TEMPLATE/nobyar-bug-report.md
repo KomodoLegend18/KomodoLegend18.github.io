@@ -1,6 +1,6 @@
 ---
 name: Nobyar Bug report
-about: Create a bug report related to nobyar project
+about: Create a bug report related to https://komodolegend18.github.io/projects/Nobyar/v2/
 title: "[ Nobyar ] Bug : issue title"
 labels: bug, [ Nobyar ]
 assignees: ''
