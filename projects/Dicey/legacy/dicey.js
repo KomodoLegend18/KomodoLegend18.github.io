@@ -169,12 +169,14 @@ function load_playerdata(){
     }
     loadcolor();
     if (rng_char==1){
+        document.body.style = "background-image:url(https://stellarintothegalaxy.hololive.tv/wp-content/themes/hoshimachi_1st_sololive/images/header_bg_min.jpg)"
         document.getElementById("enemy_nameplate").innerHTML = `Hoshimachi Suisei (kmd #Sui53X)`
-        document.getElementById("enemy_chara").style = `background-image:url(../Dicey/assets/Sui_Capcom.png) ; background-size: 80%; background-repeat: no-repeat; background-position: center 10%;`
+        document.getElementById("enemy_chara").style = `background-image:url(../assets/Sui_Capcom.png) ; background-size: 80%; background-repeat: no-repeat; background-position: center 10%;`
     } else {
         // document.getElementById("enemy_nameplate").innerHTML = `Calliope Mori (kmd #${localStorage.UserID})`
+        document.body.style = "background-image:url(https://newunderworldorder.hololivepro.com/wp-content/themes/calliope_nuo/images/kv_bg_min.jpg)"
         document.getElementById("enemy_nameplate").innerHTML = `Calliope Mori (kmd #Sui53X)`
-        document.getElementById("enemy_chara").style = `background-image:url(../Dicey/assets/kv_calliope_min.png) ; background-size: 100%; background-repeat: no-repeat; background-position: center 14%;`
+        document.getElementById("enemy_chara").style = `background-image:url(../assets/kv_calliope_min.png) ; background-size: 100%; background-repeat: no-repeat; background-position: center 14%;`
     }
     
 }

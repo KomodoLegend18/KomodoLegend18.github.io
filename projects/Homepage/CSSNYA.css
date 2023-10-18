@@ -1,5 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;700&display=swap');
 
 /*====================================================MAIN SCRIPT===============================================================*/
 #BGTrans {
@@ -28,13 +29,13 @@
 	margin:auto;
 	border-top-left-radius:5px;
 	border-top-right-radius:5px;
-	font-family:"Product Sans";
+	font-family:'Josefin Sans', sans-serif;
 	width: 81%;
 	height: 100%;
 	background-color:#2D2D2D;
 }
 #digiclock {
-  font-family:"Product Sans";
+  font-family:'Josefin Sans', sans-serif;
 }
 .judul-content {
 	border-top-left-radius:5px;
@@ -44,7 +45,7 @@
 	background-color:#2D2D2D;
 	color:#FFF;
 	font-weight:bold;
-	font-family:"Product Sans";
+	font-family:'Josefin Sans', sans-serif;
 	text-align:center;
 }
 .alink{
@@ -72,7 +73,7 @@
 }
 	/* -----------------------------------------------BUTTON NAVIGATION---------------------------------------------------------*/
 	.buttonfooterleft {
-		font-family:"DFGGothic-SU"; 
+		font-family:'Josefin Sans', sans-serif; 
     	border: solid #2D2D2D;
 		border-width:5px 5px 5px 5px;
 		border-bottom-left-radius:0px;
@@ -107,7 +108,7 @@
 		border-color: #2D2D2D;
 	}
 	.buttonfootermiddle {
-		font-family:"DFGGothic-SU"; 
+		font-family:'Josefin Sans', sans-serif; 
     	border: solid #2D2D2D;
 		border-width:5px 5px 5px 5px;
 		border-bottom-left-radius:0px;
@@ -142,7 +143,7 @@
 		border-color: #2D2D2D;
 	}
 	.buttonfooterright {
-		font-family:"DFGGothic-SU"; 
+		font-family:'Josefin Sans', sans-serif;
     	border: solid #2D2D2D;
 		border-width:5px 5px 5px 5px;
 		border-bottom-left-radius:0px;
@@ -178,7 +179,7 @@
 	}
 	/* -----------------------------------------------------ACTIVE BUTTON------------------------------------------------------ */
 	.buttonfooterleftactive {
-		font-family:"DFGGothic-SU";
+		font-family:'Josefin Sans', sans-serif;
 		border:solid #111;
 		border-width:25px 5px;
 		border-bottom-left-radius:0px;
@@ -203,7 +204,7 @@
 		float:left;  
 	}
 	.buttonfootermiddleactive {
-		font-family:"DFGGothic-SU";
+		font-family:'Josefin Sans', sans-serif;
 		border:solid #111;
 		border-width:25px 5px;
 		border-bottom-left-radius:0px;
@@ -228,7 +229,7 @@
 		float:left;  
 	}
 	.buttonfooterrightactive {
-		font-family:"DFGGothic-SU";
+		font-family:'Josefin Sans', sans-serif;
 		border:solid #111;
 		border-width:25px 5px;
 		border-bottom-left-radius:0px;
@@ -300,7 +301,7 @@
 	background-color:#CCCCCC;
 }
 .buttonquickaccess {
-	font-family:"DFGGothic-SU"; 
+	font-family:'Josefin Sans', sans-serif;
     border: solid #2D2D2D;
 	border-width:5px 5px 5px 5px;
 	border-bottom-left-radius:0px;

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Say Hi!</title>
+    <!-- <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script> -->
+  </head>
+  <body>
+    <span id="tosend"></span>
+    <button onclick="window.location.reload()">Send another message</button>
+  </body>
+
+  <script>
+    var msgdest = "https://discord.com/api/webhooks/1164156877114974208/yfEpj3HJGzFo4HC2P5azHCzRyCMe6-Tax7jeGOEKh8Y87c88KlRMYajxqWiyCUJZT1AY"
+    var msg = prompt("Input Message:");
+    sendMessage();
+    function sendMessage() {
+      // var span_Text = document.getElementById("tosend").innerText;
+      // console.log(span_Text)
+      var request = new XMLHttpRequest();
+      request.open("POST", `${msgdest}`);
+
+      request.setRequestHeader('Content-type', 'application/json');
+
+      var params = {
+        username: "Komodolegend.github.io",
+        content: msg
+      }
+
+      request.send(JSON.stringify(params));
+      console.log(params.content);
+    }
+  </script>
+</html>

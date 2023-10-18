@@ -3,7 +3,7 @@
 var GETID //enemy post ID
 console.log(GETID)
 
-var URLWebhook = "https://discord.com/api/webhooks/871795497881440278/PGB-ytcBMwXtz27-t_2EMkz7MT8VtYGrucuDIR_etDDKTqq5FMnZj_iJeDSH0qlgOFez"
+var URLWebhook
 
 var GETMSG
 var OLDMSG

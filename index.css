@@ -36,6 +36,7 @@ body{
     margin-left: 20vw;
     margin-right: 50vw;
     margin-bottom: 5%;
+    overflow-y: auto;
     width: 50vw;
     height: 15vmin;
     background-position: top;
