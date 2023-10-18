@@ -36,6 +36,9 @@
         margin: 0;
         overflow: hidden;
     }
+    a:hover{
+        text-decoration: underline !important;
+    }
     
     #header{
         position: sticky;
@@ -683,7 +686,7 @@
         overflow: hidden;
         pointer-events: none;
     }
-    #alert .notice{
+    #alert .notify{
         margin: 3% 0% 0% 0%;
         border-radius: 2vh 0 0 2vh;
         padding: 0% 5% 0% 5%;
@@ -695,7 +698,24 @@
         position: relative;
         bottom: 0;
         right: 0;
-        animation: alert 5s;
+        animation: alert 5s ease;
+        animation-fill-mode: forwards;
+        z-index: var(--alert-index);
+        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.432);
+    }
+    #alert .canvasAlert{
+        margin: 3% 0% 0% 0%;
+        border-radius: 2vh 0 0 2vh;
+        padding: 0% 5% 0% 5%;
+        background-color: hsl(263, 100%, 24%);
+        color: white;
+        width: 100%;
+        height: fit-content;
+        float: right;
+        position: relative;
+        bottom: 0;
+        right: 0;
+        animation: alert 5s ease;
         animation-fill-mode: forwards;
         z-index: var(--alert-index);
         box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.432);
@@ -714,6 +734,7 @@
             opacity: 100%;
         }
         100%{
+            display: none;
             transform: translateX(100%);
             opacity: 0%;
         }

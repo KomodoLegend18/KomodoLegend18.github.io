@@ -123,12 +123,12 @@ searchInput.addEventListener("input", function(e) {
                             // createcard(data, list.length - 1);
                             
                             console.log(list.length - 1);
-                            // toast("notice", `Successfully added "${data.title}" to the list`);
+                            toast("notify", `Added <b>"${data.title}"</b> to the list`);
                         } else {
                             // Handle duplicate item (if needed)
-                            toast("notice", `Duplicate found, entry is already in your list`);
+                            toast("notify", `Duplicate found, entry is already in your list`);
 
-                            console.warn("duplicate")
+                            console.warn("duplicate",isDuplicate)
                         }
 
                         // Remove the "empty" list message if it exists
@@ -444,16 +444,24 @@ function createEntryWindow(node, index, trigger) {
 
 // ========================================================
 function toast(type, text){ // Create toast notification when executed
-    const notify = document.createElement("div")
-    notify.className = type
-    notify.innerHTML=`<p>${text}</p>`
-    document.querySelector("#alert").appendChild(notify)
-    let alert = document.querySelectorAll("#alert > .notice")
-    for(i=0;i<alert.length;i++){
-        alert[i].addEventListener("animationend", function(e){
-            e.target.remove()
+    if(type=="notify"){
+        const notify = document.createElement("div")
+        notify.className = type
+        notify.innerHTML=`<p>${text}</p>`
+        notify.addEventListener("animationend", function(e){
+            this.remove()
             // console.log("removed alert :",e)
         })
+        document.querySelector("#alert").appendChild(notify)
+    }else if(type=="canvasAlert"){
+        const notify = document.createElement("div")
+        notify.className = type
+        notify.innerHTML=`<img src="${text}" style="float:left;">Schedule copied to clipboard</img>`
+        notify.addEventListener("animationend", function(e){
+            this.remove()
+            // console.log("removed alert :",e)
+        })
+        document.querySelector("#alert").appendChild(notify)
     }
 }
 
@@ -564,7 +572,7 @@ function createHistoryChart(node){
         const scoreHistorySection = document.createElement("div");
         scoreHistorySection.className = "entry_details_section";
         scoreHistorySection.innerHTML = `
-            <h2>Score History</h2>
+            <h2><a href="https://anime-stats.net/anime/show/${node.id}" target="_blank" style="text-decoration:none; color:white;">Score History</a></h2>
             <div id="myChart"></div>
         `;
         document.querySelector("#entry_details_container").appendChild(scoreHistorySection);
@@ -657,17 +665,22 @@ function updateEntry(id,index,fresh){
 
         createcard(load[0].list[index], index);
         if(fresh){
-            toast("notice", `Successfully added "${load[0].list[index].title}" to the list`);
+            toast("notify", `Successfully added <b>"${load[0].list[index].title}"</b> to the list`);
         } else {
-            toast("notice", `"${load[0].list[index].title}" data successfully updated`);
+            toast("notify", `<b>"${load[0].list[index].title}"</b> data successfully updated`);
         }
     }).catch((err) => {
         console.error(err);
         let i = 0
-        if (i==0&&err.status>=400){
+        if (err.status>=500){
+            // MAL Maintenance | 503
+            toast('notify',`[${err.status} ${err.response[0].error}]\n${err.response[0].message}`)
+        }else if (i==0&&err.status>=400){
             i=1
-            toast('notice','Open <b>https://cors-anywhere.herokuapp.com</b> and click <b>\'request temporary access to the demo server\'</b>')
-            window.open('https://cors-anywhere.herokuapp.com/', '_blank');
+            if(cors_proxy=="https://cors-anywhere.herokuapp.com/"){
+                toast('notify','Open <b>https://cors-anywhere.herokuapp.com</b> and click <b>\'request temporary access to the demo server\'</b>')
+                window.open('https://cors-anywhere.herokuapp.com/', '_blank');
+            }
         }
         // sendError(err,load[0].list[i],"Error updating entry data, updateAnime():320");
         // createEntryWindow(node,index)
@@ -815,4 +828,183 @@ function extraData(index,id,node){
         // console.log("Save: ",JSON.parse(loadingUserData())[0].list[index].related_manga)
         // console.log(parser);
     })
+}
+
+function sortBroadcast(){
+    let sortedArray = loadingUserData()[0].list;
+    sortedArray = sortedArray.filter(item => item.status === "currently_airing");
+
+    let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+    let timeOffset = 0
+
+    sortedArray.sort((a, b) => {
+        try {
+            let day1 = days.indexOf(a.broadcast.day_of_the_week.toLowerCase());
+            let day2 = days.indexOf(b.broadcast.day_of_the_week.toLowerCase());
+
+            if (day1 == day2) {
+                // Extract the start times
+                let time1 = a.broadcast.start_time.split(':');
+                let time2 = b.broadcast.start_time.split(':');
+
+                // Convert start times to numbers
+                let hour1 = parseInt(time1[0]);
+                let hour2 = parseInt(time2[0]);
+                let minute1 = parseInt(time1[1]);
+                let minute2 = parseInt(time2[1]);
+
+                // adjust the hour by timeOffset
+                hour1 += timeOffset
+                hour2 += timeOffset
+
+                if(hour1<0||hour1>23){
+                    hour1 = (hour1 + 24) % 24;
+                }else if(hour2<0||hour2>23){
+                    hour2 = (hour2 + 24) % 24;
+                }
+
+                // if (hour1 < 0) {
+                //     hour1 = 23;
+                // } else if(hour1>0){
+                //     hour1 += timeOffset;
+                //     hour1 = (hour1 + 24) % 24;
+                // }
+                // if (hour2 < 0) {
+                //     hour2 = 23;
+                // } else {
+                //     hour2 += timeOffset;
+                //     hour2 = (hour2 + 24) % 24;
+                // }
+
+
+                // Update the start_time properties of the objects
+                a.broadcast.start_time = `${hour1.toString().padStart(2, '0')}:${minute1.toString().padStart(2, '0')}`;
+                b.broadcast.start_time = `${hour2.toString().padStart(2, '0')}:${minute2.toString().padStart(2, '0')}`;
+
+                // Compare the adjusted times
+                if (hour1 === hour2) {
+                    return minute1 - minute2;
+                } else {
+                    return hour1 - hour2;
+                }
+            } else {
+                return day1 - day2;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    // Get the current day of the week and time
+    let currentDate = new Date();
+    let currentDay = currentDate.toLocaleString('en-US', { weekday: 'long' }).toLowerCase(); // Use 'long' to get the full day name
+
+    let currentTime = currentDate.toLocaleTimeString('en-GB', { timeStyle: 'short' });
+
+    let pastItems = [];
+    let upcomingItems = [];
+
+    // Loop through the sorted array to find past and upcoming items
+    for (let item of sortedArray) {
+        if(item.status=="currently_airing"){
+            if (item.broadcast.day_of_the_week.toLowerCase() == currentDay) {
+                // console.log(item.broadcast.day_of_the_week.toLowerCase(),currentDay);
+                // Check if the show hasn't started yet
+                if (item.broadcast.start_time >= currentTime) {
+                    upcomingItems.push(item);
+                }else{
+                    pastItems.push(item);
+                }
+            } else if (days.indexOf(item.broadcast.day_of_the_week.toLowerCase()) > days.indexOf(currentDay)) {
+                upcomingItems.push(item);
+            } else {
+                pastItems.push(item);
+            }
+        }
+    }
+
+    console.log(`${sortedArray.length}`,`${pastItems.length}`,`${upcomingItems.length}`);
+    // Display the schedule items
+    console.groupCollapsed("[Airing] Schedule")
+    // console.log("📅 Today: ",currentDay, currentTime, `(${timeOffset})`);
+    for (i = 0; i < sortedArray.length; i++) {
+        try {
+            if(sortedArray[i].status=="currently_airing"){
+                if(currentDay==sortedArray[i].broadcast.day_of_the_week){
+                    if(i==pastItems.length){
+                        console.warn("📅 Today:\n",currentDay, currentTime, `(${timeOffset})`);    
+                    }
+                    console.log(`🔴 ${sortedArray[i].broadcast.day_of_the_week} ${sortedArray[i].broadcast.start_time} | ${sortedArray[i].title}`);
+                }else{
+                    console.log(`${sortedArray[i].broadcast.day_of_the_week} ${sortedArray[i].broadcast.start_time} | ${sortedArray[i].title}`);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    console.groupEnd()
+
+    console.groupCollapsed("[Airing] Past")
+    console.log("📅 Today: ",currentDay, currentTime, `(${timeOffset})`);
+    for (let i = 0; i < pastItems.length; i++) {
+        try {
+            console.log(`${pastItems[i].broadcast.day_of_the_week} ${pastItems[i].broadcast.start_time} | ${pastItems[i].title}`);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    console.groupEnd()
+
+    console.groupCollapsed("[Airing] Upcoming")
+    console.log("📅 Today: ",currentDay, currentTime, `(${timeOffset})`);
+    for (let i = 0; i < upcomingItems.length; i++) {
+        try {
+            console.log(`${upcomingItems[i].broadcast.day_of_the_week} ${upcomingItems[i].broadcast.start_time} | ${upcomingItems[i].title}`);
+            if(i==upcomingItems.length-1){
+                draw(upcomingItems)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    console.groupEnd()
+}
+
+function draw(data) {
+    console.log(data);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    // Set the canvas size to accommodate the text
+    canvas.width = 400; // Adjust this based on your needs
+    canvas.height = data.length * 16;
+
+    // Set the background color to white by drawing a white rectangle
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < data.length; i++) {
+        let text = `${data[i].broadcast.day_of_the_week}, ${data[i].broadcast.start_time} | ${data[i].title}`;
+        context.fillStyle = 'black';
+        context.fillText(text, 10, 15 * (i + 1));
+    }
+
+    canvas.toBlob((blob) => {
+        // Now you have a blob containing the canvas content
+        // You can proceed to copy it to the clipboard or save it
+        navigator.clipboard.write([new ClipboardItem({ "image/png": blob })])
+        .then(() => {
+            // Blob successfully copied to clipboard
+        })
+        .catch((err) => {
+            console.error('Error copying blob to clipboard:', err);
+        });
+    })
+
+    const dataURI = canvas.toDataURL();
+    toast("canvasAlert",dataURI)
+    // Remove the canvas after it's been used
+    document.body.removeChild(canvas);
 }

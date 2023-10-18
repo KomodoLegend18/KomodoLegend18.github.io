@@ -3,7 +3,7 @@ var user_data = loadingUserData();
 function loadingUserData(){ 
     let data = JSON.parse(localStorage.getItem("nobyarV2"))
     if(data&&data[0]){
-        console.warn("Save data found, loading save data...",data[0])
+        // console.warn("Save data found, loading save data...",data[0])
         return data
     }else{
         // Create new empty save data
@@ -60,6 +60,8 @@ const errMSG = {
 }
 
 function resetLocalstorage(){
-    localStorage.removeItem("nobyarV2");
-    location.reload()
+    if (confirm("RESETTING NOBYAR DATA\nAre you SURE?")) {
+        localStorage.removeItem("nobyarV2");
+        location.reload()
+    }
 }

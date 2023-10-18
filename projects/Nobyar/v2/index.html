@@ -4,6 +4,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NobyarV2</title>
 
+    <meta content="NobyarV2" property="og:title">
+    <meta content='Nobyar, a Local anime tracker using data from MAL API and "Watchalong"/"Watch together" feature specifically made for the discord server im in' property="og:description">
+    <meta content="https://komodolegend18.github.io/projects/Nobyar/v2" property="og:url">
+    <meta content="../../assets/Nobyar.png" property="og:image">
+    <meta content="#4400ff" data-react-helmet="true" name="theme-color">
+    
     <link rel="icon" href="https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_64,w_64,q_auto/1369026/logo_square_qn4ncy.png" type="image/icon type">
     <!-- <script src="https://KomodoLegend18.github.io/projects/tzclock.js"></script> -->
     <link rel="stylesheet" href="../v2/stylev2.css">
@@ -35,14 +41,15 @@
         <div id="overlay">
             <div id="alert"></div>
             <div id="menu" style="transform: translateX(-100%);">
-                <div id="menuItems">Settings</div>
+                <a href="watch/index.html"><div id="menuItems">Watch</div></a>
+                <div id="menuItems" onclick="sortBroadcast()">Copy upcoming schedule to clipboard</div>
+                <div id="menuItems" onclick="resetLocalstorage()">RESET DATA</div>
                 <div id="menuClose">Close</div>
             </div>
             <div id="search-result-overlay" style="pointer-events: none;"></div>
             
             
             <div id="fadeDim"></div>
-
         </div>
         <div id="header">
             <div id="header-section">
@@ -54,7 +61,6 @@
                 
             </div>
             <div id="header-section">
-                <button onclick="resetLocalstorage()">Reset</button>
             </div>
             
         </div>

@@ -135,8 +135,11 @@ const getMalAPIDetail = (id,type) => {
 
             xhr.onload = () =>{
                 if (xhr.status>=400){
-                    let fullResponse = `{"response":[${JSON.stringify(xhr.response)}],"status":${JSON.parse(xhr.status)}}`
-                    reject(JSON.parse(fullResponse))
+                    let fullResponse = {
+                        "response":[JSON.parse(xhr.response)],
+                        "status":xhr.status
+                    }
+                    reject(fullResponse)
                 } else {
                     let simpleResponse
                     if (xhr.response.data!=null){
