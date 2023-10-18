@@ -838,8 +838,8 @@ function kuramaEpsList(data) {
                 console.log(epsUrl);
                 console.groupEnd()
 
-
-                clientGET(`${epsUrl}?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI`).then(response => {
+                // ?activate_stream=nOc7xTBoR5F0DC9Jhl5oix2oSfN8waFI
+                clientGET(`${epsUrl}?dfgRr1OagZvvxbzHNpyCy0FqJQ18mCnb=LOtqO0Y6jT&twEvZlbZbYRWBdKKwxkOnwYF0VWoGGVg=kuramadrive`).then(response => {
                     console.groupCollapsed("[kuramaEpsList] Getting episode data")
 
                     // Clear quality setting
@@ -847,9 +847,10 @@ function kuramaEpsList(data) {
 
                     const responseHTML = new DOMParser().parseFromString(response, 'text/html');
                     console.log(responseHTML);
+                    console.log("Available Server",responseHTML.querySelectorAll("#changeServer > option"));
+                    console.log("Sources: ",responseHTML.querySelectorAll("#player > source"));
 
                     // document.querySelector("#contentEntries > div:nth-child(3) > button").style = "display:none;"
-
                     for (let i = 0; i < responseHTML.querySelectorAll("#player > source").length; i++) {
                         const data = responseHTML.querySelectorAll("#player > source")[i]
                         console.log(data);
@@ -866,8 +867,10 @@ function kuramaEpsList(data) {
                         if (data.attributes["size"].value == defaultQuality) {
                             option.selected = true
                             player.src = data.attributes["src"].value
+                        }else{
+                            option.selected = true
+                            player.src = data.attributes["src"].value
                         }
-
                         quality_setting.appendChild(option);
                     }
                     hostSend(`Selected Ep.${epsCount}`)
