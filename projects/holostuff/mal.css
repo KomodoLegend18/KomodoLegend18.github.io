@@ -71,29 +71,32 @@ body[data-owner="1"] .list-table-header::after{
 	height: 25px;
 	transition: ease 150ms;
 	overflow: hidden;
-	white-space: nowrap;
-	border-radius: 8px 0 8px 0;
-	background: #0051a7 !important;
-}.tags span a[href*="tag=friend"]:hover {
+	padding: 0 !important;
+	white-space: nowrap !important;
+	border-radius: 8px 0 8px 0 !important;
+}
+.tags span a[href*="tag=friend"]:hover {
 	transition: ease 250ms;
 	width: 170px;
-}.tags span a[href*="tag=friend"]:hover::after {
+}
+.tags span a[href*="tag=friend"]:hover::after {
 	content: "\f500  Friend Recommendation";
-}.tags span a[href*="tag=friend"]::after {
+}
+.tags span a[href*="tag=friend"]::after {
 	display: flex;
     align-items: center;
     justify-content: center;
 	position: absolute;
+	top: 0;
 	border-radius: 0 0 0 0;
 	width: 100%;
 	height: 100%;
-	color: white;
+	color: #000;
 	background-color: #0051a7 !important;
 	content: "\f500";
 	font-size: 12px;
 	z-index: 1;
 	overflow: hidden;
-	padding: 12px;
 }
 
 .tags span a[href*="tag=fav"] {
@@ -109,7 +112,6 @@ body[data-owner="1"] .list-table-header::after{
 	border-radius: 8px 0 8px 0 !important;
 }
 .tags span a[href*="tag=fav"]:hover {
-	background: #0051a7 !important;
 	transition: ease 250ms;
 	width: 130px;
 }
@@ -128,6 +130,42 @@ body[data-owner="1"] .list-table-header::after{
 	color: #000;
 	background-color: #ffd900 !important;
 	content: "\f762";
+	font-size: 12px;
+	z-index: 1;
+	overflow: hidden;
+}
+
+.tags span a[href*="tag=rec"] {
+	position: relative;
+	float: right;
+	aspect-ratio: 1/1;
+	width: 25px;
+	height: 25px;
+	transition: ease 150ms;
+	overflow: hidden;
+	padding: 0 !important;
+	white-space: nowrap !important;
+	border-radius: 8px 0 8px 0 !important;
+}
+.tags span a[href*="tag=rec"]:hover {
+	transition: ease 250ms;
+	width: 130px;
+}
+.tags span a[href*="tag=rec"]:hover::after {
+	content: "\f164  Recommended";
+}
+.tags span a[href*="tag=rec"]::after {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+	position: absolute;
+	top: 0;
+	border-radius: 0 0 0 0;
+	width: 100%;
+	height: 100%;
+	color: #ffffff;
+	background-color: #009e0d !important;
+	content: "\f164";
 	font-size: 12px;
 	z-index: 1;
 	overflow: hidden;
