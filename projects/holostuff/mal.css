@@ -91,7 +91,7 @@ body[data-owner="1"] .list-table-header::after{
 	border-radius: 0 0 0 0;
 	width: 100%;
 	height: 100%;
-	color: #000;
+	color: #ffffff;
 	background-color: #0051a7 !important;
 	content: "\f500";
 	font-size: 12px;
