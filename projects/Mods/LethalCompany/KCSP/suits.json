@@ -1,0 +1,52 @@
+[
+    {
+        "name":"Stargazer",
+        "tags":["Emissive"],
+        "image":"a"
+    },
+    {
+        "name":"Onigiri",
+        "tags":["Emissive"],
+        "image":"a"
+    },
+    {
+        "name":"Navy Camo",
+        "tags":[""],
+        "image":"a"
+    },
+    {
+        "name":"Desert Camo",
+        "tags":[""],
+        "image":"a"
+    },
+    {
+        "name":"Forest Camo",
+        "tags":[""],
+        "image":"a"
+    },
+    {
+        "name":"JPEG",
+        "tags":[""],
+        "image":"a"
+    },
+    {
+        "name":"texture_err",
+        "tags":["Emissive"],
+        "image":"a"
+    },
+    {
+        "name":"Wireframe",
+        "tags":["Emissive","Custom Shader"],
+        "image":"a"
+    },
+    {
+        "name":"Nugget",
+        "tags":[],
+        "image":"a"
+    },
+    {
+        "name":"Constellation",
+        "tags":["Emissive","Custom Material"],
+        "image":"a"
+    }
+]

@@ -1,0 +1,15 @@
+/* :root{
+    --force-portrait:false;
+}
+@container style(--force-portrait:true){
+    #container {
+        z-index: 1;
+        background-color: aqua;
+    }
+}
+@media screen and (orientation: portrait), (--force-portrait: true) {
+    #container {
+      z-index: 1;
+      background-color: aqua;
+    }
+} */

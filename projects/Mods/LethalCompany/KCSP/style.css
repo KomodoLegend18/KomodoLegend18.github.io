@@ -1,0 +1,32 @@
+body{
+    margin: 0 !important;
+}
+.container{
+    display: flex;
+    margin: auto;
+    border: 1px dashed red;
+    width: 80%;
+    min-height: 100%;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+.suits{
+    position: relative;
+    margin: 5px;
+    border: 1px dashed black;
+    width: 13vw;
+    aspect-ratio: 6/9;
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.suits > #title{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    background-color: rgba(0, 0, 0, 0.76);
+    border: 1px dashed green;
+    color: white;
+    text-align: center;
+}

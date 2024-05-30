@@ -1,469 +1,306 @@
+"use strict";
+try {    
 // ========================================================
-searchInput.addEventListener("focus", function(e){
-    // console.log("Dim count: ",document.querySelector("#fadeDim").childElementCount)
-    // console.log(e)
+// page_loadlist()
+// function page_loadlist(){ // Executed when page loaded
+//     try {
+//         let data = user_data
+//         // console.log(data[0].list.length)
 
-    // Prevent multiple dim element
-    if(document.querySelector("#fadeDim").childElementCount==0){
-        // Create dim element for header and container
-        const dimElem = document.createElement("div");
-        dimElem.className="dim"
-        document.getElementById("fadeDim").appendChild(dimElem);
+//         if(!data){ // If save data somehow doesn't exist, refresh
+//             location.reload()
+//         }
 
-        // Then look for all element with dim class
-        const alldim = document.querySelectorAll(".dim")
-            for (i=0;i<alldim.length;i++){
-                // Then add eventlistener to those elements
-                alldim[i].addEventListener("click", function(e){
-                    for(i=0;i<alldim.length;i++){
-                        alldim[i].remove()
-                    }
-                    clearSearch()
-                })
-            }
-    }
-    
+//         document.querySelector("#hamburger-icon").addEventListener("click", function(e){
+//             document.querySelector("#menu").style="transform: translateX(0%);"
+//             document.querySelector("#menuClose").addEventListener("click", function(){
+//                 document.querySelector("#menu").style="transform: translateX(-100%);"
+//             })
+//         });
 
-    if(e.target.value.length>=3){
-        document.getElementById("search-result-overlay").style="pointer-events: auto;"
-    }
-    
-    // console.warn("dim applied")
-    // console.log(query)
-    function clearSearch(){ // Clear search results when executed    
-        // document.querySelector("#header-section > input[type=text]").value=""
-        const prevresult = document.getElementById("search-result-overlay")
-        if(prevresult){
-            // prevresult.innerHTML=""
-            prevresult.style="pointer-events:none;display:none"
-        }
-    }
-})
+//         if (data[0].list.length==0){ // If list is empty, display a message
+//             // display random face just for fun :\
+//             const randFace = Math.round(Math.random() * 2);
+//             const face = randFace === 0 ? ":(" : "D:";
+//             console.error("List Empty",data)
 
-// ========================================================
-let search_timer
-searchInput.addEventListener("input", function(e) {
-    let query = e.target.value
-    if (query.length>=3){ // If query is longer than/equal to 3 characters
-        console.log("Search query: ",query.length,`"${query}"`)
+//             const empty = document.createElement("div");
+//             empty.id="empty";
+//             empty.innerHTML=`
+//             <h1>${face}</h1>
+//             <h3>Hmm...Looks like your list is empty</h3>
+//             <p><span>why not add some to your list?</span></p>`
+//             document.getElementById("content").appendChild(empty);
 
-        clearTimeout(search_timer);
-        search_timer = setTimeout(() => {
-            console.log("> Searching: ",query.length,`"${query}"`)
-            getMalAPISearch(query).then(response => {
-                const result = document.getElementById("search-result-overlay");
-                result.innerHTML = "";
-                result.style.pointerEvents = "auto";
-
-                for (let i = 0; i < response.length; i++) {
-                    const entry = response[i].node;
-
-                    // Add customProperty to data
-                    const customProperty = {
-                        "nobyar": {
-                        "aired_episodes": 0,
-                        "watched_episodes": 0,
-                        "mean_history": [],
-                        "external_source": []
-                        }
-                    };
-                    Object.assign(entry, customProperty);
-
-                    const items = document.createElement("div");
-                    items.id = "items";
-                    items.setAttribute("data-index", i);
-
-                    const posterURL = entry.main_picture ? entry.main_picture.large : "";
-
-                    const genres = entry.genres ? entry.genres.map(x => x.name).join(", ") : "unavailable";
-                    const startSeason = entry.start_season ? `${entry.start_season.season} ${entry.start_season.year}` : "";
-
-                    items.innerHTML = `
-                        <div id="poster" style="background-image: url(${posterURL});">
-                        <div id="label">Add to list</div>
-                        </div>
-                        <div id="info">
-                        <div id="title">${entry.title}</div>
-                        <div id="genre">${genres}</div>
-                        <div id="details">
-                            <div id="score">${entry.mean}</div>
-                            <div id="type">${entry.media_type}</div>
-                            <div id="status">${entry.status}</div>
-                            <div id="season">${startSeason}</div>
-                        </div>
-                        <div id="synopsis">${entry.synopsis || ""}</div>
-                        </div>
-                    `;
-                    
-                    // Add a click event listener to each search result item
-                    items.addEventListener("click", function (e) {
-                        const dataIndex = e.target.getAttribute("data-index");
-                        if (!dataIndex) return; // Check if a valid data-index attribute exists
-
-                        const selectedIndex = parseInt(dataIndex, 10);
-                        const data = response[selectedIndex]?.node; // Use optional chaining to safely access data
-                        console.log("Selected data: ",data);
-
-                        if (!data) return; // Exit if data is missing
-
-                        const savedata = loadingUserData();
-                        const list = savedata[0]?.list || [];
-
-                        // Check for duplicates
-                        const isDuplicate = list.some(item => item.id === data.id);
-
-                        if (!isDuplicate) {
-                            list.push(data);
-                            savedata[0].list = list; // Update the list in savedata
-                            savingUserData(savedata, "Add from search, Non duplicate")
-
-                            updateEntry(data.id,list.length-1,true)
-
-                            // localStorage.setItem("nobyarV2", JSON.stringify(savedata));
-                            // createcard(data, list.length - 1);
-                            
-                            console.log(list.length - 1);
-                            toast("notify", `Added <b>"${data.title}"</b> to the list`);
-                        } else {
-                            // Handle duplicate item (if needed)
-                            toast("notify", `Duplicate found, entry is already in your list`);
-
-                            console.warn("duplicate",isDuplicate)
-                        }
-
-                        // Remove the "empty" list message if it exists
-                        const emptyMessage = document.querySelector("#empty");
-                        if (emptyMessage) {
-                            emptyMessage.style.display = "none";
-                        }
-
-                        // console.log(e.target);
-                    });
-
-                    result.appendChild(items);
-
-                }
-            })
-            .catch(err => {
-                if (err.status < 500) {
-                console.error(err);
-                sendError(err, query, "");
-                } else {
-                console.error(err);
-                }
-            });
-
-        }, 1000);
-    } else if (query.length<3){ // If search query is empty, clear search results
-        clearTimeout(search_timer);
-        const prevresult = document.getElementById("search-result-overlay")
-        prevresult.innerHTML=""
-        prevresult.style="pointer-events:none"
-    }
-})
+//             document.querySelector("#empty > p > span").addEventListener("click", function(){ // When hint clicked, focuses user to search input
+//                 document.querySelector("#header-section > input[type=text]").focus();
+//             });
+//         } else if(data[0].list.length!=0){ // Else if list is not empty, display user lists
+//             console.warn(data[0].list);
+//             data[0].list = data[0].list.filter((obj) => Object.keys(obj).length !== 0);
+//             // localStorage.setItem("nobyarV2", JSON.stringify(data))
+//             savingUserData(data, "Page load, List not empty")
+//             for (let i = 0; i < data[0].list.length; i++) {
+//                 let entryCardData = setTimeout(() => {
+//                     createcard(data[0].list[i],i);
+//                     clearTimeout(entryCardData);
+//                     // updateEntry(data[0].list[i].id,i)
+//                 }, i * 150); // wait between each request
+//             }  
+//         }
+//     } catch (error) {
+//         // sendError(error,JSON.parse(localStorage.getItem("nobyarV2")),"Error loading page, page_loadlist():327")
+//         console.error(error)
+//     }
+// }
 
 // ========================================================
-page_loadlist()
-function page_loadlist(){ // Executed when page loaded
-    try {
-        let data = user_data
-        // console.log(data[0].list.length)
-
-        if(!data){ // If save data somehow doesn't exist, refresh
-            location.reload()
-        }
-
-        document.querySelector("#hamburger-icon").addEventListener("click", function(e){
-            document.querySelector("#menu").style="transform: translateX(0%);"
-
-            document.querySelector("#menuClose").addEventListener("click", function(){
-                document.querySelector("#menu").style="transform: translateX(-100%);"
-
-            })
-
-        });
-
-        if (data[0].list.length==0){ // If list is empty, display a message
-
-            // display random face just for fun :\
-            const randFace = Math.round(Math.random() * 2);
-            const face = randFace === 0 ? ":(" : "D:";
-
-
-            console.error("List Empty",data)
-            const empty = document.createElement("div");
-            empty.id="empty";
-            empty.innerHTML=`
-            <h1>${face}</h1>
-            <h3>Hmm...Looks like your list is empty</h3>
-            <p><span>why not add some to your list?</span></p>`
-            document.getElementById("content").appendChild(empty);
-
-            document.querySelector("#empty > p > span").addEventListener("click", function(){ // When hint clicked, focuses user to search input
-                document.querySelector("#header-section > input[type=text]").focus();
-            });
-        } else if(data[0].list.length!=0){ // Else if list is not empty, display user lists
-            console.warn(data[0].list)
-            data[0].list = data[0].list.filter((obj) => Object.keys(obj).length !== 0);
-            // localStorage.setItem("nobyarV2", JSON.stringify(data))
-            savingUserData(data, "Page load, List not empty")
-            for (let i = 0; i < data[0].list.length; i++) {
-                setTimeout(() => {
-                    updateEntry(data[0].list[i].id,i)
-                }, i * 500); // wait between each request
-            }  
-        }
-    } catch (error) {
-        // sendError(error,JSON.parse(localStorage.getItem("nobyarV2")),"Error loading page, page_loadlist():327")
-        console.error(error)
-    }
-}
-
-// ========================================================
-function createcard(node,index){ // Create cards when executed
-    try {
-        if(node.num_episodes==0){ // Total episode is unknown, make it the same as aired
-            node.num_episodes=node.nobyar.aired_episodes
-        }
-        const card = document.createElement("div");
-        card.id="cardContainer"
-        // card.title=`${node.title}`
-        // card.setAttribute("data-index",index)
-        card.innerHTML=`
-        <div id="cardBorder"></div>
-        <div id="card" title='${node.title}' data-index="${index}">
-            <img src="${node.main_picture.large}" alt="${node.title}">
-            <div id="card-episode-num"><span>${node.nobyar.watched_episodes}[${node.nobyar.aired_episodes}]/${node.num_episodes}</span></div>
-            <div id="card-title">
-                <div id="card-episode-bar">
-                    <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes/node.num_episodes*100}%;"></div>
-                    <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes/node.num_episodes*100}%;"></div>
-                </div>
-                <p>${node.title}</p>
-            </div>
-        </div>    
-        `;
-        // if (node.status=="not_yet_aired"){
-        //     card.style="border:2px dashed gray"
-        // } else if (node.status=="currently_airing"){
-        //     card.style="border:2px dotted rgba(86, 204, 255, 1)"
-        // } else if (node.status=="finished_airing"){
-        //     card.style="border:2px solid white"
-        // }
-        // console.log(node.nobyar[0].aired_episodes)
-        document.getElementById("contentEntries").appendChild(card)
-        card.addEventListener("click",function(e){
-            // console.log(e.target)
-            // let load = JSON.parse(user_data)
-            createEntryWindow(node,index,e)
-            // console.log(load[0].list[index])
-            // console.log("Save",save)
-            // let openLink = save[0].list[e.target.attributes["data-index"].value].nobyar[2].external_link[0].url
+// function createcard(node,index){ // Create cards when executed
+//     try {
+//         if(node.num_episodes==0){ // Total episode is unknown, make it the same as aired
+//             node.num_episodes=node.nobyar.aired_episodes
+//         }
+//         const card = document.createElement("div");
+//         card.className="cardContainer"
+//         // card.title=`${node.title}`
+//         // card.setAttribute("data-index",index)
+//         card.innerHTML=`
+//         <div class="cardBorder"></div>
+//         <div class="card" title='${node.title}' data-index="${index}">
+//             <div class="card-image" style="background-image:url(${node.main_picture.large});" alt="${node.title}"></div>
+//             <div class="card-episode-num"><span>${node.nobyar.watched_episodes}[${node.nobyar.aired_episodes}]/${node.num_episodes}</span></div>
+//             <div class="card-title">
+//                 <div class="card-episode-bar">
+//                     <div class="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes/node.num_episodes*100}%;"></div>
+//                     <div class="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes/node.num_episodes*100}%;"></div>
+//                 </div>
+//                 <p>${node.title}</p>
+//             </div>
+//         </div>    
+//         `;
+//         // if (node.status=="not_yet_aired"){
+//         //     card.style="border:2px dashed gray"
+//         // } else if (node.status=="currently_airing"){
+//         //     card.style="border:2px dotted rgba(86, 204, 255, 1)"
+//         // } else if (node.status=="finished_airing"){
+//         //     card.style="border:2px solid white"
+//         // }
+//         // console.log(node.nobyar[0].aired_episodes)
+//         document.getElementById("contentEntries").appendChild(card)
+//         card.addEventListener("click",function(e){
+//             // console.log(e.target)
+//             // let load = JSON.parse(user_data)
+//             createEntryWindow(node,index,e)
+//             // console.log(load[0].list[index])
+//             // console.log("Save",save)
+//             // let openLink = save[0].list[e.target.attributes["data-index"].value].nobyar[2].external_link[0].url
             
-            // test(openLink)
-            // window.open(openLink);
-        }) 
-    } catch (error) {
-        sendError(error,node,"Error creating card, createcard()")
-    }
-}
+//             // test(openLink)
+//             // window.open(openLink);
+//         })
+//     } catch (error) {
+//         sendError(error,node,"Error creating card, createcard()")
+//     }
+// }
 
 // ========================================================
-function createEntryWindow(node, index, trigger) {
-    try {
-        // console.log('node: ',node);
-        // console.log('index: ',index);
-        // console.log('trigger: ',trigger);
-        // Helper function to get the season string
-        function getScoreString() {
-            if (node.mean === undefined) {
-                return "???";
-            } else {
-                return `${node.mean}`;
-            }
-        }
+// function createEntryWindow(node, index, trigger) {
+//     try {
+//         // console.log('node: ',node);
+//         // console.log('index: ',index);
+//         // console.log('trigger: ',trigger);
+//         // Helper function to get the season string
+//         function getScoreString() {
+//             if (node.mean === undefined) {
+//                 return "???";
+//             } else {
+//                 return `${node.mean}`;
+//             }
+//         }
 
-        // Helper function to get the season string
-        function getSeasonString() {
-            if (node.start_season === undefined) {
-                return node.start_date ? `${node.start_date}` : "Airing date unknown";
-            } else {
-                return `${node.start_season.season} ${node.start_season.year}`;
-            }
-        }
+//         // Helper function to get the season string
+//         function getSeasonString() {
+//             if (node.start_season === undefined) {
+//                 return node.start_date ? `${node.start_date}` : "Airing date unknown";
+//             } else {
+//                 return `${node.start_season.season} ${node.start_season.year}`;
+//             }
+//         }
 
-        // Helper function to get the genres string
-        function getGenresString() {
-            return node.genres ? node.genres.map(x => x.name).join(", ") : "-";
-        }
+//         // Helper function to get the genres string
+//         function getGenresString() {
+//             return node.genres ? node.genres.map(x => x.name).join(", ") : "-";
+//         }
 
-        // Create the entry window
-        const entryWindow = document.createElement("div");
-        entryWindow.id = "entry_container";
-        entryWindow.setAttribute("data-index", index);
+//         // Create the entry window
+//         const entryWindow = document.createElement("div");
+//         entryWindow.id = "entry_container";
+//         entryWindow.setAttribute("data-index", index);
 
-        // Check if external sources are available
-        const hasExternalSources = node.nobyar.external_source.length !== 0;
+//         // Check if external sources are available
+//         const hasExternalSources = node.nobyar.external_source.length !== 0;
 
-        // Generate the inner HTML based on external sources
-        entryWindow.innerHTML = `
-            <div id="entry_poster" style="background-image:url(${node.main_picture.large});background-repeat: no-repeat;background-position: center;background-size:cover;">
-                <!-- Poster -->
-                <div id="entry_return">
-                    <span class="material-symbols-outlined">close</span>
-                </div>
-            </div>
-            <div id="entry_details_container">
-                <!-- Details container -->
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <a href="https://myanimelist.net/anime/${node.id}" target="_blank" style="text-decoration:none; color:white;"><h1 data-nobyarelemtype="title">${node.title}</h1></a>
+//         // Generate the inner HTML based on external sources
+//         entryWindow.innerHTML = `
+//             <div id="entry_poster" style="background-image:url(${node.main_picture.large});background-repeat: no-repeat;background-position: center;background-size:cover;">
+//                 <!-- Poster -->
+//                 <div id="entry_return">
+//                     <span class="material-symbols-outlined">close</span>
+//                 </div>
+//             </div>
+//             <div id="entry_details_container">
+//                 <!-- Details container -->
+//                 <div class="entry_details_section">
+//                     <!-- Details -->
+//                     <a href="https://myanimelist.net/anime/${node.id}" target="_blank" style="text-decoration:none; color:white;"><h1 data-nobyarelemtype="title">${node.title}</h1></a>
 
-                    <div class="entry_details_overview">
-                        <div class="entry_details_overview_score">
-                            <div>
-                                <span>${getScoreString()}</span>
-                            </div>
-                            <div>Score</div>
-                        </div>
-                        <div class="entry_details_overview_info">
-                            <h3><span style="text-transform: capitalize">${getSeasonString()}</span> | <span style="text-transform: uppercase">${node.media_type}, </span><span style="text-transform: capitalize">${node.status.replace(/_/g, ' ')}</span></h3>
-                            <h4>${getGenresString()}</h4>
-                            <h5>Rank: #${node.rank} • Popularity: #${node.popularity} • MAL Users: ${node.num_list_users} • MAL Users Favorite: ${node.num_favorites}</h5>
-                        </div>
-                    </div>
+//                     <div class="entry_details_overview">
+//                         <div class="entry_details_overview_score">
+//                             <div>
+//                                 <span>${getScoreString()}</span>
+//                             </div>
+//                             <div>Score</div>
+//                         </div>
+//                         <div class="entry_details_overview_info">
+//                             <h3><span style="text-transform: capitalize">${getSeasonString()}</span> | <span style="text-transform: uppercase">${node.media_type}, </span><span style="text-transform: capitalize">${node.status.replace(/_/g, ' ')}</span></h3>
+//                             <h4>${getGenresString()}</h4>
+//                             <h5>Rank: #${node.rank} • Popularity: #${node.popularity} • MAL Users: ${node.num_list_users} • MAL Users Favorite: ${node.num_favorites}</h5>
+//                         </div>
+//                     </div>
 
-                    <div id="synopsisContainer">
-                        <p id="synopsis" class="entry_details_synopsisCollapsed">${node.synopsis}</p>
-                        <div id="toggleSynopsis">Show More</div>
-                    </div>
-                    <div id="entry_remove" style="background-color:red;color:white;cursor:pointer;width:fit-content"><span id="entry_remove" class="material-symbols-outlined">delete</span></div>
-                </div>
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <h2>Episodes</h2>
-                    <div id="ep_rem"><span class="material-symbols-outlined">remove</span></div><div id="ep_add"><span class="material-symbols-outlined">add</span></div>
-                    <br>
-                    <br>
-                    <div id="card-episode-bar">
-                        <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes / node.num_episodes * 100}%;"></div>
-                        <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes / node.num_episodes * 100}%;"></div>
-                    </div>
-                    <p>Watched: ${node.nobyar.watched_episodes}</p>
-                    <p>Aired: ${node.nobyar.aired_episodes}</p>
-                    <strong>Total: ${node.num_episodes}</strong>
-                </div>
-                <div class="entry_details_section">
-                    <!-- Details -->
-                    <h2>Watch</h2>
-                    ${hasExternalSources ? node.nobyar.external_source.map(source => `<p><a href="${source.url}" target="_blank" style="color:inherit;">${source.name}</a></p>`).join('') : ''}
-                </div>
-            </div>`;
+//                     <div id="synopsisContainer">
+//                         <p id="synopsis" class="entry_details_synopsisCollapsed">${node.synopsis}</p>
+//                         <div id="toggleSynopsis">Show More</div>
+//                     </div>
+//                     <div id="entry_remove" style="background-color:red;color:white;cursor:pointer;width:fit-content"><span id="entry_remove" class="material-symbols-outlined">delete</span></div>
+//                 </div>
+//                 <div class="entry_details_section">
+//                     <!-- Details -->
+//                     <h2>Episodes</h2>
+//                     <div id="ep_rem"><span class="material-symbols-outlined">remove</span></div><div id="ep_add"><span class="material-symbols-outlined">add</span></div>
+//                     <br>
+//                     <br>
+//                     <div id="card-episode-bar">
+//                         <div id="card-episode-bar-aired" style="width: ${node.nobyar.aired_episodes / node.num_episodes * 100}%;"></div>
+//                         <div id="card-episode-bar-watched" style="width: ${node.nobyar.watched_episodes / node.num_episodes * 100}%;"></div>
+//                     </div>
+//                     <p>Watched: ${node.nobyar.watched_episodes}</p>
+//                     <p>Aired: ${node.nobyar.aired_episodes}</p>
+//                     <strong>Total: ${node.num_episodes}</strong>
+//                 </div>
+//                 <div class="entry_details_section">
+//                     <!-- Details -->
+//                     <h2>Watch</h2>
+//                     ${hasExternalSources ? node.nobyar.external_source.map(source => `<p><a href="${source.url}" target="_blank" style="color:inherit;">${source.name}</a></p>`).join('') : ''}
+//                 </div>
+//             </div>`;
 
-        // Append the entry window to the overlay
-        document.querySelector("#overlay").appendChild(entryWindow);
+//         // Append the entry window to the overlay
+//         document.querySelector("#overlay").appendChild(entryWindow);
        
-        extraData(index,node.id,node)
+//         extraData(index,node.id,node)
 
-        // Event listeners 
-        document.querySelector("#entry_return").addEventListener("click", function (e) {
-            e.target.parentElement.parentElement.remove();
-        });
+//         // Event listeners 
+//         document.querySelector("#entry_return").addEventListener("click", function (e) {
+//             e.target.parentElement.parentElement.remove();
+//         });
 
-        // Add a click event listener to toggle the synopsis
-        const maxHeight = 4.5 * parseFloat(window.getComputedStyle(document.querySelector("#synopsis")).fontSize); // Convert 4.5em to pixels
-        // console.log("MaxHeight: ",maxHeight)
-        if (document.querySelector("#synopsis").scrollHeight > maxHeight) {
-            // console.log('More');
-            document.querySelector("#toggleSynopsis").addEventListener("click", function (e) {
-                const synopsis = document.querySelector("#synopsis");
-                const isCollapsed = synopsis.classList.contains("entry_details_synopsisCollapsed");
-                if (isCollapsed) {
-                    // Expand the synopsis
-                    // synopsis.classList.remove("entry_details_synopsisCollapsed");
-                    synopsis.classList.value = "entry_details_synopsisExpanded";
-                    // console.log(synopsis.classList);
-                    document.querySelector("#toggleSynopsis").textContent = "Show Less";
-                } else {
-                    // Collapse the synopsis
-                    // synopsis.classList.remove("entry_details_synopsisExpanded");
-                    synopsis.classList.value = "entry_details_synopsisCollapsed";
-                    // console.log(synopsis.classList);
-                    document.querySelector("#toggleSynopsis").textContent = "Show More";
-                }
-            });
-        } else {
-            // console.log('Less');
-            document.querySelector("#toggleSynopsis").style = `
-                pointer-events:none; display:none;
-            `;
-        }
+//         // Add a click event listener to toggle the synopsis
+//         const maxHeight = 4.5 * parseFloat(window.getComputedStyle(document.querySelector("#synopsis")).fontSize); // Convert 4.5em to pixels
+//         // console.log("MaxHeight: ",maxHeight)
+//         if (document.querySelector("#synopsis").scrollHeight > maxHeight) {
+//             // console.log('More');
+//             document.querySelector("#toggleSynopsis").addEventListener("click", function (e) {
+//                 const synopsis = document.querySelector("#synopsis");
+//                 const isCollapsed = synopsis.classList.contains("entry_details_synopsisCollapsed");
+//                 if (isCollapsed) {
+//                     // Expand the synopsis
+//                     // synopsis.classList.remove("entry_details_synopsisCollapsed");
+//                     synopsis.classList.value = "entry_details_synopsisExpanded";
+//                     // console.log(synopsis.classList);
+//                     document.querySelector("#toggleSynopsis").textContent = "Show Less";
+//                 } else {
+//                     // Collapse the synopsis
+//                     // synopsis.classList.remove("entry_details_synopsisExpanded");
+//                     synopsis.classList.value = "entry_details_synopsisCollapsed";
+//                     // console.log(synopsis.classList);
+//                     document.querySelector("#toggleSynopsis").textContent = "Show More";
+//                 }
+//             });
+//         } else {
+//             // console.log('Less');
+//             document.querySelector("#toggleSynopsis").style = `
+//                 pointer-events:none; display:none;
+//             `;
+//         }
 
-        document.querySelector("#entry_remove").addEventListener("click", function (e) {
-            const load = loadingUserData();
-            load[0].list.splice(index, 1);
-            // localStorage.setItem("nobyarV2", JSON.stringify(load));
-            savingUserData(load, "Entry window, User manual delete entry")
-            location.reload();
-        });
+//         document.querySelector("#entry_remove").addEventListener("click", function (e) {
+//             const load = loadingUserData();
+//             load[0].list.splice(index, 1);
+//             // localStorage.setItem("nobyarV2", JSON.stringify(load));
+//             savingUserData(load, "Entry window, User manual delete entry")
+//             location.reload();
+//         });
 
-        // Add/Remove episode event listeners
-        const epRem = document.querySelector("#ep_rem");
-        const epAdd = document.querySelector("#ep_add");
+//         // Add/Remove episode event listeners
+//         const epRem = document.querySelector("#ep_rem");
+//         const epAdd = document.querySelector("#ep_add");
 
-        epRem.addEventListener("click", function () {
-            updateWatchedEpisodes(-1);
-        });
+//         epRem.addEventListener("click", function () {
+//             updateWatchedEpisodes(-1);
+//         });
 
-        epAdd.addEventListener("click", function () {
-            updateWatchedEpisodes(1);
-        });
+//         epAdd.addEventListener("click", function () {
+//             updateWatchedEpisodes(1);
+//         });
 
-        // Helper function to update watched episodes
-        function updateWatchedEpisodes(change) {
-            if (node.nobyar.watched_episodes + change >= 0) {
-                node.nobyar.watched_episodes += change;
+//         // Helper function to update watched episodes
+//         function updateWatchedEpisodes(change) {
+//             if (node.nobyar.watched_episodes + change >= 0) {
+//                 node.nobyar.watched_episodes += change;
 
-                const watchedPercentage = node.num_episodes !== 0 ? (node.nobyar.watched_episodes / node.num_episodes * 100) : (node.nobyar.watched_episodes / node.nobyar.aired_episodes * 100);
+//                 const watchedPercentage = node.num_episodes !== 0 ? (node.nobyar.watched_episodes / node.num_episodes * 100) : (node.nobyar.watched_episodes / node.nobyar.aired_episodes * 100);
 
-                epRem.parentElement.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
-                document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${node.nobyar.watched_episodes}`;
-                trigger.target.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
-                trigger.target.querySelector("#card-episode-num > span").innerText = `${node.nobyar.watched_episodes}[${node.nobyar.aired_episodes}]/${node.num_episodes || node.nobyar.aired_episodes}`;
+//                 epRem.parentElement.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
+//                 document.querySelector("#entry_details_container > div:nth-child(2) > p:nth-child(7)").innerText = `Watched: ${node.nobyar.watched_episodes}`;
+//                 trigger.target.querySelector("#card-episode-bar-watched").style.width = `${watchedPercentage}%`;
+//                 trigger.target.querySelector("#card-episode-num > span").innerText = `${node.nobyar.watched_episodes}[${node.nobyar.aired_episodes}]/${node.num_episodes || node.nobyar.aired_episodes}`;
 
-                // localStorage.setItem("nobyarV2", JSON.stringify(load));
-                savingUserData(load, "Entry window, User manual episode change")
-            }
-        }
+//                 // localStorage.setItem("nobyarV2", JSON.stringify(load));
+//                 const load = loadingUserData();
+//                 load[0].list[index] = node
+//                 savingUserData(load, "Entry window, User manual episode change")
+//             }
+//         }
 
-    } catch (error) {
-        sendError(error, node, "Error creating entry, createEntryWindow()");
-    }
-}
+//     } catch (error) {
+//         sendError(error, node, "Error creating entry, createEntryWindow()");
+//     }
+// }
 
 
 // ========================================================
-function toast(type, text){ // Create toast notification when executed
-    if(type=="notify"){
-        const notify = document.createElement("div")
-        notify.className = type
-        notify.innerHTML=`<p>${text}</p>`
-        notify.addEventListener("animationend", function(e){
-            this.remove()
-            // console.log("removed alert :",e)
-        })
-        document.querySelector("#alert").appendChild(notify)
-    }else if(type=="canvasAlert"){
-        const notify = document.createElement("div")
-        notify.className = type
-        notify.innerHTML=`<img src="${text}" style="float:left;">Schedule copied to clipboard</img>`
-        notify.addEventListener("animationend", function(e){
-            this.remove()
-            // console.log("removed alert :",e)
-        })
-        document.querySelector("#alert").appendChild(notify)
-    }
-}
+// function toast(type, text){ // Create toast notification when executed
+//     if(type=="notify"){
+//         const notify = document.createElement("div")
+//         notify.className = type
+//         notify.innerHTML=`<p>${text}</p>`
+//         notify.addEventListener("animationend", function(e){
+//             this.remove()
+//             // console.log("removed alert :",e)
+//         })
+//         document.querySelector("#alert").appendChild(notify)
+//     }else if(type=="canvasAlert"){
+//         const notify = document.createElement("div")
+//         notify.className = type
+//         notify.innerHTML=`<img src="${text}" style="float:left;">Schedule copied to clipboard</img>`
+//         notify.addEventListener("animationend", function(e){
+//             this.remove()
+//             // console.log("removed alert :",e)
+//         })
+//         document.querySelector("#alert").appendChild(notify)
+//     }
+// }
 
 // ========================================================
 function addMeanHistory(node){
@@ -638,51 +475,53 @@ function createHistoryChart(node){
 }
 
 function updateEntry(id,index,fresh){
-    getMalAPIDetail(id,"anime").then((response) => {
+    MALClient.detail(id,"anime").then(response => {
         let load = loadingUserData();
-        let parsedResponse = JSON.parse(response);
-        // console.log("New: ", parsedResponse);
+        // console.log("New: ", response);
         // console.log("Old: ", load[0].list[i]);
 
         let newData = Object.assign({}, load[0].list[index]);
 
-        for (let key in parsedResponse) {
-            if (parsedResponse[key] !== undefined && parsedResponse[key] !== newData[key]) {
+        for (let key in response) {
+            if (response[key] !== undefined && response[key] !== newData[key]) {
                 // console.log("Old: ", response[key]);
                 // console.log(newData[key], response[key]);
 
-                newData[key] = parsedResponse[key];
+                newData[key] = response[key];
             }
         }
+        // console.log(newData);
+        AnimeScheduleClient.searchByMALID({id:newData.id})
 
         // load[0].list[index] = updateMeanHistory(index,load,newData);
         load[0].list[index] = newData
         // console.log(newData,load[0].list[index]);
-        // localStorage.setItem("nobyarV2", JSON.stringify(load));  
+        // localStorage.setItem("nobyarV2", JSON.stringify(load));
         savingUserData(load, "Entry update")
+
 
         // extraData(index,id)
 
-        createcard(load[0].list[index], index);
+        // createcard(load[0].list[index], index);
         if(fresh){
             toast("notify", `Successfully added <b>"${load[0].list[index].title}"</b> to the list`);
         } else {
             toast("notify", `<b>"${load[0].list[index].title}"</b> data successfully updated`);
         }
     }).catch((err) => {
-        console.error(err);
-        let i = 0
         if (err.status>=500){
             // MAL Maintenance | 503
             toast('notify',`[${err.status} ${err.response[0].error}]\n${err.response[0].message}`)
-        }else if (i==0&&err.status>=400){
-            i=1
+        }else if (err.status>=400){
             if(cors_proxy=="https://cors-anywhere.herokuapp.com/"){
                 toast('notify','Open <b>https://cors-anywhere.herokuapp.com</b> and click <b>\'request temporary access to the demo server\'</b>')
                 window.open('https://cors-anywhere.herokuapp.com/', '_blank');
             }
+        }else{
+            console.error("Uh oh!\n"+err);
+            toast('notify',`${err}`)
+            sendError(err,`ID:${id}\nINDEX:${index}\nFRESH:${fresh}`,"Error updating entry data, updateAnime()");
         }
-        // sendError(err,load[0].list[i],"Error updating entry data, updateAnime():320");
         // createEntryWindow(node,index)
     });
 }
@@ -690,7 +529,7 @@ function updateEntry(id,index,fresh){
 function extraData(index,id,node){
     createHistoryChart(node);
     // GET anime page
-    getMalPage(id,"anime").then((response) => {
+    MALClient.page(id,"anime").then((response) => {
         try {
             // parse HTML
             const parser = new DOMParser().parseFromString(response, 'text/html');
@@ -789,16 +628,14 @@ function extraData(index,id,node){
             console.groupEnd()
 
             function mangaDetail(id){
-                getMalAPIDetail(id,"manga").then((response) => {
+                MALClient.detail(id,"manga").then((response) => {
                     console.groupCollapsed(`[Manga Detail] ${id}`)
-
-                    let resp = JSON.parse(response)
                     // console.log(resp)
                     let obj = {
                         "node": {
-                            "id": resp.id,
-                            "title": resp.title,
-                            "main_picture": resp.main_picture
+                            "id": response.id,
+                            "title": response.title,
+                            "main_picture": response.main_picture
                         },
                         "relation_type": "adaptation",
                         "relation_type_formatted": "Adaptation"
@@ -830,7 +667,13 @@ function extraData(index,id,node){
     })
 }
 
-function sortBroadcast(){
+function scheduleSort(){
+    // get malid's and use that for getting anisched slug to compare timetable
+    // malid > anisched slug > timetable
+    // AnimeScheduleClient.searchByMALID()
+    AnimeScheduleClient.checkSchedule()
+    // AnimeScheduleClient.testSlug("sousou-no-frieren")
+
     let sortedArray = loadingUserData()[0].list;
     sortedArray = sortedArray.filter(item => item.status === "currently_airing");
 
@@ -907,6 +750,7 @@ function sortBroadcast(){
 
     // Loop through the sorted array to find past and upcoming items
     for (let item of sortedArray) {
+        item.broadcast.day_of_the_week = item.broadcast.day_of_the_week.charAt(0).toUpperCase() + item.broadcast.day_of_the_week.slice(1);
         if(item.status=="currently_airing"){
             if (item.broadcast.day_of_the_week.toLowerCase() == currentDay) {
                 // console.log(item.broadcast.day_of_the_week.toLowerCase(),currentDay);
@@ -963,34 +807,104 @@ function sortBroadcast(){
         try {
             console.log(`${upcomingItems[i].broadcast.day_of_the_week} ${upcomingItems[i].broadcast.start_time} | ${upcomingItems[i].title}`);
             if(i==upcomingItems.length-1){
-                draw(upcomingItems)
+                // draw(sortedArray)
             }
         } catch (error) {
             console.error(error);
         }
     }
     console.groupEnd()
+
+    draw(sortedArray)
 }
 
 function draw(data) {
     console.log(data);
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-
+    const defaultHeight = 26
+    const textStart = 60
+    const paddingBottom = 14
+    const fontSize = 20
     // Set the canvas size to accommodate the text
-    canvas.width = 400; // Adjust this based on your needs
-    canvas.height = data.length * 16;
+    canvas.width = 600; // Adjust this based on your needs
+    canvas.height = (26 * (data.length+1)) + paddingBottom;
 
     // Set the background color to white by drawing a white rectangle
     context.fillStyle = 'white';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < data.length; i++) {
-        let text = `${data[i].broadcast.day_of_the_week}, ${data[i].broadcast.start_time} | ${data[i].title}`;
-        context.fillStyle = 'black';
-        context.fillText(text, 10, 15 * (i + 1));
+    // Get the current day of the week and time
+    let days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    let currentDate = new Date();
+    let currentDay = currentDate.toLocaleString('en-US', { weekday: 'long' }).toLowerCase(); // Use 'long' to get the full day name
+    let currentTime = currentDate.toLocaleTimeString('en-GB', { timeStyle: 'short' });
+    let currentTimeParts = currentTime.split(':');
+
+    // Header
+    context.fillStyle = '#37288f';
+    context.fillRect(0, 0, canvas.width, 40);
+    let text = `[Nobyar Schedule] [${getSeasonWithYear(currentDate)}] ${currentDay.charAt(0).toUpperCase()+currentDay.slice(1)}, ${currentTime}`;
+    context.font = `${fontSize}px` + ' ' + context.font.split(' ')[context.font.split(' ').length - 1];
+    context.fillStyle = 'white';
+    context.fillText(text, 10, defaultHeight);
+
+    function getSeasonWithYear(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // JavaScript months are zero-based (0-11)
+    
+        let season = "";
+    
+        if (month >= 1 && month <= 3) {
+            season = "Winter";
+        } else if (month >= 4 && month <= 6) {
+            season = "Spring";
+        } else if (month >= 7 && month <= 9) {
+            season = "Summer";
+        } else {
+            season = "Fall";
+        }
+    
+        return `${season} ${year}`;
     }
 
+    for (let i = 0; i < data.length; i++) {
+        let startTimeParts = data[i].broadcast.start_time.split(':');
+        let currentHour = parseInt(currentTimeParts[0]);
+        let currentMinute = parseInt(currentTimeParts[1]);
+    
+        let startHour = parseInt(startTimeParts[0]);
+        let startMinute = parseInt(startTimeParts[1]);
+    
+        // Calculate the time difference in minutes
+        let timeDifference = (startHour - currentHour) * 60 + (startMinute - currentMinute);
+        console.warn(timeDifference,data[i].title);
+    
+        if (data[i].broadcast.day_of_the_week.toLowerCase() == currentDay) {
+            // If Today
+            if (timeDifference >= -23 && timeDifference <= 0) {
+                // If within a range of 23 minutes, use green color
+                context.fillStyle = 'green';
+            } else if (timeDifference < -23) {
+                // If earlier today, use red color
+                context.fillStyle = 'red';
+            } else {
+                // If later today, use black color
+                context.fillStyle = 'black';
+            }
+        } else if (days.indexOf(data[i].broadcast.day_of_the_week.toLowerCase()) > days.indexOf(currentDay)) {
+            // If Tomorrow, use gray color
+            context.fillStyle = 'gray';
+        } else {
+            // If Yesterday, use red color
+            context.fillStyle = 'red';
+        }
+    
+        let text = `${data[i].broadcast.day_of_the_week}, ${data[i].broadcast.start_time} > ${data[i].title}`;
+        context.font = `${fontSize}px` + ' ' + context.font.split(' ')[context.font.split(' ').length - 1];
+        context.fillText(text, 10, textStart + (i * defaultHeight));
+    }
+    
     canvas.toBlob((blob) => {
         // Now you have a blob containing the canvas content
         // You can proceed to copy it to the clipboard or save it
@@ -1006,5 +920,9 @@ function draw(data) {
     const dataURI = canvas.toDataURL();
     toast("canvasAlert",dataURI)
     // Remove the canvas after it's been used
-    document.body.removeChild(canvas);
+    // document.body.removeChild(canvas);
+}
+} catch (error) {
+    toast('notify',`${error}`)
+    sendError(error, `List total: ${loadingUserData()[0].list.length}\nWebhook total: ${loadingUserData()[0].config[0].webhook.length}\n`, `Error executing script.js in nobyar`);
 }

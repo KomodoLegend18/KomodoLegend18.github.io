@@ -1,137 +1,4 @@
-import { string } from "./config.js";
-
-const malkey = "a5f40eba77d1d8f6e092d31aa2780f74"; //REMIND ME TO MAKE THIS A USER INPUT INSTEAD
-const anischedkey = "VKOt1Smvx4iS2yMlFbnYPloEpQiNFU";
-
-
-// Main function for HTTP request
-const clientRequest = (options) => {
-    const promise = new Promise((resolve, reject) => {
-        const {
-            method = "GET",
-            cors = false,
-            url,
-            async = true,
-            headers,
-            respType = "text",
-            data,
-        } = options;
-        // Check method
-        if (!["GET", "POST", "PATCH"].includes(method)) {
-            reject(
-                new Error(
-                    "Invalid method. Method must be one of 'GET', 'POST', or 'PATCH'."
-                )
-            );
-        }
-        // Check cors
-        if (typeof cors !== "boolean") {
-            reject(new Error("Invalid cors. Cors must be boolean"));
-        }
-        // Check url
-        if (!url) {
-            reject(new Error("URL is not specified."));
-        }
-        // Check async
-        if (typeof async !== "boolean") {
-            reject(new Error("Invalid async. Async must be boolean"));
-        }
-        // Check headers
-        if (headers) {
-            // console.log(headers);
-            if (typeof headers !== "object") {
-                reject(new Error("Invalid headers. Headers must be object"));
-            }
-        }
-        // Check respType
-        if (!["text", "document", "json"].includes(respType)) {
-            reject(
-                new Error(
-                    "Invalid responseType. type must be one of 'text', 'document', or 'json'."
-                )
-            );
-        }
-
-        const xhr = new XMLHttpRequest();
-        if (cors) {
-            // removed encodeuricomponent
-            // encodeuri now must be provided before requested
-            xhr.open(method, string.corsProxy + url, async);
-        } else {
-            xhr.open(method, url, async);
-        }
-        xhr.responseType = respType;
-        if (headers) {
-            for (const key in headers) {
-                xhr.setRequestHeader(key, headers[key]);
-            }
-        }
-        // xhr.setRequestHeader("Access-Control-Allow-Origin","*")
-        // xhr.setRequestHeader("Origin","https://komodolegend18.github.io/")
-        // xhr.abort()
-        xhr.onload = () => {
-            const respHeaders = xhr.getAllResponseHeaders();
-            const responseData = {
-                data: {
-                    result: xhr.response,
-                    status: xhr.status,
-                },
-                input: {
-                    method,
-                    cors,
-                    url,
-                    async,
-                    headers,
-                    respType,
-                    data,
-                },
-                respHeader: {
-                    respHeaders,
-                },
-            };
-
-            if (xhr.status >= 400) {
-                console.error(
-                    "Don't forget to encodeuricomponent() 😇\n",
-                    responseData
-                );
-                reject(new Error(responseData));
-            } else {
-                // console.log("Don't forget to encodeuricomponent() 😇\n",responseData);
-                resolve(responseData.data.result);
-            }
-        };
-        xhr.onerror = () => {
-            const respHeaders = xhr.getAllResponseHeaders();
-            const responseData = {
-                data: {
-                    result: xhr.response,
-                    status: xhr.status,
-                },
-                input: {
-                    method,
-                    cors,
-                    url,
-                    async,
-                    headers,
-                    respType,
-                    data,
-                },
-                respHeader: {
-                    respHeaders,
-                },
-            };
-            console.error(
-                "Don't forget to encodeuricomponent() 😇\n",
-                responseData
-            );
-            // sendError(new Error("ClientRequest ERROR"),JSON.stringify(responseData),"ClientRequest ERROR")
-            reject(new Error(responseData));
-        };
-        xhr.send(data);
-    });
-    return promise;
-};
+import {clientRequest} from "../modules/xhr.js"
 // clientRequest({
 //     method:"GET",
 //     url:"https://anidb.net/anime/16921",
@@ -174,189 +41,7 @@ const sendError = (error, data, additionalInfo) => {
     });
 };
 
-const AnimeScheduleClient = {
-    searchByAllMALID: function (options = {}) {
-        const { page = 1 } = options;
-        const filteredIDs = loadingUserData()[0]
-            .list.filter((item) => item.status === "currently_airing")
-            .map((item) => item.id)
-            .map((id) => "mal-ids=" + id)
-            .join("&");
-        const url = encodeURIComponent(
-            `https://animeschedule.net/api/v3/anime?page=${page}&mt=any&${filteredIDs}`
-        );
-        const headers = {
-            Authorization: "Bearer " + anischedkey,
-        };
-        clientRequest({
-            method: "GET",
-            url: url,
-            cors: true,
-            headers: headers,
-            respType: "json",
-        }).then((resp) => {
-            // if result total amount is more than 18 in current page
-            if (resp.totalAmount > 18 * page) {
-                AnimeScheduleClient.searchByAllMALID({ page: page + 1 });
-            }
-            console.log(resp);
-        });
-    },
-    searchByMALID: function (options = {}) {
-        const { id } = options;
-        const url = encodeURIComponent(
-            `https://animeschedule.net/api/v3/anime?mt=any&mal-ids=${id}`
-        );
-        console.warn(id);
-        const headers = {
-            Authorization: "Bearer " + anischedkey,
-        };
-        clientRequest({
-            method: "GET",
-            url: url,
-            cors: true,
-            headers: headers,
-            respType: "json",
-        }).then((resp) => {
-            // if result total amount is more than 18 in current page
-            return console.log(resp);
-        });
-    },
-    checkSchedule: function () {
-        function getParam() {
-            let currentDate = new Date();
 
-            let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            let year = currentDate.getFullYear();
-
-            currentDate.setHours(0, 0, 0, 0);
-            currentDate.setDate(
-                currentDate.getDate() + 3 - ((currentDate.getDay() + 6) % 7)
-            );
-            let w = new Date(year, 0, 4);
-            let week =
-                1 +
-                Math.round(
-                    ((currentDate.getTime() - w.getTime()) / 86400000 -
-                        3 +
-                        ((w.getDay() + 6) % 7)) /
-                        7
-                );
-
-            return `tz=${timezone}&year=${year}&week=${week}`;
-        }
-        const reqURL = encodeURIComponent(
-            `https://animeschedule.net/api/v3/timetables/raw?${getParam()}`
-        );
-        const reqHeaders = {
-            Authorization: "Bearer VKOt1Smvx4iS2yMlFbnYPloEpQiNFU",
-        };
-        clientRequest({
-            method: "GET",
-            url: reqURL,
-            cors: true,
-            headers: reqHeaders,
-            respType: "json",
-        }).then((resp) => {
-            const filtered = resp.filter((item) => item.donghua === false); // Monday first
-            const unaired = filtered.filter(
-                (item) => item.airingStatus === "unaired"
-            );
-            const sortbyDay = filtered.reduce((acc, item) => {
-                const date = new Date(item.episodeDate);
-                const day = date.getDay(); // Sunday first
-                if (!acc[day]) {
-                    acc[day] = [];
-                }
-                acc[day].push(item);
-                return acc;
-            }, []);
-            console.log(
-                "Full:\n",
-                resp,
-                "Filtered:\n",
-                filtered,
-                "Unaired:\n",
-                unaired,
-                "sorted by day:\n",
-                sortbyDay
-            );
-            return sortbyDay;
-        });
-    },
-    testSlug: function (query) {
-        const url = encodeURIComponent(
-            `https://animeschedule.net/api/v3/anime/${query}`
-        );
-        const headers = {
-            Authorization: "Bearer VKOt1Smvx4iS2yMlFbnYPloEpQiNFU",
-        };
-        return clientRequest({
-            method: "GET",
-            url: url,
-            cors: true,
-            headers: headers,
-            respType: "json",
-        });
-    },
-};
-
-// MAL related request
-export const MALClient = {
-    search: function (query) {
-        const url = encodeURIComponent(
-            `https://api.myanimelist.net/v2/anime?q=${query}&${string.anime}`
-        );
-        const headers = {
-            "X-MAL-CLIENT-ID": malkey,
-        };
-
-        return clientRequest({
-            method: "GET",
-            url: url,
-            cors: true,
-            headers: headers,
-            respType: "json",
-        });
-    },
-    page: function (id, type) {
-        const url =
-            type === "anime"
-                ? `https://myanimelist.net/anime/${id}`
-                : `https://myanimelist.net/manga/${id}`;
-
-        return clientRequest({
-            method: "GET",
-            url: url,
-            respType: "text",
-            cors: true,
-        });
-    },
-    detail: function (id, type) {
-        try {
-            const url =
-                type === "anime"
-                    ? encodeURIComponent(
-                          `https://api.myanimelist.net/v2/anime/${id}?${string.anime}`
-                      )
-                    : encodeURIComponent(
-                          `https://api.myanimelist.net/v2/manga/${id}?${string.manga}`
-                      );
-            const headers = {
-                "X-Mal-Client-Id": malkey,
-            };
-            return clientRequest({
-                method: "GET",
-                url: url,
-                cors: true,
-                headers: headers,
-                respType: "json",
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    },
-};
 
 const getAnimeScoreHistory = (query) => {
     const promise = new Promise((resolve, reject) => {
@@ -364,7 +49,7 @@ const getAnimeScoreHistory = (query) => {
         const xhr = new XMLHttpRequest();
         xhr.open(
             "GET",
-            `${string.corsProxy}https://anime-stats.net/api/v4/anime/show/${query}`,
+            `${corsProxy}https://anime-stats.net/api/v4/anime/show/${query}`,
             true
         );
         xhr.responseType = "json";
@@ -401,7 +86,7 @@ const clientGET = (url) => {
     const promise = new Promise((resolve, reject) => {
         // console.warn(query)
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", `${string.corsProxy}${encodeURIComponent(url)}`, true);
+        xhr.open("GET", `${corsProxy}${encodeURIComponent(url)}`, true);
 
         // xhr.responseType = 'json';
         // xhr.setRequestHeader("Access-Control-Allow-Origin","*")
@@ -438,7 +123,7 @@ const kuramaTokenPOST = (url, token) => {
     const promise = new Promise((resolve, reject) => {
         // console.warn(query)
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${string.corsProxy}${encodeURIComponent(url)}`, true);
+        xhr.open("POST", `${corsProxy}${encodeURIComponent(url)}`, true);
 
         xhr.responseType = "json";
         xhr.setRequestHeader("X-Csrf-Token", `${token}`);
