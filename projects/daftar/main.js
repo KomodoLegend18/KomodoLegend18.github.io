@@ -4,6 +4,10 @@ import { clientRequest } from "../modules/xhr.js";
 import { AnimeScheduleClient } from "../modules/aniSched.js";
 import { userData } from "./scripts/functions.js";
 
+document.querySelector(`[data-func="reset"]`).addEventListener("click",(event)=>{
+    userData.reset("DaFTAR");
+})
+
 function process(param) {
     const {data} = param
     // console.log("param\n",data);
@@ -101,12 +105,19 @@ function process(param) {
                 }
             })
         });
-
         // Output IDs that were not found in any MAL website
         const IDnotFound = MALids.filter(id => !IDfound.includes(id));
         if (IDnotFound.length > 0) {
             IDnotFound.forEach(id => {
-                console.error(`Anime ID ${id} does not have a MAL website.`);
+                const card = document.querySelector(`[data-id="${id}"]`)
+                if (card.querySelector(".card-stream").children.length===0) {
+                    card.querySelector(".card-stream").setAttribute("data-hide","true")
+                }
+                // if (elem.querySelector(".card-stream").childElementCount<1) {
+                //     console.log(elem.querySelector(".card-stream"));
+                //     elem.querySelector(".card-stream").setAttribute("data-hide","true")
+                // }
+                console.error(`Unable to find Anime ID ${id} in AniSched Database`);
             });
         }
         // console.warn(userData.load("DaFTAR"));
@@ -126,7 +137,7 @@ const card = {
             websites
         } = data
         const elem = document.querySelector(`[data-id="${id}"]`)
-        // console.log(elem);
+        console.log(data);
         Object.keys(data).forEach(key => {
             const tag = elem.querySelector(`[data-info="${key}"]`)
             if(key=="episode_aired"){
@@ -159,9 +170,10 @@ const card = {
                     // </span>`
                 // }
             } else {
+                // insert data to innerHTMl
                 tag.innerHTML = data[key]
             }
-            
+            // console.log(elem.querySelector(".card-stream").childElementCount);
         });
 
     },
@@ -196,6 +208,9 @@ const card = {
             <p>${entry.title}</p>
         </div>`
         elem.setAttribute("data-id", entry.id)
+        elem.addEventListener("click",function(){
+            window.open(`${window.location.origin}/projects/daftar/details/?id=${entry.id}`)
+        })
         document.querySelector("main").appendChild(elem)
         console.log(`[Card > Create] ${entry.title}`);
     }

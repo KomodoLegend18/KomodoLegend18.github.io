@@ -430,7 +430,7 @@ export const userData = {
         }
     },
     save: (key,data,info) => {
-        if (data){
+        if (key&&data){
             localStorage.setItem( key , JSON.stringify(data) )
             console.groupCollapsed(`[Save] ${info}`)
             console.log("[Save] Saving...",data)
@@ -439,11 +439,16 @@ export const userData = {
         }
     },
     reset:(key) => {
-        let confirmation = window.confirm(`Delete ${key}?`)
-        if (confirmation) {
-            localStorage.removeItem(key)
-        } else {
-            window.alert(`${key} deletion canceled`)
+        if (key) {
+            let confirmation = window.confirm(`Delete ${key}?`)
+            if (confirmation) {
+                localStorage.removeItem(key)
+                setTimeout(() => {
+                    location.reload()
+                }, 1000);
+            } else {
+                window.alert(`${key} deletion canceled`)
+            }
         }
     }
 }

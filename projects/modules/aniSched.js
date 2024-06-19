@@ -23,6 +23,7 @@ export const AnimeScheduleClient = {
                 id = id.map(id => `mal-ids=${id}`).join('&');                
                     // console.error(error);
             } else {
+                id = `mal-ids=${id}`;
                 console.warn("ID Input:\n",id);   
             }
 
@@ -39,6 +40,7 @@ export const AnimeScheduleClient = {
                 headers: headers,
                 respType: "json",
             })
+            console.warn(resp);
             resp.anime.forEach(item => {
                 // console.log(item);
                 result.push(item)
@@ -46,7 +48,7 @@ export const AnimeScheduleClient = {
             // if result total amount is more than 18 in current page
             if (resp.totalAmount > 18 * page) {
                 // debugger;
-                return await AnimeScheduleClient.searchByMALID({ page: page + 1,id:id,result:result});
+                // return await AnimeScheduleClient.searchByMALID({ page: page + 1,id:id,result:result});
             } else {
                 // console.log(resp);
 

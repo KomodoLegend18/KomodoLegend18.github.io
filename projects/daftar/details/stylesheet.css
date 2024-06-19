@@ -30,6 +30,12 @@ body{
     -webkit-user-select: none;
     user-select: none;
 }
+#historyChart{
+    padding:0;
+}
+#historyChart *{
+    padding:0;
+}
 header{
     position: sticky;
     top: 0;
@@ -76,8 +82,12 @@ main div{
 }
 main #left{
     /* outline: 1px orange dotted; */
+    grid-column: span 1;
+    width: 100%;
+    max-width: calc(100% - 20px);
     border-radius: 10px;
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.267);
+    overflow: hidden;
 }
 #left #title{
     border-radius: 10px;
@@ -88,12 +98,34 @@ main #left{
     /* position: sticky; */
     /* top: 10vh; */
 }
+#left #title span{
+    display: none;
+}
+#left #title:hover span{
+    display: inline-block;
+}
+#left #title a{
+    text-decoration: none;
+    color:inherit;
+}
+#left #title:hover a{
+    text-decoration: underline;
+    color:inherit;
+}
 #left #poster{
-    background-color: var(--menu-color);
-    margin: 0 auto;
-    aspect-ratio: 3/4;
-    width: 250px;
-    outline: 1px yellow dotted;
+    padding: 0;
+    /* outline: 1px yellow dotted; */
+}
+#left #poster img{
+    display: block;
+    width: auto; /* Set width to auto so it adjusts proportionally */
+    max-width: 100%; /* Ensure the image doesn't exceed its container width */
+    height: auto; /* Allow the height to adjust proportionally */
+    max-height: 300px; /* Limit the maximum height */
+    margin: 0 auto; /* Center the image horizontally */
+
+    border-radius: 5px;
+    /* outline: 1px yellow dotted; */
 }
 #left #overview{
     margin: 15px 0 0 0;
@@ -184,9 +216,11 @@ main #left{
 }
 .stats-number{
     text-align: center;
+    text-transform: capitalize;
 }
 main #center{
     /* outline: 1px navajowhite dotted; */
+    grid-column: span 1;
     border-radius: 10px;
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.267);
 }
@@ -225,10 +259,79 @@ main #center{
 }
 main #right{
     /* outline: 1px orange dotted; */
+    grid-column: span 1;
     border-radius: 10px;
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.267);
 }
+#recommendation{
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    background: var(--header-color);
+    position: relative;
+    padding: 0;
+    /* outline: 1px dotted yellow; */
+    border-radius: 10px;
+    width: 100%;
+    height: auto;
+}
+#recommendation p{
+    text-align: center;
+    flex: 0 0 100%;
+}
+#recommendation #rec_none{
+    background: var(--menu-color);
+    flex: 0 0 100%;
+}
+#recommendation .rec_item{
+    flex: 1 0 calc(50%);
+    padding: 0;
+    position: relative;
+    width: 100%;
+    background: var(--menu-color);
+}
+#recommendation .rec_item:hover img{
+    /* position: absolute; */
+    /* z-index: 99; */
+    transform: scale(101%);
+    transition: var(--transition-time) ease;
+    background: #2c2c2c;
+}
+#recommendation .rec_item img{
+    width: 100%;
+    padding: 0;
+    transition: var(--transition-time) ease;
+}
+#recommendation .rec_item:hover div{
+    display: block;
+}
+#recommendation .rec_item_title{
+    display: none;
+    padding: 0;
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: var(--background-color);
+    /* outline: 1px dotted yellow; */
+}
+#recommendation .rec_item_users{
+    display: none;
+    border-radius: 0 10px 0 0 ;
+    position: absolute;
+    bottom: 0;
+    background: var(--background-color);
+    /* outline: 1px dotted yellow; */
+}
+#recommendation .rec_item_users:hover::before{
+    content: "Recommended by MAL Users: ";
+    position: relative;
+    bottom: 0;
+    background: var(--background-color);
+    /* outline: 1px dotted yellow; */
+}
 /* -------------------------------------------------------- */
+/* Menu */
 aside {
     background-color: var(--menu-color);
     height: 92%;
