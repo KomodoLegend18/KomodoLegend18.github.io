@@ -3,6 +3,8 @@
 import { MALClient } from "../../modules/MAL.js";
 import { AnimeScheduleClient } from "../../modules/aniSched.js";
 import { AnimeStatClient } from "../../modules/aniStat.js";
+import { AnimeThemesClient } from "../../modules/aniThemes.js";
+import { mediaPlayer } from "../../modules/mediaPlayer.js";
 import { clientRequest } from "../../modules/xhr.js";
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -237,6 +239,74 @@ function createHistoryChart(node){
     chart.draw(data, options);
     }
 }
+function createOPED(id) {
+    AnimeThemesClient.MALid(id).then(resp=>{
+        const entryData = resp.anime[0]
+        const songs = entryData.animethemes
+        const container = document.querySelector("#themesongs")
+        songs.forEach((item,index)=>{
+            const s = document.createElement("div")
+            s.className = "songs"
+            s.innerHTML = `
+                <div class="songType">${item.type}</div>
+                <div class="songEpisode">${item.animethemeentries[0].episodes}</div>
+                <div class="songTitle">${item.song.title}</div>
+                <div class="songArtist"></div>
+                <div class="songTags"></div>`
+            console.warn(item);
+            
+            const artistNames = item.song.artists.map(artist => {
+                if (artist.artistsong.as) {
+                    return `${artist.artistsong.as} (${artist.name})`;
+                } else {
+                    return artist.name;
+                }
+            }).join(', ');
+            s.querySelector(".songArtist").innerHTML = artistNames;
+            s.addEventListener("click",function(){
+                playOPED({
+                    data:entryData,
+                    index:index
+                })
+            })
+            // console.log(index);
+            container.appendChild(s)
+        })
+        console.log(resp);
+    }).catch(err=>{
+        console.error(err);
+    })
+}
+function playOPED(options) {
+    const {
+        index,
+        data
+    } = options
+    if (data&&index>=0) {
+        const selected = data.animethemes[index]
+        const qualities = []
+        console.warn(index,selected);
+        mediaPlayer.create({
+            source:selected.animethemeentries[0].videos[0].link,
+            poster:data.images[1].link,
+            target:document.body
+        })
+        selected.animethemeentries[0].videos.forEach(item=>{
+            const quality = {
+                link:item.link,
+                name:`${item.resolution}p (${item.source})`
+            }
+            qualities.push(quality)
+        })
+        const audio = {
+            link:selected.animethemeentries[0].videos[0].audio.link,
+            name:"Audio Only"
+        }
+        qualities.push(audio)
+        mediaPlayer.qualities(qualities)
+    }
+    
+}
 function detailDisplay(data) {
     console.log(data);
 
@@ -309,39 +379,46 @@ function detailDisplay(data) {
         console.warn(error);
     }
 
+    // Genre
+    try {
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(1) > div.data-value").innerHTML = `${data.genres?data.genres.map(item=>item.name).join(", "):"???"}`
+    } catch (error) {
+        console.warn(error);
+    }
+
     // Episodes
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(1) > div.data-value").innerHTML = `${data.num_episodes?data.num_episodes:"???"}`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(2) > div.data-value").innerHTML = `${data.num_episodes?data.num_episodes:"???"}`
     } catch (error) {
         console.warn(error);
     }
 
     // Duration
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(2) > div.data-value").innerHTML = `${formatDuration(data.average_episode_duration?data.average_episode_duration:0)}<br><br>(*Total: ${formatDuration(data.average_episode_duration?data.average_episode_duration*data.num_episodes:0)})<h5>*including opening and ending</h5>`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(3) > div.data-value").innerHTML = `${formatDuration(data.average_episode_duration?data.average_episode_duration:0)}<br><br>(*Total: ${formatDuration(data.average_episode_duration?data.average_episode_duration*data.num_episodes:0)})<h5>*including opening and ending</h5>`
     } catch (error) {
         console.warn(error);
     }
 
     // Status
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(3) > div.data-value").innerHTML = `${data.status?data.status.replace(/_/g, " "):"???"}`
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(3) > div.data-value").style = `text-transform:capitalize;`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(4) > div.data-value").innerHTML = `${data.status?data.status.replace(/_/g, " "):"???"}`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(4) > div.data-value").style = `text-transform:capitalize;`
     } catch (error) {
         console.warn(error);
     }
 
     // Aired
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(4) > div.data-value").innerHTML = `${formatDate(data.start_date?data.start_date:0).formatted} - ${formatDate(data.end_date?data.end_date:0).formatted} (${formatRelativeDate(data.start_date,data.end_date)})`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(5) > div.data-value").innerHTML = `${formatDate(data.start_date?data.start_date:0).formatted} - ${formatDate(data.end_date?data.end_date:0).formatted} (${formatRelativeDate(data.start_date,data.end_date)})`
     } catch (error) {
         console.warn(error);
     }
 
     // Broadcast
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(5) > div.data-value").innerHTML = `${data.broadcast.day_of_the_week?data.broadcast.day_of_the_week:"???"}, ${data.broadcast.start_time ? data.broadcast.start_time + " JST" : ""} `
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(5) > div.data-value").style = `text-transform:capitalize;`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(6) > div.data-value").innerHTML = `${data.broadcast.day_of_the_week?data.broadcast.day_of_the_week:"???"}, ${data.broadcast.start_time ? data.broadcast.start_time + " JST" : ""} `
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(6) > div.data-value").style = `text-transform:capitalize;`
     } catch (error) {
         console.warn(error);
     }
@@ -350,7 +427,7 @@ function detailDisplay(data) {
     try {
         AnimeStatClient.entry({query:data.id}).then(resp=>{
             let t = resp.data.anime.producers
-            document.querySelector("#overview > div:nth-child(3) > div:nth-child(6) > div.data-value").innerHTML = `${t.map(item=>item.name).join(", ")}`
+            document.querySelector("#overview > div:nth-child(3) > div:nth-child(7) > div.data-value").innerHTML = `${t.map(item=>item.name).join(", ")}`
             
             console.log(t);
         }).catch(err=>{
@@ -362,14 +439,14 @@ function detailDisplay(data) {
     
     // Studios
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(7) > div.data-value").innerHTML = `${data.studios.map(id=>id.name).join(', ')}`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(8) > div.data-value").innerHTML = `${data.studios.map(id=>id.name).join(', ')}`
     } catch (error) {
         console.warn(error);
     }
 
     // Age Rating
     try {
-        document.querySelector("#overview > div:nth-child(3) > div:nth-child(8) > div.data-value").innerHTML = `${formatAgeRating(data.rating)}`
+        document.querySelector("#overview > div:nth-child(3) > div:nth-child(9) > div.data-value").innerHTML = `${formatAgeRating(data.rating)}`
     } catch (error) {
         console.warn(error);
     }
@@ -393,6 +470,13 @@ function detailDisplay(data) {
         createHistoryChart(data)
     } catch (error) {
         console.warn(error);
+    }
+
+    // OP & ED
+    try {
+        createOPED(data.id)
+    } catch (error) {
+        console.warn(error)
     }
 
     // Recommendation

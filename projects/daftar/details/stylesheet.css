@@ -257,6 +257,43 @@ main #center{
     background-size: cover;
     height: 100%;
 }
+#center #themesongs{
+    /* outline: 1px dotted yellow; */
+    padding: 0;
+}
+#center #themesongs .songs{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    /* outline: 1px dashed yellow; */
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.267);
+}
+#center #themesongs .songs:hover{
+    outline: 1px white solid;
+}
+#center #themesongs .songs .songType{
+    /* outline: 1px dotted yellow; */
+    grid-column: span 1;
+}
+#center #themesongs .songs .songEpisode{
+    /* outline: 1px dotted yellow; */
+    grid-column: span 3;
+}
+#center #themesongs .songs .songTags{
+    /* outline: 1px dotted yellow; */
+    grid-column: span 4;
+}
+#center #themesongs .songs .songTitle{
+    /* outline: 1px dotted yellow; */
+    text-decoration: underline;
+    grid-column: span 4;
+}
+#center #themesongs .songs .songArtist{
+    /* outline: 1px dotted yellow; */
+    grid-column: span 4;
+}
 main #right{
     /* outline: 1px orange dotted; */
     grid-column: span 1;
