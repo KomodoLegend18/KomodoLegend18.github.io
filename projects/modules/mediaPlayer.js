@@ -17,13 +17,6 @@ export const mediaPlayer = {
                     <option value="" selected hidden>No data</option>
                 </select>
             </div>
-            <div class="settingItems">
-                <label for="sync2Host">Automatically sync to host: </label>
-                <select name="sync2Host" id="syncMode">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-            </div>
             <div class="settingItems notImplemented">
                 <label for="aniSkip">When available, Automatically skip opening & ending: </label>
                 <select name="aniSkip" id="">
