@@ -4,8 +4,89 @@ import { clientRequest } from "../modules/xhr.js";
 import { AnimeScheduleClient } from "../modules/aniSched.js";
 import { userData } from "./scripts/functions.js";
 
+document.querySelector(`[data-func="refresh"]`).addEventListener("click",(event)=>{
+    location.reload();
+})
 document.querySelector(`[data-func="reset"]`).addEventListener("click",(event)=>{
     userData.reset("DaFTAR");
+})
+document.querySelector(`[data-func="schedule"]`).addEventListener("click",(event)=>{
+    document.querySelector("main").innerHTML = ""
+    document.querySelector(`[data-func="schedule"]`).style = `display:none`
+
+    AnimeScheduleClient.checkSchedule("all").then(resp => {
+        console.warn("Schedule", resp);
+    
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('u');
+    
+        MALClient.user({ username }).then(response => {
+            console.warn(response);
+    
+            const save_data = userData.load("DaFTAR");
+            console.warn(save_data);
+    
+            const responseIds = new Set(response.data.map(item => item.node.id));
+            const storedRoutes = new Set(save_data.map(item => item.route));
+    
+            const filteredSchedule = resp.filter(item => {
+                const correspondingSaveData = save_data.find(dataItem => dataItem.route === item.route);
+                return correspondingSaveData && responseIds.has(correspondingSaveData.id);
+            });
+            filteredSchedule.forEach(item=>{
+                const day = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+                const date = new Date(item.episodeDate)
+                const dateOpt = {
+                    year: 'numeric',
+                    month: 'long', // Use 'short' for abbreviated month names
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true // Change to false for 24-hour time
+                }
+                const dateFormat = new Intl.DateTimeFormat("en-US",dateOpt)
+
+                const schedCard = document.createElement("div")
+                schedCard.innerText = `
+                ${day[date.getDay()]}
+                ${dateFormat.format(date)}
+                `
+                schedCard.style = `grid-column:span var(--card-column-count); display:grid; grid-template-columns: repeat(3, 1fr);padding:10px;border-radius:10px;box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.267);`
+                if (new Date().getTime()>date.getTime()) {
+                    schedCard.style.background = `var(--menu-color)`
+                }
+
+                const poster = document.createElement("div")
+                poster.style.background = `url(https://img.animeschedule.net/production/assets/public/img/${item.imageVersionRoute}) no-repeat`
+                poster.style.backgroundSize = `cover`
+                poster.style.width = `100%`
+                poster.style.aspectRatio = `3/4`
+
+                const detail = document.createElement("div")
+                detail.style.float = `left`
+                detail.style.padding = `10px`
+                detail.innerText = `
+                ${item.title}
+                \n
+                Ep.${item.episodeNumber}/Ep.${item.episodes}
+                `
+
+                schedCard.appendChild(poster)
+                schedCard.appendChild(detail)
+
+                document.querySelector("main").appendChild(schedCard)
+
+                document.querySelector(`[data-func="refresh"]`).style = ``
+            })
+            console.log("Filtered Schedule:", filteredSchedule);
+    
+        }).catch(err => {
+            console.error(err);
+        });
+    }).catch(err => {
+        console.error("Error fetching schedule:", err);
+    });
 })
 
 function process(param) {
@@ -208,7 +289,10 @@ const card = {
             <p>${entry.title}</p>
         </div>`
         elem.setAttribute("data-id", entry.id)
-        elem.addEventListener("click",function(){
+        const openDetail = document.createElement("div")
+        openDetail.style = `width:100%;height:100%`
+        elem.appendChild(openDetail)
+        openDetail.addEventListener("click",function(){
             window.open(`${window.location.origin}/projects/daftar/details/?id=${entry.id}`)
         })
         document.querySelector("main").appendChild(elem)
@@ -219,6 +303,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const checkParam = urlParams.has("u")
 if (checkParam) {
     document.querySelector(".header-title").innerHTML = `${urlParams.get('u')} > Currently Watching`
+    userSearch()
     MALClient.user({
         username:`${urlParams.get('u')}`
     }).then(response=>{
@@ -230,18 +315,73 @@ if (checkParam) {
         console.error(err);
     })
 }else{
-    document.querySelector(".header-title").innerHTML = `KomodoLegend18 > Currently Watching`
+    document.querySelector(".header-title").innerHTML = `Welcome`
+    userSearch()
+    // MALClient.user({
+    //     username:`KomodoLegend18`
+    // }).then(response=>{
+    //     console.warn(response);
+    //     process({data:response.data})
+    //     card.load(response)
+    //     // userData.save("DaFTAR",response,"[MAL LIST] Saved")
+    // }).catch(err=>{
+    //     console.error(err);
+    // })
+}
 
-    MALClient.user({
-        username:`KomodoLegend18`
-    }).then(response=>{
-        console.warn(response);
-        process({data:response.data})
-        card.load(response)
-        // userData.save("DaFTAR",response,"[MAL LIST] Saved")
-    }).catch(err=>{
-        console.error(err);
-    })
+function userSearch() {
+    // Create a new form element
+    const formElement = document.createElement('form');
+    formElement.id = "userInput"
+    // Create a new input element (text type)
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.placeholder = 'MAL Username';
+    inputElement.name = 'textInput'; // Set name attribute for form submission
+
+    // Create a new submit button element
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.innerHTML = `<span class="material-symbols-outlined">
+    search
+    </span>`;
+
+    // Append input and submit button elements to the form
+    formElement.appendChild(inputElement);
+    formElement.appendChild(submitButton);
+
+    // Add event listener to form submission
+    formElement.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        inputElement.placeholder = `Submitting...`
+
+
+        // Get form data using FormData API
+        const formData = new FormData(formElement);
+        const inputValue = formData.get('textInput'); // Get input value by name
+
+        console.log('Submitted username:', inputValue);
+        MALClient.user({
+            username:inputValue
+        }).then(response=>{
+            window.location.href = `${window.location.origin}/projects/daftar/?u=${inputValue}`
+            console.warn(response);
+            // process({data:response.data})
+            // card.load(response)
+            // userData.save("DaFTAR",response,"[MAL LIST] Saved")
+        }).catch(err=>{
+            inputElement.placeholder = err
+            console.error(err);
+        })
+
+        // Example action with input value (log to console)
+
+        // Optionally, clear the input field after submission
+        inputElement.value = '';
+    });
+
+    // Append the form element to the body or any desired parent element
+    document.body.querySelector("main").appendChild(formElement);
 }
 
 window.addEventListener("load", (event) => {

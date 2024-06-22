@@ -1,13 +1,28 @@
-:root{
-    --background-color: #2c2c2c;
-    --header-color: brown;
-    --menu-color: rgb(87, 23, 23);
-    --font-color: #fff;
-    --font-size-1: 1em;
-    --header-icon-size:2em;
-    --transition-time:150ms;
-    --card-column-count: 5;
-    --transition: all 150ms ease-in-out;
+@media (orientation: portrait) {
+    :root{
+        --background-color: #2c2c2c;
+        --header-color: brown;
+        --menu-color: rgb(87, 23, 23);
+        --font-color: #fff;
+        --font-size-1: 1em;
+        --header-icon-size:2em;
+        --transition-time:150ms;
+        --card-column-count: 2;
+        --transition: all 150ms ease-in-out;
+    }
+}
+@media (orientation: landscape) {
+    :root{
+        --background-color: #2c2c2c;
+        --header-color: brown;
+        --menu-color: rgb(87, 23, 23);
+        --font-color: #fff;
+        --font-size-1: 1em;
+        --header-icon-size:2em;
+        --transition-time:150ms;
+        --card-column-count: 5;
+        --transition: all 150ms ease-in-out;
+    }
 }
 [data-hide="true"]{
     display: none !important;
@@ -183,6 +198,7 @@ aside button{
     overflow: hidden;
 }
 .card:hover .card-stream{
+    z-index: 999;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
@@ -242,4 +258,33 @@ aside button{
 }
 .card:hover .card-score{
     opacity: 1;
+}
+#userInput{
+    margin-top: 15px;
+    grid-column: span var(--card-column-count);
+    justify-self: center;
+    align-self: center;
+}
+#userInput *:not(span){
+    vertical-align: middle;
+    outline: 1px black solid;
+    border: 0;
+    padding: 5px;
+    margin: 0;
+    font-size: 21px;
+}
+#userInput input{
+    width: 50vw;
+    border-radius: 10px 0 0 10px;
+}
+#userInput button{
+    vertical-align: middle;
+    overflow: hidden;
+    /* width: 10vw; */
+    border-radius: 0 10px 10px 0;
+    aspect-ratio: 1/1;
+}
+#userInput button span{
+    vertical-align: middle;
+    position: relative;
 }
