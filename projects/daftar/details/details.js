@@ -254,7 +254,17 @@ function createOPED(id) {
                 <div class="songArtist"></div>
                 <div class="songTags"></div>`
             console.warn(item);
-            
+
+            const tags = []
+            if (item.animethemeentries[0].nsfw) {
+                tags.push("NSFW")
+            }
+            if (item.animethemeentries[0].spoiler) {
+                tags.push("SPOILER")
+            }
+            s.querySelector(".songTags").innerHTML = tags.join(", ")
+            // console.warn(tags);
+
             const artistNames = item.song.artists.map(artist => {
                 if (artist.artistsong.as) {
                     return `${artist.artistsong.as} (${artist.name})`;
@@ -286,10 +296,36 @@ function playOPED(options) {
         const selected = data.animethemes[index]
         const qualities = []
         console.warn(index,selected);
+        const dimBG = document.createElement("div")
+        dimBG.style = `
+            background-color: rgba(0, 0, 0, 0.9); 
+            backdrop-filter: blur(5px);
+            width: 100%; 
+            height: 100%;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            position: fixed; 
+            z-index: 5;
+        `
+        dimBG.addEventListener("click",function(e){
+            console.warn(e);
+
+            // fix media still playing after removal
+            dimBG.querySelector("video").pause();
+            dimBG.querySelector("video").removeAttribute("src");
+            dimBG.querySelector("video").load();
+
+            // remove element along with childrens
+            dimBG.remove()
+        })
+        document.body.appendChild(dimBG)
+
         mediaPlayer.create({
             source:selected.animethemeentries[0].videos[0].link,
             poster:data.images[1].link,
-            target:document.body
+            target:dimBG,
+            width:"75vw"
         })
         selected.animethemeentries[0].videos.forEach(item=>{
             const quality = {

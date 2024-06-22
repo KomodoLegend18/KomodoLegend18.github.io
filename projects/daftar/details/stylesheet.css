@@ -371,7 +371,7 @@ main #right{
 /* Menu */
 aside {
     background-color: var(--menu-color);
-    height: 92%;
+    height: 100%;
     width: 25%;
     min-width: 300px;
     position: fixed;
