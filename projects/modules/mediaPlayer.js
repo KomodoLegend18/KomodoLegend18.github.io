@@ -4,11 +4,13 @@ export const mediaPlayer = {
         const {
             source,
             poster,
-            target
+            target,
+            width = "70vw"
         } = options;
         const container = document.createElement("div")
         container.className = "vidContainer"
-        // container.innerHTML =``
+        container.style.width = width
+        container.style.boxShadow = "0px 0px 5px 2px rgba(0, 0, 0, 0.267)"
         container.innerHTML = `
         <div class="vidSettingOverlay">
             <div class="settingItems">
@@ -93,14 +95,19 @@ export const mediaPlayer = {
             const fullscreen_button = target.querySelector(".vidcontrols > #fullscreen-container > span")
             const buffer_overlay = target.querySelector(".vidContainer > .bufferOverlay")
             play_button.addEventListener("click", function(e){
+                console.log(e);
+                e.stopPropagation();
                 togglePlay()
             })
             player.addEventListener('click', function(e) {
-                // console.log(e.target);
+                console.log(e);
+                e.stopPropagation();
                 togglePlay()
             });
             progress_input.addEventListener("input", function(e){
-                // console.log(e.target.value);
+                e.stopPropagation();
+                console.log(e);
+
                 const seek = e.target.value
                 player.currentTime = seek
         
@@ -108,17 +115,35 @@ export const mediaPlayer = {
                 progress_bar.value = seek + 10
                 progress_input.attributes[1].value = `${seek}`
             })
+            progress_input.addEventListener("click", function(e){
+                e.stopPropagation();
+                console.log(e);
+            })
             mute_button.addEventListener("click",function(e){
+                e.stopPropagation();
+                console.log(e);
+
                 toggleMute();
             })
             volume_input.addEventListener("input",function(e){
+                e.stopPropagation();
+                console.log(e);
+
                 const vol = e.target.value
                 player.volume = vol
             })
+            volume_input.addEventListener("click",function(e){
+                e.stopPropagation();
+                console.log(e);
+            })
             setting_button.addEventListener("click", function(e){
+                e.stopPropagation();
+
                 toggleSetting();
             })
             quality_setting.addEventListener("change", function(e) {
+                e.stopPropagation();
+
                 // The value of the selected option
                 var value = e.target.value;
         
@@ -131,7 +156,12 @@ export const mediaPlayer = {
                 console.log("Selected option value: " + value);
                 console.log("Selected option text: " + text);
             });
+            quality_setting.addEventListener("click", function(e) {
+                e.stopPropagation();
+            });
             fullscreen_button.addEventListener("click", function(e){
+                e.stopPropagation();
+
                 toggleFullscreen();
             })
             // Skip opening
@@ -232,11 +262,15 @@ export const mediaPlayer = {
                 }
             });
             // Toggle controls visibility
-            player_element.addEventListener('mousemove', function() {
+            player_element.addEventListener('mousemove', function(e) {
+                e.stopPropagation();
+
                 hideControls();
             });
-            player_element.addEventListener('mouseout', function() {
-                hideControls();
+            player_element.addEventListener('mouseout', function(e) {
+                e.stopPropagation();
+
+                hideControls(true);
             });
     
             // Try to load video
@@ -388,7 +422,7 @@ export const mediaPlayer = {
                 }
             }
             
-            function hideControls() {
+            function hideControls(forced) {
                 clearTimeout(hidePlayerControlsTimer);
             
                 // console.log("[hideControls] paused: ",player.paused);
@@ -400,17 +434,28 @@ export const mediaPlayer = {
                     } else if (document.webkitFullscreenElement) {
                         document.webkitFullscreenElement.style.cursor = "default"
                     }
-            
-                    hidePlayerControlsTimer = setTimeout(function() {
+
+                    if (!forced||forced===false) {
+                        hidePlayerControlsTimer = setTimeout(function() {
+                            player_element.querySelector(".vidcontrols").classList.add("hidden");
+                            player.style.cursor = "none"
+                            // document.body.style.cursor = "none"
+                            if (document.fullscreenElement) {
+                                document.fullscreenElement.style.cursor = "none"
+                            } else if (document.webkitFullscreenElement) {
+                                document.webkitFullscreenElement.style.cursor = "none"
+                            }
+                        }, 2000);
+                    }else{
                         player_element.querySelector(".vidcontrols").classList.add("hidden");
-                        player.style.cursor = "none"
-                        // document.body.style.cursor = "none"
-                        if (document.fullscreenElement) {
-                            document.fullscreenElement.style.cursor = "none"
-                        } else if (document.webkitFullscreenElement) {
-                            document.webkitFullscreenElement.style.cursor = "none"
-                        }
-                    }, 2000);
+                            player.style.cursor = "none"
+                            // document.body.style.cursor = "none"
+                            if (document.fullscreenElement) {
+                                document.fullscreenElement.style.cursor = "none"
+                            } else if (document.webkitFullscreenElement) {
+                                document.webkitFullscreenElement.style.cursor = "none"
+                            }
+                    }
                 }else if(player.paused){
                     player_element.querySelector(".vidcontrols").classList.remove("hidden");
                     player.style.cursor = "default"
@@ -462,9 +507,35 @@ export const mediaPlayer = {
                     console.error(error);
                 }
             }
+            let v = player
+            const cElem = document.createElement("canvas")
+            cElem.style = `filter:blur(50px);position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);`
+            target.appendChild(cElem)
+            let c = target.querySelector("canvas");
+            let ctx = c.getContext("2d");
+            let i;
+            function draw() {
+            c.width = container.getBoundingClientRect().width;
+            c.height = container.getBoundingClientRect().height; 
+            i = window.requestAnimationFrame(draw)
+            ctx.drawImage(v, 0, 0, c.width, c.height)
+            }
+
+            v.addEventListener("loadeddata", function() {
+            draw()
+            }, false);
+            v.addEventListener("play", function() {
+            draw()
+            }, false);
+            v.addEventListener("pause", function() {
+            window.cancelAnimationFrame(i);
+            i = undefined;
+            }, false);
+            v.addEventListener("ended", function() {
+            window.cancelAnimationFrame(i);
+            i = undefined;
+            }, false); 
         }
-
-
             // return simple
     },qualities: function(array){
         const quality_setting = document.querySelector(".vidContainer > .vidSettingOverlay > .settingItems > #qualitySelect") 

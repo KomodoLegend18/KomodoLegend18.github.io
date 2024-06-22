@@ -10,1037 +10,286 @@
     --color-secondary:rgb(90, 90, 90);
     --color-accent:rgb(204, 125, 51);
 }
-    .dim{
-        background-color: rgba(0, 0, 0, 0.727); 
-        /* backdrop-filter: blur(0px); */
-        width: 100%; 
-        height: 100%; 
-        position: fixed; 
-        z-index: var(--dim-index);
-    }
 
-    video{
-        width: 100%;
-        height: 100%;
-        /* pointer-events: none; */
-        /* position: fixed; */
-        z-index: 999;
-        /* aspect-ratio: 16/9; */
-    }
+/* ================================================= */
 
-    /* https://blog.logrocket.com/creating-custom-css-range-slider-javascript-upgrades/ */
-    input[type="range"] {
-        /* removing default appearance */
-        -webkit-appearance: none;
-        appearance: none;
-        /* creating a custom design */
-        width: 100%;
-        height: 12px;
-        cursor: pointer;
-        outline: none;
-        /*  slider progress trick  */
-        overflow: hidden;
-        border-radius: 16px;
-        border: 1px white solid;
-        background: transparent;
-    }
+.mediaBGDim{
+    background-color: rgba(0, 0, 0, 0.727); 
+    /* backdrop-filter: blur(0px); */
+    width: 100%; 
+    height: 100%; 
+    position: fixed; 
+    z-index: var(--dim-index);
+}
 
-    /* Track: webkit browsers */
-    input[type="range"]::-webkit-slider-runnable-track {
-        height: 10px;
-        background: #ccc;
-        border-radius: 16px;
-        transition: 50ms ease-out;
-    }
+video{
+    width: 100%;
+    height: 100%;
+    /* pointer-events: none; */
+    /* z-index: 999; */
+    /* aspect-ratio: 16/9; */
+}
 
-    /* Track: Mozilla Firefox */
-    input[type="range"]::-moz-range-track {
-        height: 10px;
-        background: #ccc;
-        border-radius: 16px;
-        /* overflow: hidden; */
-    }
+/* ================================================= */
 
-    /* Thumb: webkit */
-    input[type="range"]::-webkit-slider-thumb {
-        /* removing default appearance */
-        -webkit-appearance: none;
-        appearance: none;
-        /* creating a custom design */
-        height: 10px;
-        width: 10px;
-        background-color: #fff;
-        border-radius: 50%;
-        border: 2px solid #6200ff;
-        /*  slider progress trick  */
-        box-shadow: -407px 0 0 400px #6200ff;
-        transition: 50ms ease-out;
-    }
-    input[type="range"]:hover::-webkit-slider-thumb {
-        /* height: 15px; */
-        border-radius: 5px;
-        width: 15px;
-        transition: 50ms ease-out;
-    }
+.hidden{
+    pointer-events: none !important;
+    cursor: default !important;
+    opacity: 0 !important;
+}
 
-    /* Thumb: Firefox */
-    input[type="range"]::-moz-range-thumb {
-        height: 10px;
-        width: 10px;
-        background-color: #fff;
-        border-radius: 50%;
-        border: 1px solid #6200ff;
-        /*  slider progress trick  */
-        box-shadow: -407px 0 0 400px #6200ff;
-    }
+.disabled{
+    cursor: not-allowed !important;
+    color: rgb(83, 83, 83) !important;
+    pointer-events: none;
+}
 
-    .hidden{
-        pointer-events: none !important;
-        cursor: default !important;
-        opacity: 0 !important;
-    }
+.notImplemented{
+    display: none;
+    pointer-events: none;
+}
 
-    .disabled{
-        cursor: not-allowed !important;
-        color: rgb(83, 83, 83) !important;
-        pointer-events: none;
-    }
+/* ================================================= */
 
-    .notImplemented{
-        display: none;
-        pointer-events: none;
-    }
-      
- 
-    
-    .vidContainer{
-        /* border: 1px red dashed; */
-        aspect-ratio: 16/9;
-        width: 70vw;
-        background-color: transparent;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 999;
-        overflow: hidden;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        outline: 1px yellow dotted;
-        /* pointer-events: none; */
-    }
+.vidContainer{
+    /* border: 1px red dashed; */
+    aspect-ratio: 16/9;
+    /* width: 70vw; */
+    background: black;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    overflow: hidden;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    border-radius: 10px;
+    /* outline: 1px yellow dotted; */
+    /* pointer-events: none; */
+}
 
-    .vidcontrols{
-        background-color: rgba(15, 15, 15, 0.8);
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 40px;
-        color: white;
-        display: flex;
-        cursor: auto;
-        opacity: 1;
-        transition: opacity 100ms ease;
-        z-index: 2;
-        /* overflow: hidden; */
-    }
-    .vidcontrols span{
-        aspect-ratio: 1/1;
-        /* border: 1px pink dotted; */
-        border-radius: 5px;
-        background-color: var(--color-primary);
-        margin: 5px;
-        box-shadow: 0px 5px 2px rgba(27, 27, 27, 0.774);
-        cursor: pointer;
-    }
-    .vidcontrols > #play-container{
-        /* border: 1px aquamarine dashed; */
-        height: 100%;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 0.5;
-        /* overflow: hidden; */
-    }
-    .vidcontrols > #progress-container{
-        /* border: 1px purple dashed; */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 10;
-        position: relative;
-        overflow: visible;
-        min-width: 42px;
-    }
-        
-        .vidcontrols > #progress-container > input{
-            /* border: 1px orangered dashed; */
-            color: red;
-            opacity: 0%;
-            /* background: transparent; */
-            width: 95%;
-            z-index: 2;
-            margin: 0;
-            /* -webkit-appearance: none; */
-        }
-        .vidcontrols > #progress-container > input[value]:not([value=""]):hover{
-            /* border: 1px orangered dashed; */
-            opacity: 100%;
-            /* background: transparent; */
-            width: 95%;
-            z-index: 2;
-            margin: 0;
-            /* -webkit-appearance: none; */
-        }
-        .vidcontrols > #progress-container > progress{
-            /* border: 1px rgb(40, 173, 0) dashed; */
-            width: 95%;
-            accent-color: var(--color-primary);
-            position: absolute;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .vidcontrols > #progress-container > #progressStatus{
-            width: 100%;
-            min-width: 42px;
-            height: fit-content;
-            /* border: 1px cyan dotted; */
-            position: absolute;
-            bottom: 45;
-            text-align: center;
-            background-color: var(--color-primary);
-            padding: 5px;
-            border-radius: 5px;
-            overflow: hidden;
-            opacity: 50%;
-        }
-    .vidcontrols > #volume-container{
-        /* border: 1px yellow dashed; */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 3;
-        /* overflow: hidden; */
-    }
-    .vidcontrols > #controls-container{
-        /* border: 1px green dashed; */
-        height: 100%;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-        /* overflow: hidden; */
-    }
-    .vidcontrols > #fullscreen-container{
-        /* border: 1px orange dashed; */
-        height: 100%;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 0.5;
-        /* overflow: hidden; */
-    }
-    .vidSettingOverlay{
-        width: 30%;
-        height: fit-content;
-        max-height: 30vh;
-        max-width: 25vw;
+.vidcontrols{
+    background-color: rgba(15, 15, 15, 0.8);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    color: white;
+    display: flex;
+    cursor: auto;
+    opacity: 1;
+    transition: opacity 100ms ease;
+    z-index: 2;
+    /* overflow: hidden; */
+}
 
-        /* border: 1px mediumslateblue dashed; */
-        border-radius: 5px 0px 0px 5px;
+.vidcontrols span{
+    aspect-ratio: 1/1;
+    /* border: 1px pink dotted; */
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    margin: 5px;
+    box-shadow: 0px 5px 2px rgba(27, 27, 27, 0.774);
+    cursor: pointer;
+}
 
-        position: absolute;
-        z-index: 3;
-        bottom: 40;
-        right: 0;
-        display: none;
-        overflow-y: auto;
-        overflow-x: hidden;
-        background-color: var(--color-primary);
-        color: white;
-        opacity: 75%;
-    }
-        .vidSettingOverlay > .settingItems{
-            width: 100%;
-            height: fit-content;
-            /* border: 1px springgreen dashed; */
-            padding: 5px;
-        }
-    
-    .bufferOverlay{
-        pointer-events: none;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background-color: rgba(134, 76, 0, 0);
-        -webkit-backdrop-filter: blur(2px) grayscale();
-        backdrop-filter: blur(2px) grayscale();
-        display: grid;
-        z-index: 2;
-    }
+.vidcontrols > #play-container{
+    /* border: 1px aquamarine dashed; */
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0.5;
+    /* overflow: hidden; */
+}
 
-    .epsContainer{
-        /* border: 1px red dashed; */
-        padding: 5px;
-        background-color: var(--color-secondary);
-        width: 100%;
-        height: fit-content;
-        max-height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
+.vidcontrols > #progress-container{
+    /* border: 1px purple dashed; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 10;
+    position: relative;
+    overflow: visible;
+    min-width: 42px;
+}.vidcontrols > #progress-container > input{
+    /* border: 1px orangered dashed; */
+    color: red;
+    opacity: 0%;
+    /* background: transparent; */
+    width: 95%;
+    z-index: 2;
+    margin: 0;
+    /* -webkit-appearance: none; */
+}.vidcontrols > #progress-container > input[value]:not([value=""]):hover{
+    /* border: 1px orangered dashed; */
+    opacity: 100%;
+    /* background: transparent; */
+    width: 95%;
+    z-index: 2;
+    margin: 0;
+    /* -webkit-appearance: none; */
+}.vidcontrols > #progress-container > progress{
+    /* border: 1px rgb(40, 173, 0) dashed; */
+    width: 95%;
+    accent-color: var(--color-primary);
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+}.vidcontrols > #progress-container > #progressStatus{
+    width: 100%;
+    min-width: 42px;
+    height: fit-content;
+    /* border: 1px cyan dotted; */
+    position: absolute;
+    bottom: 45;
+    text-align: center;
+    background-color: var(--color-primary);
+    padding: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    opacity: 50%;
+}
 
-    .epsContainer > #items{
-        margin-bottom: 2px;
-        display: block;
-        position: relative;
-        width: 100%;
-        height: fit-content;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-        /* border: 1px green dashed; */
-        cursor:pointer;
-        transition-duration: var(--transition-duration);
-        z-index: var(--background-index);
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.575);
-    }
+.vidcontrols > #volume-container{
+    /* border: 1px yellow dashed; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 3;
+    /* overflow: hidden; */
+}
 
-    .miscContainer{
-        /* border: 1px red dashed; */
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-        color: white;
-    }
-    
-    #header{
-        position: sticky;
-        top: 0;
-        width: 100%;
-        height: 8vh;
-        background-color: var(--color-secondary);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.281);
-        z-index: var(--header-index);
-    }
-    #hamburger-icon {
-        height: 100%;
-        aspect-ratio: 1/1;
-        cursor: pointer;
-    }
-    #hamburger-icon span.material-symbols-outlined{
-        vertical-align: middle;
-        height: 100% !important;
-        aspect-ratio: 1/1;
-        font-size: 5vh;
-        transform: translate(15%,15%);
-    }
-    #header-section{
-        box-sizing: border-box;
-        border: 2px rgba(255, 255, 0, 0) solid;
-        height: 100%;
-        width: 33.3%;
-        position: relative;
-        float: left;
-        overflow: hidden;
-    }
-    #header-section:has(input){
-        z-index: var(--search-index);
-    
-        text-align: center;
-    }
-    #header-section input{
-        z-index: var(--search-index);
-        float: left;
-        font-size: 2.5vh;
-        position: relative;
-        border-radius: 10vw 0 0 10vw;
-        border: none;
-        margin-left: 10%;
-        padding-left: 2%;
-        padding-right: 0%;
-        top: 15%;
-        width: 70%;
-        height: 70%;
-    }
-    #header-section #search{
-        /* display: table-cell;
-        vertical-align: middle;
-        text-align: center; */
-        float: left;
-        position: relative;
-        top: 15%;
-        height: 70%;
-        margin-right: 5%;
-        background-color: rgb(219, 219, 219);
-        aspect-ratio: 1/1;
-        cursor: pointer;
-        border-radius:0 10vw 10vw 0;
-        padding-right: 1%;
-        overflow: hidden;
-    }
-    #header-section #search:focus{
-        background-color: rgb(233, 233, 233);
-    }
-    #header-section #search span{
-        /* display: inline-block; */
-        transform: translateY(16%);
-        /* top: 0.5vh; */
-        font-size: 3.5vh;
-        height: 100%;
-    }
-    /* ============================================ */
-    #container #search-result-overlay{
-        position: absolute;
-        bottom: 0;
-        left: 20%;
-        background-color: rgba(255, 255, 255, 0);
-        /* border: 2px red dashed; */
-        width: 60%;
-        height: 92%;
-        overflow: auto;
-        z-index: var(--search-index);
-    }
-    #container #search-result-overlay #items{
-        /* padding-bottom: 1%; */
-        display: flex;
-        position: relative;
-        width: 100%;
-        height: 30%;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-        border-bottom: 1vh solid rgba(0, 0, 0, 0.192);
-        transition-duration: var(--transition-duration);
-        z-index: var(--background-index);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.59);
-    }
-    #container #search-result-overlay #items:hover{
-        /* padding-bottom: 1%; */
-        background-color: rgb(187, 187, 187);
-        transition-duration: var(--transition-duration);
-        cursor: pointer;
-    }
-    #container #search-result-overlay #items #poster{
-        position: relative;
-        float: left;
-        height: 100%;
-        aspect-ratio: 3/4;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        pointer-events: none;
-    }
-    #container #search-result-overlay #items #poster img{
-        /* position: absolute; */
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-    #container #search-result-overlay #items #poster #label{
-        position: absolute;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        text-align: center;
-        vertical-align: middle;
-        width: 100%;
-        height: 0%;
-        transition-duration: var(--transition-duration);
-        pointer-events: none;
-    }
-    #container #search-result-overlay #items:hover #poster #label{
-        height: fit-content;
-        transition-duration: var(--transition-duration);
-    }
-    #container #search-result-overlay #items #info{
-        flex-grow: 1;
-        position: relative;
-        float: left;
-        height: 100%;
-        /* width: 80.07%; */
-        background-color: rgba(255, 0, 0, 0);
-        pointer-events: none;
-    }
-    #container #search-result-overlay #items #info #title{
-        color: white;
-        padding: 1%;
-        font-size: 3vh;
-        position: relative;
-        float: left;
-        height: fit-content;
-        width: 100%;
-        background-color: var(--color-primary);
-    }
-    #container #search-result-overlay #items #info #genre{
-        color: white;
-        padding: 1%;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        height: fit-content;
-        width: 100%;
-        background-color: var(--color-secondary);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #info #details{
-        padding: 1%;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        height: fit-content;
-        width: 100%;
-        background-color: var(--color-accent);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #info #details #score{
-        margin-right: 1%;
-        padding: 0 1.5% 0 1.5%;
-        font-weight: bold;
-        border-radius: 2vh;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        /* height: fit-content; */
-        width: fit-content;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #info #details #type{
-        margin-right: 1%;
-        padding: 0 1.5% 0 1.5%;
-        font-weight: bold;
-        border-radius: 2vh;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        /* height: fit-content; */
-        width: fit-content;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #info #details #status{
-        margin-right: 1%;
-        padding: 0 1.5% 0 1.5%;
-        font-weight: bold;
-        border-radius: 2vh;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        /* height: fit-content; */
-        width: fit-content;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #info #details #season{
-        margin-right: 1%;
-        padding: 0 1.5% 0 1.5%;
-        font-weight: bold;
-        border-radius: 2vh;
-        font-size: 2vh;
-        position: relative;
-        float: left;
-        /* height: fit-content; */
-        width: fit-content;
-        background-color: rgb(255, 255, 255);
-        overflow: hidden;
-    }
-    #container #search-result-overlay #items #synopsis{
-        padding: 1%;
-        font-size: 2vh;
-        color: black;
-        background-color: white;
-        float: left;
-        margin-bottom: 6px;
-        display: -webkit-box;
-        -webkit-line-clamp: 6;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        width: 100%;
-        height: 14vh;
-    }
-    /* =================================================== */
-    #container{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        /* scroll-behavior: smooth; */
-        background-color: var(--color-primary);
-        overflow-y: hidden;
-    }
-    #content{
-        /* scroll-behavior: smooth; */
-        height: 92%; 
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    #contentEntries{
-        padding: 10px;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 10px;
-    }
-    #empty{
-        text-align: center;
-        color: white;
-    }
-    #empty p span{
-        cursor: pointer;
-        text-decoration: underline;
-    }
-    #cardContainer{
-        position: relative;
-        float: left;
-        width: 100%;
-        border-radius: 1vw;
-        /* margin: 0.5vw; */
-        aspect-ratio: 3/4;
-        background-color: rgba(0, 255, 255, 0);
-        /* overflow: hidden; */
-        cursor: pointer;
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.178);
-        animation: cardAppear var(--transition-duration) ease;
-        -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* IE 10 and IE 11 */
-        user-select: none; /* Standard syntax */
-    }
-    #cardContainer:hover > #cardBorder{
-        transform: rotate(-5deg);
-        transition-duration: var(--transition-duration);
-        background-color: rgb(0, 255, 255);
-    }
-    #card{
-        position: absolute;
-        float: left;
-        width: 100%;
-        border-radius: 1vw;
-        /* margin: 0.5vw; */
-        aspect-ratio: 3/4;
-        /* background-color: rgba(0, 255, 255, 0); */
-        overflow: hidden;
-        cursor: pointer;
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.178);
-        /* animation: cardAppear 500ms ease-out; */
-    }
-    #cardBorder{
-        pointer-events: none;
-        transform: rotate(0deg);
-        position: relative;
-        float: left;
-        width: 100%;
-        border-radius: 1vw;
-        transition-duration: var(--transition-duration);
-        /* margin: 0.5vw; */
-        aspect-ratio: 3/4;
-        background-color: rgba(0, 255, 255, 0);
-        /* overflow: hidden; */
-        /* cursor: pointer; */
-        /* box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.178); */
-        /* animation: cardAppear 500ms ease-out; */
-    }
-    @keyframes cardAppear {
-        from{
-            opacity: 0%;
-            transform: scale(1.1) translate(-20%,-30%) skew(0deg,-15deg);
-            filter: blur(5px);
-        }
-        to{
-            opacity: 100%;
-            transform: scale(1) translate(0%,0%) skew(0deg,0deg);
-            filter: blur(0px);
-        }
-    }
-    #card img{
-        width: 100%;
-        height: 100%;
-        transition-duration: var(--transition-duration);
-        transition-timing-function: ease-out;
-        pointer-events: none;
-    
-    }
-    #card:hover img{
-        transition-timing-function: ease-out;
-        transform: scale(1.03);
-        transition-duration: var(--transition-duration);
-    }
-    #card-title{
-        position: absolute;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.658);
-        height: 30%;
-        width: 100%;
-        transition-duration: var(--transition-duration);
-        color: white;
-        font-weight: 600;
-        pointer-events: none;
-        /* backdrop-filter: blur(2px); */
-    }
-    #card-title::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 39px; /* adjust the height as needed */
-        background: linear-gradient(0deg, rgb(0 0 0 / 74%) 0%, rgb(52 0 166 / 0%) 100%);
-    }
-    #card-title p{
-        padding:5px;
-        font-size: 1.5vw;
-        margin: 0;
-        /* margin-top: 1vw; */
-        text-align: center;
-        pointer-events: none;
-        /* mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-        max-height: 100%; */
-    }
-    #card:hover #card-title{
-        background-color: rgba(0, 0, 0, 0.863);
-        transition-duration: var(--transition-duration);
-        pointer-events: none;
-    }
-    #card-episode-bar{
-        position: relative;
-        bottom: 0;
-        background-color: rgba(184, 184, 184, 0.603);
-        width: 100%;
-        height: 1.5vh;
-        pointer-events: none;
-    }
-    #card-episode-num{
-        position: absolute;
-        border-radius: 1vw;
-        margin: 0.3vw;
-        top: 58%;
-        right: 0%;
-        background-color: rgba(0, 0, 0, 0.603);
-        width: fit-content;
-        height: 10%;
-        transition-duration: var(--transition-duration);
-        pointer-events: none;
-        /* overflow: hidden; */
-    }
-    #card:hover #card-episode-num{
-        background-color: rgb(0, 0, 0);
-        transition-duration: var(--transition-duration);
-        pointer-events: none;
-    }
-    #card-episode-num span{
-        padding: 1vw;
-    
-        position: relative;
-        top: 20%;
-        margin: 0;
-        font-size: 1.4vw;
-        font-weight: 700;
-        color: white;
-        pointer-events: none;
-    }
-    
-    #card-episode-bar-aired{
-        position: absolute;
-        background-color: hsl(348, 100%, 66%);
-        height: 100%;
-        animation: aired-flash 2s infinite;
-        pointer-events: none;
-        border: 1px solid black;
-    }
-    @keyframes aired-flash {
-        0%{
-            opacity: 0%;
-        }
-        50%{
-            opacity: 100%;
-        }
-        100%{
-            opacity: 0%;
-        }
-    }
-    #card-episode-bar-watched{
-        position: absolute;
-        background-color: slateblue;
-        pointer-events: none;
-        height: 100%;
-        border: 1px solid black;
-        transition-duration: var(--transition-duration);
-    }
-    #ep_rem{
-        cursor: pointer;
-        background-color: rgb(255, 8, 0);
-        color: white;
-        width: fit-content;
-        /* aspect-ratio: 1/1; */
-        float: left;
-        border-radius: 1vh 0 0 1vh;
-        user-select: none;
-    }
-    #ep_add{
-        cursor: pointer;
-        background-color: slateblue;
-        color: white;
-        width: fit-content;
-        float: left;
-        border-radius: 0 1vh 1vh 0;
-        aspect-ratio: 1/1;
-        user-select: none;
-    }
-    
-    #entry_container{
-        animation: open_entry var(--transition-duration) ease;
-        width: 100%; 
-        height: 92%; 
-        top: 8%; 
-        background-color: rgba(165, 42, 42, 0.144);
-        color: white; 
-        position: absolute; 
-        z-index: 1; 
-        display: flex;
-    }
-    @keyframes open_entry {
-        from{
-            opacity: 0%;
-        }
-        to{
-            opacity: 100%;
-        }
-    }
-    #entry_poster{
-        position: relative; 
-        height: 100%;
-        aspect-ratio: 3/4; 
-        background-color: rgba(0, 0, 0, 0.815); 
-        float: left;
-    }
-    #entry_return{
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: fit-content;
-        aspect-ratio: 1/1;
-        background-color: rgb(255, 0, 0);
-        box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.432);
-        color: white;
-        user-select: none;
-    }
-    #entry_return:hover{
-        background-color: rgb(228, 0, 0);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.432);
-    }
-    #entry_return span{
-        pointer-events: none;
-        font-size: 5vh;
-    }
-    #entry_details_container{
-        position: relative; 
-        height: 100%; 
-        background-color: rgb(20, 20, 20); 
-        float: left; 
-        overflow-x: hidden; 
-        flex-grow: 1;
-    }
-    .entry_details_section{
-        width: 100%; 
-        height: fit-content; 
-        background-color: var(--color-primary); 
-        padding: 2%; 
-        /* border: 1px black dashed;  */
-        margin-bottom: 1%;
-        overflow: hidden;
-    }
-    div[section-type='characters'] > a > div > div{
-        background-color: rgba(0, 0, 0, 0.774);
-        color: white;
-        text-align: center;
-        width:100%; 
-        height:fit-content;
-        position: absolute;
-        bottom: 0;
-    }
-    div[section-type='characters']{
-        display: flex;
-        flex-wrap: wrap;
-    }
+.vidcontrols > #controls-container{
+    /* border: 1px green dashed; */
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    /* overflow: hidden; */
+}
 
-    .entry_details_overview{
-        display: flex; 
+.vidcontrols > #fullscreen-container{
+    /* border: 1px orange dashed; */
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0.5;
+    /* overflow: hidden; */
+}
 
-        align-items: stretch; 
-        /* border: 2px green dashed; */
-        border-radius: 10px;
-        overflow: hidden;
-    }
-        .entry_details_overview_score{
-            display: flex; 
-            flex: 0.5; 
+.vidSettingOverlay{
+    width: 30%;
+    height: fit-content;
+    max-height: 30vh;
+    max-width: 25vw;
 
-            flex-direction: column;
-            /* justify-content: center; */
-            background-color: var(--color-secondary);
-            /* border: 2px cyan dashed;  */
-            aspect-ratio: 1/1;
-        }
-            .entry_details_overview_score > div:nth-child(1){
-                display: flex; 
-                flex: 2;
+    /* border: 1px mediumslateblue dashed; */
+    border-radius: 5px 0px 0px 5px;
 
-                /* border: 2px red dashed;  */
-                justify-content: center; 
-                align-items: center;
-            }
-                .entry_details_overview_score > div > span{
-                    flex: 0.2;
+    position: absolute;
+    z-index: 3;
+    bottom: 40;
+    right: 0;
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--color-primary);
+    color: white;
+    opacity: 75%;
+}.vidSettingOverlay > .settingItems{
+    width: 100%;
+    height: fit-content;
+    /* border: 1px springgreen dashed; */
+    padding: 5px;
+}
 
-                    font-size: 3.5vw;
-                    /* display: inline-flex; */
-                    align-items: center; 
-                    padding: 10px;
-                }
-            .entry_details_overview_score > div:nth-child(2){
-                flex: 0.5;
+.bufferOverlay{
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(134, 76, 0, 0);
+    -webkit-backdrop-filter: blur(2px) grayscale();
+    backdrop-filter: blur(2px) grayscale();
+    display: grid;
+    z-index: 2;
+}
 
-                /* border: 2px yellow dashed;  */
-                text-align: center; 
-            }
-        .entry_details_overview_info{
-            flex: 2;
+/* =================================================== */
 
-            background-color: rgba(184, 184, 184, 0.603);
-            padding: 0px 10px 0px 10px;
-        }
-            .entry_details_overview_info > div:nth-child(1){
-                /* border: 2px pink dashed; */
-                font-weight: bold;
-                font-size: 1.5em;
-            }
-            .entry_details_overview_info > div:nth-child(2){
-                /* border: 2px purple dashed; */
-            }
-    
+/* https://blog.logrocket.com/creating-custom-css-range-slider-javascript-upgrades/ */
+.vidContainer > .vidcontrols > * > input[type="range"] {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    /* creating a custom design */
+    width: 100%;
+    height: 12px;
+    cursor: pointer;
+    outline: none;
+    /*  slider progress trick  */
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px white solid;
+    background: transparent;
+}
 
-    .entry_details_section #card-episode-bar{
-        height: 4vh;
-        overflow-x: hidden;
-    } 
-    .entry_details_section > a > h1[data-nobyarelemtype="title"]:hover{
-        text-decoration: underline;
-    }
-    .entry_details_synopsisCollapsed {
-        max-height: 4.5em; /* Adjust the height as needed for 4 lines */
+/* Track: webkit browsers */
+.vidContainer > .vidcontrols > * > input[type="range"]::-webkit-slider-runnable-track {
+    height: 10px;
+    background: #ccc;
+    border-radius: 16px;
+    transition: 50ms ease-out;
+}
 
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
-        overflow: hidden;
-        text-overflow: ellipsis;
+/* Track: Mozilla Firefox */
+.vidContainer > .vidcontrols > * > input[type="range"]::-moz-range-track {
+    height: 10px;
+    background: #ccc;
+    border-radius: 16px;
+    /* overflow: hidden; */
+}
 
-        transition: ease-out var(--transition-duration);
-    }
-    .entry_details_synopsisExpanded {
-        max-height: none; /* Adjust the height as needed for 4 lines */
-    }
-        #toggleSynopsis{
-            cursor: pointer; 
-            color: black;
-            text-align: center;
-            background-color: var(--color-accent);
-            padding: 5px;
-            border-radius: 0px 0px 10px 10px;
-            margin-bottom: 5px;
-        }
-    
-    
-    #alert{
-        background-color: rgba(255, 238, 0, 0);
-        width: 30%;
-        height: 100%;
-        right: 0;
-        position: absolute;
-        z-index: var(--alert-index);
-        overflow: hidden;
-        pointer-events: none;
-    }
-    #alert .notice{
-        margin: 3% 0% 0% 0%;
-        border-radius: 2vh 0 0 2vh;
-        padding: 0% 5% 0% 5%;
-        background-color: hsl(248, 53%, 70%);
-        color: white;
-        width: 100%;
-        height: fit-content;
-        float: right;
-        position: relative;
-        bottom: 0;
-        right: 0;
-        animation: alert 5s;
-        animation-fill-mode: forwards;
-        z-index: var(--alert-index);
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.432);
-    }
-    @keyframes alert {
-        0%{
-            transform: translateX(100%);
-            opacity: 0%;
-        }
-        10%{
-            transform: translateX(0%);
-            opacity: 100%;
-        }
-        90%{
-            transform: translateX(0%);
-            opacity: 100%;
-        }
-        100%{
-            transform: translateX(100%);
-            opacity: 0%;
-        }
-    }
-    #menu{
-        position: absolute;
-        width: 35%;
-        height: 100%;
-        background-color: var(--color-secondary);
-        z-index: 5;
-        transition-duration: 250ms;
-    }
-    #menuItems{
-        margin: auto;
-        width: 100%;
-        height: 10%;
-        background-color: white;
-        border: 1px black solid;
-        cursor: pointer;
-        font-size: 2vw;
-        /* Center the text vertically and horizontally */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    #menuItems:hover{
-        color: white;
-        background-color: var(--color-secondary);
-        border: 2px var(--color-primary) double;
-    }
-    #menuClose{
-        position: absolute;
-        bottom: 0;
-        margin: auto;
-        width: 100%;
-        height: 10%;
-        background-color: red;
-        color: white;
-        border: 1px black solid;
-        cursor: pointer;
-        font-size: 2vw;
+/* Thumb: webkit */
+.vidContainer > .vidcontrols > * > input[type="range"]::-webkit-slider-thumb {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    /* creating a custom design */
+    height: 10px;
+    width: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid #6200ff;
+    /*  slider progress trick  */
+    box-shadow: -407px 0 0 400px #6200ff;
+    transition: 50ms ease-out;
+}
+.vidContainer > .vidcontrols > * > input[type="range"]:hover::-webkit-slider-thumb {
+    /* height: 15px; */
+    border-radius: 5px;
+    width: 15px;
+    transition: 50ms ease-out;
+}
 
-        /* Center the text vertically and horizontally */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+/* Thumb: Firefox */
+.vidContainer > .vidcontrols > * > input[type="range"]::-moz-range-thumb {
+    height: 10px;
+    width: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #6200ff;
+    /*  slider progress trick  */
+    box-shadow: -407px 0 0 400px #6200ff;
+}
