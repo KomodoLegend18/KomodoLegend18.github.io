@@ -1,14 +1,25 @@
+import { randomString } from "./random.js";
+
 let mediaTime = 0
 export const mediaPlayer = {
     create: function (options){
         const {
             source,
-            poster,
+            poster="",
             target,
-            width = "70vw"
+            width = "70vw",
+            ambient=true,
+            volume=100
         } = options;
+        if (!source){
+            throw "Source not provided"
+        } else if (!target){
+            throw "Target not specified"
+        }
+        const PlayerID = randomString(6); //generate unique id
         const container = document.createElement("div")
         container.className = "vidContainer"
+        container.setAttribute("PlayerID",PlayerID)
         container.style.width = width
         container.style.boxShadow = "0px 0px 5px 2px rgba(0, 0, 0, 0.267)"
         container.innerHTML = `
@@ -54,7 +65,7 @@ export const mediaPlayer = {
                 <span class="material-symbols-rounded">
                     volume_up
                 </span>
-                <input value="1" type="range" max="1" min="0" step="0.01">
+                <input value="${volume/100}" type="range" max="1" min="0" step="0.01">
             </div>
             <div id="controls-container">
                 <span class="material-symbols-rounded">settings_cinematic_blur</span>
@@ -63,513 +74,552 @@ export const mediaPlayer = {
                 <span class="material-symbols-rounded">fullscreen</span>
             </div>
         </div>
-    
+        
         <video poster="${poster}" src="${source}" data-title="" 
         data-eps="" data-idmal="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>`
-
+        target.appendChild(container)
         // const simple = document.createElement("video")
         // simple.src = resource
         // simple.controls = true
-        if (target.querySelector(".vidContainer")) {
+        if (target.querySelectorAll(`.vidContainer[playerid="${PlayerID}"]`).length>1) {
             console.warn("element found, removing...");
-            target.querySelector(".vidContainer").remove()
+            const elems = target.querySelectorAll(`.vidContainer[playerid="${PlayerID}"]`)
+            for (let i = 0; i < elems.length; i++) {
+                elems[i].remove()                
+            }
         }
-        target.appendChild(container)
-        loadPlayer(target)
 
-        function loadPlayer(target) {
-            const player = target.querySelector("video")
-            let hidePlayerControlsTimer
-            const player_element = target.querySelector(".vidContainer")
-            const play_button = target.querySelector(".vidcontrols > #play-container > span")
-            const progress_current = target.querySelector(".vidcontrols > #progress-container > div > p:nth-child(1)")
-            const progress_status = target.querySelector(".vidcontrols > #progress-container > div > p:nth-child(2)")
-            const progress_duration = target.querySelector(".vidcontrols > #progress-container > div > p:nth-child(3)")
-            const progress_input = target.querySelector(".vidcontrols > #progress-container > input")
-            const progress_bar = target.querySelector(".vidcontrols > #progress-container > progress")
-            const mute_button = target.querySelector(".vidcontrols > #volume-container > span")
-            const volume_input = target.querySelector(".vidcontrols > #volume-container > input")
-            const setting_button = target.querySelector(".vidcontrols > #controls-container > span:nth-child(1)")
-            const setting_menu = target.querySelector(".vidContainer > .vidSettingOverlay")
-            const quality_setting = target.querySelector(".vidContainer > .vidSettingOverlay > .settingItems > #qualitySelect")
-            const fullscreen_button = target.querySelector(".vidcontrols > #fullscreen-container > span")
-            const buffer_overlay = target.querySelector(".vidContainer > .bufferOverlay")
-            play_button.addEventListener("click", function(e){
-                console.log(e);
-                e.stopPropagation();
-                togglePlay()
-            })
-            player.addEventListener('click', function(e) {
-                console.log(e);
-                e.stopPropagation();
-                togglePlay()
-            });
-            progress_input.addEventListener("input", function(e){
-                e.stopPropagation();
-                console.log(e);
+        playerEvents(container,options)
 
-                const seek = e.target.value
-                player.currentTime = seek
+        container.quality = function (array){
+            const quality_setting = document.querySelector(".vidContainer > .vidSettingOverlay > .settingItems > #qualitySelect") 
+            const defQuality = [
+                {
+                    link:"https://",
+                    name:"720"
+                }
+            ]
+            // Clear quality setting
+            quality_setting.innerHTML = ""
         
-                updateProgress()
-                progress_bar.value = seek + 10
-                progress_input.attributes[1].value = `${seek}`
-            })
-            progress_input.addEventListener("click", function(e){
-                e.stopPropagation();
-                console.log(e);
-            })
-            mute_button.addEventListener("click",function(e){
-                e.stopPropagation();
-                console.log(e);
-
-                toggleMute();
-            })
-            volume_input.addEventListener("input",function(e){
-                e.stopPropagation();
-                console.log(e);
-
-                const vol = e.target.value
-                player.volume = vol
-            })
-            volume_input.addEventListener("click",function(e){
-                e.stopPropagation();
-                console.log(e);
-            })
-            setting_button.addEventListener("click", function(e){
-                e.stopPropagation();
-
-                toggleSetting();
-            })
-            quality_setting.addEventListener("change", function(e) {
-                e.stopPropagation();
-
-                // The value of the selected option
-                var value = e.target.value;
-        
-                // The text of the selected option
-                var text = e.target.options[e.target.selectedIndex].text;
-        
-                player.src = value
-                player.currentTime = mediaTime
-                // Now you can use the value and text as needed
-                console.log("Selected option value: " + value);
-                console.log("Selected option text: " + text);
-            });
-            quality_setting.addEventListener("click", function(e) {
-                e.stopPropagation();
-            });
-            fullscreen_button.addEventListener("click", function(e){
-                e.stopPropagation();
-
-                toggleFullscreen();
-            })
-            // Skip opening
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'ArrowRight' && event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] +85s")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    player.currentTime += 85;
-                }
-            });
-            // Skip -5s/+5s
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'ArrowLeft' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] -5s")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    player.currentTime -= 5;
-                }
-            });
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'ArrowRight' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] +5s")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    player.currentTime += 5;
-                }
-            });
-            // Toggle play
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'Space' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] Play/Pause")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    togglePlay();
-                }
-            });
-            // Toggle mute
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'KeyM' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] Toggle Mute")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    toggleMute();
-                }
-            });
-            // Toggle setting
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'KeyC' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] Toggle Setting Menu")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    toggleSetting();
-                }
-            });
-            // Toggle fullscreen
-            document.addEventListener('keydown', function(event) {
-                if (event.code == 'KeyF' && !event.ctrlKey) {
-                    // Check if the event's target is an input element
-                    if (event.target.tagName.toLowerCase() === 'input') {
-                        return;  // Don't do anything if the user is focused on an input element
-                    }
-                    console.groupCollapsed("[Keyboard Shortcut] Toggle Fullscreen")
-                        console.log(event);
-                    console.groupEnd()
-                    event.preventDefault();
-                    toggleFullscreen();
-                }
-            });
-            // Toggle controls visibility
-            player_element.addEventListener('mousemove', function(e) {
-                e.stopPropagation();
-
-                hideControls();
-            });
-            player_element.addEventListener('mouseout', function(e) {
-                e.stopPropagation();
-
-                hideControls(true);
-            });
+            // console.log("Available Server", servers);
+            // console.log("Sources: ", sources);
+            console.log("quality: ",array);
     
-            // Try to load video
-            player.onloadstart = function() {
-                buffer_overlay.style["display"] = "grid"
-                // player.poster = poster
-                progress_status.innerHTML = `Loading data`
-                // console.log("onloadstart");
-            }
-            // data loaded
-            player.onloadeddata = function() {
-                buffer_overlay.style["display"] = "none"
-                progress_status.innerHTML = `Data ready`
-                // console.log("onloadeddata");
-            }
-            // Video can start
-            player.oncanplay = function(){
-                updateProgress()
-                togglePlay("Playing")
-                // progress_status.innerHTML = `Can play data`
-                buffer_overlay.style["display"] = "none"
-                // player.poster = ""
-        
-                // console.log("oncanplay");
-                // skipOP()
-            }
-            // Update progress display
-            player.ontimeupdate = function() {
-                // console.log(player.currentTime,player.duration);
-                updateProgress()
-        
-            };
-            // Downloading video / buffer
-            player.onprogress = function() {
-                // buffer_overlay.style["display"] = "none"
-                // progress_status.innerHTML = `Downloading data`
-                // console.log("onprogress");
-            }
-            // Can't load video
-            player.onerror = function(e) {
-                buffer_overlay.style["display"] = "grid"
-                player.poster = poster
-                progress_status.innerHTML = `No Data`
-                console.error(`[player.onerror] Video Player Error\n${e.target.error.message}`,e);
-            }
-            // Player waiting to play
-            player.onwaiting = function() {
-                buffer_overlay.style["display"] = "grid"
-                progress_status.innerHTML = `Waiting`
-                // hideControls()
-                // console.log("onwaiting");
-            }
-            // Player playing
-            player.onplaying = function() {
-                buffer_overlay.style["display"] = "none"
-                // console.log("onplaying");
-            }
-            player.onplay = function() {
-                // buffer_overlay.style["display"] = "none"
-                // console.log("onplay");
-                hideControls()
-                // togglePlay()
-            }
-            // Player paused
-            player.onpause = function() {
-                buffer_overlay.style["display"] = "none"
-                // console.log("onpause");
+            array.forEach((quality,i) => {
+                console.log(quality,i);
+    
+                // Create a new video quality option element
+                var option = document.createElement("option");
+                option.value = `${quality.link}`;
+                option.textContent = `${quality.name}`;
 
-                hideControls()
-                // togglePlay()
+                if (i===0) {
+                    option.selected = true
+                }
+                // if (data.attributes["size"].value == defaultQuality) {
+                //     option.selected = true
+                //     player.src = data.attributes["src"].value
+                // }else{
+                //     option.selected = true
+                //     player.src = data.attributes["src"].value
+                // }
+                console.warn("adding quality: ",quality);
+                quality_setting.appendChild(option);
+            });
+            return this;
+        }
+
+        return container
+        // return simple
+    }
+}
+
+function playerEvents(player,options) {
+    let hidePlayerControlsTimer
+    const media = player.querySelector("video")
+    const play_button = player.querySelector(".vidcontrols > #play-container > span")
+    const progress_current = player.querySelector(".vidcontrols > #progress-container > div > p:nth-child(1)")
+    const progress_status = player.querySelector(".vidcontrols > #progress-container > div > p:nth-child(2)")
+    const progress_duration = player.querySelector(".vidcontrols > #progress-container > div > p:nth-child(3)")
+    const progress_input = player.querySelector(".vidcontrols > #progress-container > input")
+    const progress_bar = player.querySelector(".vidcontrols > #progress-container > progress")
+    const mute_button = player.querySelector(".vidcontrols > #volume-container > span")
+    const volume_input = player.querySelector(".vidcontrols > #volume-container > input")
+    const setting_button = player.querySelector(".vidcontrols > #controls-container > span:nth-child(1)")
+    const setting_menu = player.querySelector(".vidSettingOverlay")
+    const quality_setting = player.querySelector(".vidSettingOverlay > .settingItems > #qualitySelect")
+    const fullscreen_button = player.querySelector(".vidcontrols > #fullscreen-container > span")
+    const buffer_overlay = player.querySelector(".bufferOverlay")
+
+    play_button.addEventListener("click", function(e){
+        console.log(e);
+        e.stopPropagation();
+        playerAction(player).togglePlayback()
+    })
+    player.addEventListener('click', function(e) {
+        console.log(e);
+        e.stopPropagation();
+        playerAction(player).togglePlayback()
+    });
+    progress_input.addEventListener("input", function(e){
+        e.stopPropagation();
+        console.log(e);
+
+        const seek = e.target.value
+        media.currentTime = seek
+
+        playerAction(player).updateProgress()
+        progress_bar.value = seek + 10
+        progress_input.attributes[1].value = `${seek}`
+    })
+    progress_input.addEventListener("click", function(e){
+        e.stopPropagation();
+        console.log(e);
+    })
+    mute_button.addEventListener("click",function(e){
+        e.stopPropagation();
+        console.log(e);
+
+        playerAction(player).toggleMute();
+    })
+    volume_input.addEventListener("input",function(e){
+        e.stopPropagation();
+        // console.log(e);
+
+        const vol = e.target.value
+        media.volume = vol
+    })
+    volume_input.addEventListener("click",function(e){
+        e.stopPropagation();
+        // console.log(e);
+    })
+    setting_button.addEventListener("click", function(e){
+        e.stopPropagation();
+
+        playerAction(player).toggleSettings();
+    })
+    quality_setting.addEventListener("change", function(e) {
+        e.stopPropagation();
+
+        // The value of the selected option
+        var value = e.target.value;
+
+        // The text of the selected option
+        var text = e.target.options[e.target.selectedIndex].text;
+
+        media.src = value
+        media.currentTime = mediaTime
+        // Now you can use the value and text as needed
+        console.log("Selected option value: " + value);
+        console.log("Selected option text: " + text);
+    });
+    quality_setting.addEventListener("click", function(e) {
+        e.stopPropagation();
+    });
+    fullscreen_button.addEventListener("click", function(e){
+        e.stopPropagation();
+
+        playerAction(player).toggleFullscreen();
+    })
+    // Skip opening / 85s
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowRight' && event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
             }
-            // Player ended
-            player.onended = function() {
-                buffer_overlay.style["display"] = "grid"
-                progress_status.innerHTML = `Data Ended`
-                console.log("onended");
-
-                play_button.innerHTML = "play_arrow"
-
-                // togglePlay()
+            console.groupCollapsed("[Keyboard Shortcut] +85s")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            media.currentTime += 85;
+        }
+    });
+    // Skip -5s/+5s
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowLeft' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
             }
-            function togglePlay(state){
-                try {
-                    console.log("togglePlay");
+            console.groupCollapsed("[Keyboard Shortcut] -5s")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            media.currentTime -= 5;
+        }
+    });
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'ArrowRight' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.groupCollapsed("[Keyboard Shortcut] +5s")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            media.currentTime += 5;
+        }
+    });
+    // Toggle play
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'Space' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.groupCollapsed("[Keyboard Shortcut] Play/Pause")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            playerAction(player).togglePlayback()
+            
+        }
+    });
+    // Toggle mute
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyM' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Mute")
+            console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            playerAction(player).toggleMute();
+        }
+    });
+    // Toggle setting
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyC' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Setting Menu")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            playerAction(player).toggleSettings();
+        }
+    });
+    // Toggle fullscreen
+    document.addEventListener('keydown', function(event) {
+        if (event.code == 'KeyF' && !event.ctrlKey) {
+            // Check if the event's target is an input element
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return;  // Don't do anything if the user is focused on an input element
+            }
+            console.groupCollapsed("[Keyboard Shortcut] Toggle Fullscreen")
+                console.log(event);
+            console.groupEnd()
+            event.preventDefault();
+            playerAction(player).toggleFullscreen();
+        }
+    });
+    // Toggle controls visibility
+    player.addEventListener('mousemove', function(e) {
+        e.stopPropagation();
 
-                    if (player.readyState>=3){
-                        if (player.paused) {
-                            console.log("paused/ended > play");
-                            progress_status.innerHTML = `Playing`
-                            try {
-                                player.play();
-                            } catch (error) {
-                                console.error(error);
-                            }
-                
-                            // Icon
-                            play_button.innerHTML = "pause"            
-                        } else {
-                        // data for the current and at least the next frame is available
-                            console.log("playing > pause");
-                            player.pause();
-                            progress_status.innerHTML = `Paused`
-                
-                            // Icon
-                            play_button.innerHTML = "play_arrow"
-                        }
-                    }
-                
-                    // if NOT host
-                    if(state=="Playing"){
+        playerAction(player).toggleControls();
+    });
+    player.addEventListener('mouseout', function(e) {
+        e.stopPropagation();
+
+        playerAction(player).toggleControls(true);
+    });
+
+    // Try to load video
+    media.onloadstart = function() {
+        buffer_overlay.style["display"] = "grid"
+        // player.poster = poster
+        progress_status.innerHTML = `Loading data`
+        // console.log("onloadstart");
+    }
+    // data loaded
+    media.onloadeddata = function() {
+        buffer_overlay.style["display"] = "none"
+        progress_status.innerHTML = `Data ready`
+        // console.log("onloadeddata");
+    }
+    // Video can start
+    media.oncanplay = function(){
+        playerAction(player).updateProgress()
+        playerAction(player).togglePlayback("Playing")
+        // progress_status.innerHTML = `Can play data`
+        buffer_overlay.style["display"] = "none"
+        // player.poster = ""
+
+        // console.log("oncanplay");
+        // skipOP()
+    }
+    // Update progress display
+    media.ontimeupdate = function() {
+        // console.log(player.currentTime,player.duration);
+        playerAction(player).updateProgress()
+    };
+    // Downloading video / buffer
+    media.onprogress = function() {
+        // buffer_overlay.style["display"] = "none"
+        // progress_status.innerHTML = `Downloading data`
+        // console.log("onprogress");
+    }
+    // Can't load video
+    media.onerror = function(e) {
+        buffer_overlay.style["display"] = "grid"
+        // player.poster = poster
+        progress_status.innerHTML = `No Data`
+        console.error(`[player.onerror] Video Player Error\n`,e);
+    }
+    // Player waiting to play
+    media.onwaiting = function() {
+        buffer_overlay.style["display"] = "grid"
+        progress_status.innerHTML = `Waiting`
+        // hideControls()
+        // console.log("onwaiting");
+    }
+    // Player playing
+    media.onplaying = function() {
+        buffer_overlay.style["display"] = "none"
+        // console.log("onplaying");
+    }
+    media.onplay = function() {
+        // buffer_overlay.style["display"] = "none"
+        // console.log("onplay");
+        playerAction(player).toggleControls()
+        // togglePlay()
+    }
+    // Player paused
+    media.onpause = function() {
+        buffer_overlay.style["display"] = "none"
+        // console.log("onpause");
+
+        playerAction(player).toggleControls()
+        // togglePlay()
+    }
+    // Player ended
+    media.onended = function() {
+        buffer_overlay.style["display"] = "grid"
+        progress_status.innerHTML = `Data Ended`
+        console.log("onended");
+
+        play_button.innerHTML = "play_arrow"
+
+        // togglePlay()
+    }
+    const playerAction = (player) => ({
+        togglePlayback: function (state) {
+            try {
+                const media = player.querySelector("video")
+                media.volume = volume_input.value
+
+                console.log("togglePlay");
+                if (media.readyState>=3){
+                    if (media.paused) {
+                        console.log("paused/ended > play");
+                        progress_status.innerHTML = `Playing`
                         try {
-                            player.play();
+                            media.play();
                         } catch (error) {
                             console.error(error);
                         }
-                        progress_status.innerHTML = `Playing`
-                        // player.muted = false;
-                        
+            
                         // Icon
-                        play_button.innerHTML = "pause"
-                    }else if(state=="Paused"){
-                        player.pause();
-                        progress_status.innerHTML = `Host Paused`
-                        // player.muted = false;
-                
+                        play_button.innerHTML = "pause"            
+                    } else {
+                    // data for the current and at least the next frame is available
+                        console.log("playing > pause");
+                        media.pause();
+                        progress_status.innerHTML = `Paused`
+            
                         // Icon
                         play_button.innerHTML = "play_arrow"
                     }
-                } catch (error) {
-                    console.error(error);
                 }
-            }
             
-            function toggleMute(){
-                if (player.muted){
-                    mute_button.innerHTML = "volume_up"
-                    player.muted = false
-                } else {
-                    mute_button.innerHTML = "volume_off"
-                    player.muted = true
-                }
-            }
-            
-            function toggleSetting(){
-                if (setting_menu.style["display"]=="block"){
-                    setting_menu.style["display"] = "none"
-                } else {
-                    setting_menu.style["display"] = "block"
-                }
-            }
-            
-            function hideControls(forced) {
-                clearTimeout(hidePlayerControlsTimer);
-            
-                // console.log("[hideControls] paused: ",player.paused);
-                if(!player.paused){
-                    player_element.querySelector(".vidcontrols").classList.remove("hidden");
-                    player.style.cursor = "default"
-                    if (document.fullscreenElement) {
-                        document.fullscreenElement.style.cursor = "default"
-                    } else if (document.webkitFullscreenElement) {
-                        document.webkitFullscreenElement.style.cursor = "default"
+                if(state=="Playing"){
+                    try {
+                        media.play();
+                    } catch (error) {
+                        console.error(error);
                     }
-
-                    if (!forced||forced===false) {
-                        hidePlayerControlsTimer = setTimeout(function() {
-                            player_element.querySelector(".vidcontrols").classList.add("hidden");
-                            player.style.cursor = "none"
-                            // document.body.style.cursor = "none"
-                            if (document.fullscreenElement) {
-                                document.fullscreenElement.style.cursor = "none"
-                            } else if (document.webkitFullscreenElement) {
-                                document.webkitFullscreenElement.style.cursor = "none"
-                            }
-                        }, 2000);
-                    }else{
-                        player_element.querySelector(".vidcontrols").classList.add("hidden");
-                            player.style.cursor = "none"
-                            // document.body.style.cursor = "none"
-                            if (document.fullscreenElement) {
-                                document.fullscreenElement.style.cursor = "none"
-                            } else if (document.webkitFullscreenElement) {
-                                document.webkitFullscreenElement.style.cursor = "none"
-                            }
-                    }
-                }else if(player.paused){
-                    player_element.querySelector(".vidcontrols").classList.remove("hidden");
-                    player.style.cursor = "default"
-                    if (document.fullscreenElement) {
-                        document.fullscreenElement.style.cursor = "default"
-                    } else if (document.webkitFullscreenElement) {
-                        document.webkitFullscreenElement.style.cursor = "default"
-                    }
-                }
-            }
+                    progress_status.innerHTML = `Playing`
+                    // player.muted = false;
+                    
+                    // Icon
+                    play_button.innerHTML = "pause"
+                }else if(state=="Paused"){
+                    media.pause();
+                    progress_status.innerHTML = `Host Paused`
+                    // player.muted = false;
             
-            function toggleFullscreen() {
+                    // Icon
+                    play_button.innerHTML = "play_arrow"
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        toggleMute:function (){
+            const media = player.querySelector("video")
+            if (media.muted){
+                mute_button.innerHTML = "volume_up"
+                media.muted = false
+            } else {
+                mute_button.innerHTML = "volume_off"
+                media.muted = true
+            }
+        },
+        toggleSettings:function (){
+            if (setting_menu.style["display"]=="block"){
+                setting_menu.style["display"] = "none"
+            } else {
+                setting_menu.style["display"] = "block"
+            }
+        },
+        toggleControls:function (isForced) {
+            clearTimeout(hidePlayerControlsTimer);
+            // console.log("[hideControls] paused: ",player.paused);
+            if(!media.paused){
+                player.querySelector(".vidcontrols").classList.remove("hidden");
+                player.style.cursor = "default"
                 if (document.fullscreenElement) {
-                    fullscreen_button.innerHTML = "fullscreen"
-                    document.exitFullscreen();
+                    document.fullscreenElement.style.cursor = "default"
                 } else if (document.webkitFullscreenElement) {
-                    // Need this to support Safari
-                    fullscreen_button.innerHTML = "fullscreen"
-                    document.webkitExitFullscreen();
-                } else if (player_element.webkitRequestFullscreen) {
-                    // Need this to support Safari
-                    fullscreen_button.innerHTML = "fullscreen_exit"
-                    player_element.webkitRequestFullscreen();
-                } else {
-                    fullscreen_button.innerHTML = "fullscreen_exit"
-                    player_element.requestFullscreen();
+                    document.webkitFullscreenElement.style.cursor = "default"
                 }
-            }
-            function updateProgress(){
-                try {
-                    if(player.duration){
-                        // Update Player Progress
-                        // # Progress Bar
-                        progress_bar.value = player.currentTime
-                        progress_bar.max = player.duration
-                        // # Progress Input
-                        progress_input.attributes[1].value = `${player.currentTime}`
-                        progress_input.value = player.currentTime
-                        progress_input.max = player.duration
-                        // # Progress Text
-                        progress_current.innerHTML = new Date(player.currentTime*1000).toISOString().substr(11, 8);
-                        progress_status.innerHTML = `${player.currentTime}/${player.duration}, Frame: ${Math.round(player.currentTime*24)}`
-                        progress_duration.innerHTML = new Date(player.duration*1000).toISOString().substr(11, 8);
-
-                        mediaTime = player.currentTime
-        
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-            let v = player
-            const cElem = document.createElement("canvas")
-            cElem.style = `filter:blur(50px);position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);`
-            target.appendChild(cElem)
-            let c = target.querySelector("canvas");
-            let ctx = c.getContext("2d");
-            let i;
-            function draw() {
-            c.width = container.getBoundingClientRect().width;
-            c.height = container.getBoundingClientRect().height; 
-            i = window.requestAnimationFrame(draw)
-            ctx.drawImage(v, 0, 0, c.width, c.height)
-            }
-
-            v.addEventListener("loadeddata", function() {
-            draw()
-            }, false);
-            v.addEventListener("play", function() {
-            draw()
-            }, false);
-            v.addEventListener("pause", function() {
-            window.cancelAnimationFrame(i);
-            i = undefined;
-            }, false);
-            v.addEventListener("ended", function() {
-            window.cancelAnimationFrame(i);
-            i = undefined;
-            }, false); 
-        }
-            // return simple
-    },qualities: function(array){
-        const quality_setting = document.querySelector(".vidContainer > .vidSettingOverlay > .settingItems > #qualitySelect") 
-        const defQuality = [
-            {
-                link:"https://",
-                name:"720"
-            }
-        ]
-        // Clear quality setting
-        quality_setting.innerHTML = ""
     
-        // console.log("Available Server", servers);
-        // console.log("Sources: ", sources);
-        console.log("quality: ",array);
-
-        array.forEach((quality,i) => {
-            console.log(quality);
-
-            // Create a new video quality option element
-            var option = document.createElement("option");
-            option.value = `${quality.link}`;
-            option.textContent = `${quality.name}`;
-
-            // if (data.attributes["size"].value == defaultQuality) {
-            //     option.selected = true
-            //     player.src = data.attributes["src"].value
-            // }else{
-            //     option.selected = true
-            //     player.src = data.attributes["src"].value
-            // }
-            console.warn("adding quality: ",quality);
-            quality_setting.appendChild(option);
-        });
+                if (!isForced||isForced===false) {
+                    hidePlayerControlsTimer = setTimeout(function() {
+                        player.querySelector(".vidcontrols").classList.add("hidden");
+                        player.style.cursor = "none"
+                        // document.body.style.cursor = "none"
+                        if (document.fullscreenElement) {
+                            document.fullscreenElement.style.cursor = "none"
+                        } else if (document.webkitFullscreenElement) {
+                            document.webkitFullscreenElement.style.cursor = "none"
+                        }
+                    }, 2000);
+                }else{
+                    player.querySelector(".vidcontrols").classList.add("hidden");
+                        player.style.cursor = "none"
+                        // document.body.style.cursor = "none"
+                        if (document.fullscreenElement) {
+                            document.fullscreenElement.style.cursor = "none"
+                        } else if (document.webkitFullscreenElement) {
+                            document.webkitFullscreenElement.style.cursor = "none"
+                        }
+                }
+            }else if(media.paused){
+                player.querySelector(".vidcontrols").classList.remove("hidden");
+                player.style.cursor = "default"
+                if (document.fullscreenElement) {
+                    document.fullscreenElement.style.cursor = "default"
+                } else if (document.webkitFullscreenElement) {
+                    document.webkitFullscreenElement.style.cursor = "default"
+                }
+            }
+        },
+        toggleFullscreen:function () {
+            if (document.fullscreenElement) {
+                fullscreen_button.innerHTML = "fullscreen"
+                document.exitFullscreen();
+            } else if (document.webkitFullscreenElement) {
+                // Need this to support Safari
+                fullscreen_button.innerHTML = "fullscreen"
+                document.webkitExitFullscreen();
+            } else if (player.webkitRequestFullscreen) {
+                // Need this to support Safari
+                fullscreen_button.innerHTML = "fullscreen_exit"
+                player.webkitRequestFullscreen();
+            } else {
+                fullscreen_button.innerHTML = "fullscreen_exit"
+                player.requestFullscreen();
+            }
+        },
+        updateProgress:function (){
+            try {
+                if(media.duration && media.duration!=Infinity){
+                    console.warn(media.duration);
+                    // Update Player Progress
+                    // # Progress Bar
+                    progress_bar.value = media.currentTime
+                    progress_bar.max = media.duration
+                    // # Progress Input
+                    progress_input.attributes[1].value = `${media.currentTime}`
+                    progress_input.value = media.currentTime
+                    progress_input.max = media.duration
+                    // # Progress Text
+                    progress_current.innerHTML = new Date(media.currentTime*1000).toISOString().substr(11, 8);
+                    progress_status.innerHTML = `${media.currentTime}/${media.duration}, Frame: ${Math.round(media.currentTime*24)}`
+                    progress_duration.innerHTML = new Date(media.duration*1000).toISOString().substr(11, 8);
+    
+                    mediaTime = media.currentTime
+                }else{
+                    // If duration is "infinite" aka streaming
+    
+                    // Update Player Progress
+                    // # Progress Bar
+                    // progress_bar.value = media.currentTime
+                    // progress_bar.max = media.currentTime
+                    // # Progress Input
+                    progress_input.style = "pointer-events:none;"
+                    // progress_input.attributes[1].value = `${media.currentTime}`
+                    // progress_input.value = media.currentTime
+                    // progress_input.max = media.currentTime
+                    // # Progress Text
+                    progress_current.innerHTML = "Live";
+                    // progress_status.innerHTML = `${media.currentTime}/${media.duration}, Frame: ${Math.round(media.currentTime*24)}`
+                    progress_duration.innerHTML = "Streaming";
+    
+                    mediaTime = media.currentTime
+                }
+            } catch (error) {
+                console.error(error);
+            }
+            if (options.ambient){
+                let v = player
+                const cElem = document.createElement("canvas")
+                cElem.style = `filter:blur(50px);position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);`
+                target.appendChild(cElem)
+                let c = target.querySelector("canvas");
+                let ctx = c.getContext("2d");
+                let i;
+                function draw() {
+                c.width = container.getBoundingClientRect().width;
+                c.height = container.getBoundingClientRect().height; 
+                i = window.requestAnimationFrame(draw)
+                ctx.drawImage(v, 0, 0, c.width, c.height)
+                }
+        
+                v.addEventListener("loadeddata", function() {
+                draw()
+                }, false);
+                v.addEventListener("play", function() {
+                draw()
+                }, false);
+                v.addEventListener("pause", function() {
+                window.cancelAnimationFrame(i);
+                i = undefined;
+                }, false);
+                v.addEventListener("ended", function() {
+                window.cancelAnimationFrame(i);
+                i = undefined;
+                }, false); 
+            }
+        }
+    })
+    function playerActions(player) {
+        try {
+            const media = player.querySelector("video")
+            
+            
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 

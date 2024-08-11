@@ -53,7 +53,7 @@ video{
 
 .vidContainer{
     /* border: 1px red dashed; */
-    aspect-ratio: 16/9;
+    /* aspect-ratio: 16/9; */
     /* width: 70vw; */
     background: black;
     position: fixed;
