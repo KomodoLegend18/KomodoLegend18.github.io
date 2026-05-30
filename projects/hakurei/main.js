@@ -1,6 +1,8 @@
-import { mediaPlayer } from "../modules/mediaPlayer.js";
+// import { mediaPlayer } from "../modules/mediaPlayer/mediaPlayer.js";
+import { mediaPlayer as mediaPlayerV2 } from "../modules/mediaPlayer/mediaPlayerV2.js";
 import { clientRequest } from "../modules/xhr.js";
 
+// available quality
 const Quality = [
     {
         link:"https://stream.gensokyoradio.net/3/",
@@ -15,29 +17,49 @@ const Quality = [
         name:"Mobile (64kbps opus)"
     }
 ]
-let player = mediaPlayer.create({
-    source:"https://stream.gensokyoradio.net/1/",
-    target:document.body,
-    volume:40,
-    width:"45vh",
-    ambient:false
-}).quality(Quality)
-const progress = player.querySelector(".vidcontrols > #progress-container > progress")
-let curr = 0
-let durr = 0
-const songProgressInterval = setInterval(()=>{
-    updateTrackDuration(curr,durr)
-}, 1000);
-function updateTrackDuration(current,end) {
-    if(curr===0){
-        curr = current
+console.log(document.body);
+
+let player = mediaPlayerV2.create(
+    {
+        source:"https://stream.gensokyoradio.net/1/",
+        target:document.body
     }
-    progress.value = curr
-    progress.max = end
-    // console.warn(`${curr}/${end}`);
-    curr+=1
-}
-console.log(player);
+)
+
+// console.log(player);
+// player.media.play()
+
+
+// create player
+// let player = mediaPlayer.create({
+//     source:"https://stream.gensokyoradio.net/1/",
+//     target:document.body,
+//     volume:40,
+//     width:"45vh",
+//     ambient:false
+// }).quality(Quality)
+
+// const progress = player.querySelector(".vidcontrols > #progress-container > progress")
+// let curr = 0
+// let durr = 0
+// const songProgressInterval = setInterval(()=>{
+//     updateTrackDuration(curr,durr)
+// }, 1000);
+// function updateTrackDuration(current,end) {
+//     if(curr===0){
+//         curr = current
+//     }
+//     try {
+//         progress.value = curr
+//         progress.max = end
+//     } catch (error) {
+//         // progress value possibly invalid
+//         console.error(error);
+//     }
+//     // console.warn(`${curr}/${end}`);
+//     curr+=1
+// }
+// console.log(player);
 
 var clientId
 var recheck = 0
@@ -80,13 +102,33 @@ function setupWSS() {
             let artImgSrc = albumArt;
 
             console.warn(artImgSrc);
+            player.media.poster = artImgSrc;
+            if ("mediaSession" in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                title: `${title}`,
+                artist: `${artist}`,
+                album: `${album}`,
+                artwork: [
+                    { src: `${artImgSrc}`}
+                ]
+                });
+                navigator.mediaSession.setPositionState({
+                duration: duration-played,
+                playbackRate: 1
+            });
+            navigator.mediaSession.setActionHandler("seekto", (e) => {
+                console.log(e);
+                console.log(player.media.currentTime,player.media.duration);
+                
+                player.media.currentTime = e.seekTime
+            });
+            }
             if (title!=""&&title!=previousTitle){
                 previousTitle=title
                 recheck=0
             }
             curr = played
             durr = duration
-            player.querySelector("video").poster = artImgSrc;
             document.title = `${title} / ${artist}`
             document.querySelector("#favicon").href = artImgSrc
         }
@@ -131,11 +173,11 @@ function pingRecv(socket) {
     // socket.send("pong:"+clientId); // Before WS rework 06-2023
     socket.send('{"message":"pong", "id":'+clientId+'}');
 }
-// clientRequest(
-//     {
-//         cors:true,
-//         url:"https://stream.gensokyoradio.net/GensokyoRadio-original.m3u"
-//     }
-// ).then(resp=>{
-//     console.log(resp);
-// })
+clientRequest(
+    {
+        cors:true,
+        url:"https://stream.gensokyoradio.net/GensokyoRadio-original.m3u"
+    }
+).then(resp=>{
+    console.log(resp);
+})

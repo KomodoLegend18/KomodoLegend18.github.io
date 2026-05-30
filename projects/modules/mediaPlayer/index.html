@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @media (prefers-color-scheme: light) {
+            body{
+                /* background: rgb(24, 24, 24); */
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            body{
+                background: rgb(24, 24, 24);
+            }
+        }
+
+        .mediaContainer{
+            /* border: 1px dashed greenyellow; */
+            outline: 2px dashed greenyellow;
+            width: 1080px;
+            aspect-ratio: 16/9;
+
+            position: relative;
+            background: black;
+            /* overflow: hidden; */
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        .mediaContainer video{
+            /* cursor: none; */
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+        .mediaContainer div.controls-bottom-container{
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            outline: 1px dashed yellow;
+            padding: 0 12px 8px 12px;
+            width: 100%;
+            height: 4rem;
+            box-sizing: border-box;
+        }
+        .mediaContainer div.controls-bottom-container div.controls-bottom{
+            width: 100%;
+            height: 100%;
+            outline: 1px dashed yellow;
+            border-radius: 12px;
+            background: #d9d9d967;
+            backdrop-filter: blur(13px);
+        }
+        .mediaContainer div.controls-bottom-container div.controls-bottom span svg{
+            filter: drop-shadow(0px 2px 2px rgb(0 0 0 / 0.4));
+            height: 100%;
+            /* box-sizing: border-box; */
+    </style>
+</head>
+<body>
+    <div class="mediaContainer" id="">
+        <video src="" poster="../../assets/2.png"></video>
+        <div class="controls-bottom-container">
+            <div class="controls-bottom">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M360-272.31v-415.38L686.15-480 360-272.31Z"/></span><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M650.77-295.38v-369.24h40v369.24h-40Zm-381.54 0v-369.24L546.15-480 269.23-295.38Z"/></span>
+            </div>
+        </div>
+    </div>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, omnis minus placeat dolores, molestias repudiandae beatae non sunt repellat quisquam aspernatur a labore tenetur molestiae, porro incidunt reprehenderit perferendis ullam.
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+</html>

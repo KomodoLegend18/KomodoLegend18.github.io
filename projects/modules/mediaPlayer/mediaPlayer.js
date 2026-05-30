@@ -1,4 +1,4 @@
-import { randomString } from "./random.js";
+import { randomString } from "../random.js";
 
 let mediaTime = 0
 export const mediaPlayer = {
@@ -17,12 +17,12 @@ export const mediaPlayer = {
             throw "Target not specified"
         }
         const PlayerID = randomString(6); //generate unique id
-        const container = document.createElement("div")
-        container.className = "vidContainer"
-        container.setAttribute("PlayerID",PlayerID)
-        container.style.width = width
-        container.style.boxShadow = "0px 0px 5px 2px rgba(0, 0, 0, 0.267)"
-        container.innerHTML = `
+        const playerContainer = document.createElement("div")
+        playerContainer.className = "vidContainer"
+        playerContainer.setAttribute("PlayerID",PlayerID)
+        playerContainer.style.width = width
+        playerContainer.style.boxShadow = "0px 0px 5px 2px rgba(0, 0, 0, 0.267)"
+        playerContainer.innerHTML = `
         <div class="vidSettingOverlay">
             <div class="settingItems">
                 <label for="vidQuality">Quality: </label>
@@ -46,7 +46,6 @@ export const mediaPlayer = {
         </div>
     
         <div class="bufferOverlay"></div>
-    
     
         <div class="vidcontrols">
             <div id="play-container">
@@ -77,7 +76,7 @@ export const mediaPlayer = {
         
         <video poster="${poster}" src="${source}" data-title="" 
         data-eps="" data-idmal="" data-opstart="" data-opend="" data-edstart="" data-edend=""></video>`
-        target.appendChild(container)
+        target.appendChild(playerContainer)
         // const simple = document.createElement("video")
         // simple.src = resource
         // simple.controls = true
@@ -89,9 +88,9 @@ export const mediaPlayer = {
             }
         }
 
-        playerEvents(container,options)
+        playerEvents(playerContainer,options)
 
-        container.quality = function (array){
+        playerContainer.quality = function (array){
             const quality_setting = document.querySelector(".vidContainer > .vidSettingOverlay > .settingItems > #qualitySelect") 
             const defQuality = [
                 {
@@ -130,7 +129,7 @@ export const mediaPlayer = {
             return this;
         }
 
-        return container
+        return playerContainer
         // return simple
     }
 }
