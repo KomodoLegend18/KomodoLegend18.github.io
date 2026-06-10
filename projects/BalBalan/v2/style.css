@@ -1,0 +1,137 @@
+:root{
+    --fontSize-main:1.8rem;
+    --fontSize-sec:1.1rem;
+    --backgroundCol:#0a84ff;
+    --timelineCol:#ebebeb;
+    --flag-size:30%;
+    --shadow: 0px 0px 20px -5px rgba(0,0,0,0.39);
+    --livepulse-col-a:#FF0000;
+    --livepulse-col-b:#8a0000;
+    --anim-dur:1s;
+}
+@keyframes livePulse {
+    from{
+        color: var(--livepulse-col-a);
+    }
+    to{
+        color: var(--livepulse-col-b);
+    }
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--backgroundCol);
+    margin: 0px;
+}
+div{
+    /* outline: 2px rgba(128, 128, 128, 0.342) dashed; */
+}
+#content{
+    border-radius: 15px;
+    display: block;
+    position: relative;
+    /* overflow: hidden; */
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0 15px 0 15px;
+    background: white;
+    box-shadow: var(--shadow);
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    /* outline: 2px black dashed; */
+    /* height: 100vh !important; */
+    width: 80vw !important;
+}
+#live,#upcoming,#past{
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+.match{
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    width: 100%;
+    height: auto;
+    margin: 15px 0 15px 0;
+    transition: ease-out 150ms;
+    outline: 0px;
+    /* border: white 1px solid; */
+    /* outline: 2px purple dashed; */
+}
+.match:hover{
+    outline: 1px black solid;
+    /* border: black 1px solid; */
+    transition: ease-out 150ms;
+}
+.match .date{
+    background: rgb(147, 198, 255);
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+}
+:is(#live,#upcoming,#past) > .match .mainInfo{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 15px;
+}
+.match .mainInfo .flag img{
+    width: var(--flag-size);
+    box-shadow: var(--shadow);
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    user-select: none;
+    -webkit-user-drag: none;
+}
+.match .mainInfo .home{
+    font-size: var(--fontSize-main);
+    justify-self: center;
+    text-align: center;
+}
+.match .mainInfo .time{
+    font-size: var(--fontSize-sec);
+    font-variant-numeric: tabular-nums;
+    justify-self: center;
+    text-align: center;
+    min-width: 70px;
+    padding-bottom: 10px;
+    animation-name: livePulse;
+    animation-duration: var(--anim-dur);
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+}
+.match .mainInfo .matchnum{
+    font-size: var(--fontSize-sec);
+    font-variant-numeric: tabular-nums;
+    justify-self: center;
+    text-align: center;
+    min-width: 70px;
+    padding-bottom: 10px;
+}
+.match .mainInfo .score{
+    font-size: var(--fontSize-main);
+    font-variant-numeric: tabular-nums;
+    justify-self: center;
+    text-align: center;
+    min-width: 70px;
+}
+.match .mainInfo .away{
+    font-size: var(--fontSize-main);
+    justify-self: center;
+    text-align: center;
+}
+.match .mainInfo .timeline{
+    background: var(--timelineCol);
+    padding: 10px 0 10px 0;
+    width: 100%;
+    grid-column: 1/span 3;
+    text-align: center;
+}
